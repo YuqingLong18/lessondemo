@@ -165,6 +165,25 @@ These steps must not be explicitly labeled in the UI unless instructed.
 
 ---
 
+## 6b. Proven Design Patterns (from Experience)
+
+### 6b.1 Scaffolding: The Atomic to Systemic Journey
+- **Start Small**: Begin with the smallest unit (e.g., Pixel) before showing the system (e.g., Network).
+- **Build Complexity**: Introduce meaningful complexity one step at a time (e.g., Grayscale -> RGB -> Filter -> Stack).
+- **Avoid Overwhelm**: Never show the full architecture until the components are understood.
+
+### 6b.2 Tangibility: Concrete Metaphors
+- **Replace Math with Visuals**: Use "Pattern Matching" instead of "Dot Products".
+- **Use Real World Analogues**: "Blur/Sharpen" filters are better than abstract matrices.
+- **Specific Illustrations**: Use literal "Cat Ears" or "Edges" to represent abstract feature maps.
+
+### 6b.3 High-Agency Interactivity
+- **Creative Agency**: Allow users to upload their own content (e.g., photos) to make the concept personal.
+- **Micro-Sized Gamification**: Simple scoring systems (e.g., "Match the color") increase engagement significantly.
+- **Direct Manipulation**: Draggable elements and sliders are superior to buttons.
+
+---
+
 ## 7. Visual & Interaction Standards
 
 ### 7.1 Visual clarity
