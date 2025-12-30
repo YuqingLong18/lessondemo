@@ -2,106 +2,82 @@ import React, { useState } from 'react';
 import { ConceptStage } from '../../components/core/ConceptStage';
 import { ExplainPanel } from '../../components/core/ExplainPanel';
 
-const LAYERS = [
-    {
-        level: 'Input',
-        desc: 'Raw Pixels',
-        visual: 'Grid of colored numbers',
-        detail: 'The computer sees 3 matrices (R, G, B) of numbers. No meaning yet.',
-    },
-    {
-        level: 'Low-Level',
-        desc: 'Edges & Lines',
-        visual: 'Simple Gradients',
-        detail: 'Filters detect simple geometric primitives: vertical lines, diagonals, color gradients.',
-    },
-    {
-        level: 'Mid-Level',
-        desc: 'Shapes & Parts',
-        visual: 'Circles, Corners, Eyes',
-        detail: 'By combining edges, the network finds simple shapes: circles, squares, or specific parts like an eye.',
-    },
-    {
-        level: 'High-Level',
-        desc: 'Object Concepts',
-        visual: 'Faces, Cars, Cats',
-        detail: 'Combining shapes reveals complex objects. This layer "knows" what a face looks like.',
-    },
-];
-
 export const Slide5_FeatureHierarchy: React.FC = () => {
-    const [activeLayer, setActiveLayer] = useState(0);
+    const [activeLayer, setActiveLayer] = useState<string | null>(null);
+
+    const layers = [
+        { id: 'objects', label: 'Objects (Face)', color: '#fd79a8', example: '🐶' },
+        { id: 'parts', label: 'Parts (Eyes, Ears)', color: '#74b9ff', example: '👁️ 👂' },
+        { id: 'edges', label: 'Edges / Curves', color: '#55efc4', example: '— | /' },
+        { id: 'pixels', label: 'Pixels', color: '#b2bec3', example: '102, 45, 88' },
+    ];
 
     return (
         <>
             <ConceptStage>
-                <div style={{ display: 'flex', gap: '4rem', alignItems: 'center' }}>
-                    {/* Layer Pyramid */}
-                    <div style={{ display: 'flex', flexDirection: 'column-reverse', gap: '10px' }}>
-                        {LAYERS.map((layer, idx) => (
-                            <div
-                                key={layer.level}
-                                onClick={() => setActiveLayer(idx)}
-                                style={{
-                                    width: `${300 - idx * 40}px`, // Tapering width
-                                    height: '60px',
-                                    backgroundColor: activeLayer === idx ? '#0984e3' : '#74b9ff',
-                                    color: '#fff',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer',
-                                    fontWeight: 'bold',
-                                    boxShadow: activeLayer === idx ? '0 0 10px rgba(9, 132, 227, 0.5)' : 'none',
-                                    transition: 'all 0.3s',
-                                    marginLeft: `${idx * 20}px`, // Centering effect
-                                }}
-                            >
-                                {layer.level}
-                            </div>
-                        ))}
-                    </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+                    <h2 style={{ color: '#2d3436' }}>The CNN Hierarchy</h2>
 
-                    {/* Info Box */}
-                    <div
-                        style={{
-                            width: '300px',
-                            height: '300px',
-                            border: '2px dashed #b2bec3',
-                            borderRadius: '8px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            padding: '2rem',
-                            textAlign: 'center',
-                            backgroundColor: '#fdfeff',
-                        }}
-                    >
-                        <h2 style={{ color: '#2d3436', margin: 0, marginBottom: '0.5rem' }}>
-                            {LAYERS[activeLayer].desc}
-                        </h2>
-                        <div style={{ fontSize: '3rem', margin: '1rem' }}>
-                            {/* Simple Emoji visualization of complexity */}
-                            {activeLayer === 0 && '🔢'}
-                            {activeLayer === 1 && '➖'}
-                            {activeLayer === 2 && '👁️'}
-                            {activeLayer === 3 && '🧑'}
-                        </div>
-                        <p style={{ color: '#636e72', lineHeight: '1.4' }}>
-                            {LAYERS[activeLayer].detail}
-                        </p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '300px' }}>
+                        {layers.map((layer, index) => {
+                            const width = 300 - index * 60; // Pyramid shape
+                            const isActive = activeLayer === layer.id;
+
+                            return (
+                                <div
+                                    key={layer.id}
+                                    onMouseEnter={() => setActiveLayer(layer.id)}
+                                    onMouseLeave={() => setActiveLayer(null)}
+                                    style={{
+                                        alignSelf: 'center',
+                                        width: `${width}px`,
+                                        height: '60px',
+                                        backgroundColor: layer.color,
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        borderRadius: '8px',
+                                        cursor: 'pointer',
+                                        transition: 'transform 0.2s, opacity 0.2s',
+                                        transform: isActive ? 'scale(1.05)' : 'scale(1)',
+                                        opacity: activeLayer && !isActive ? 0.6 : 1,
+                                        boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                                        position: 'relative',
+                                        color: '#2d3436',
+                                        fontWeight: 'bold',
+                                    }}
+                                >
+                                    {layer.label}
+
+                                    {isActive && (
+                                        <div style={{
+                                            position: 'absolute',
+                                            right: '-140px',
+                                            backgroundColor: 'white',
+                                            padding: '0.5rem 1rem',
+                                            borderRadius: '8px',
+                                            boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                                            width: '120px',
+                                            textAlign: 'center',
+                                            fontSize: '1.2rem',
+                                        }}>
+                                            {layer.example}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </ConceptStage>
             <ExplainPanel>
-                <h3>5. Standard Hierarchy</h3>
+                <h3>4. Feature Hierarchy</h3>
                 <ul>
-                    <li>Deep Learning is "Deep" because it stacks these layers.</li>
-                    <li><strong>Bottom:</strong> Simple dots and lines.</li>
-                    <li><strong>Top:</strong> Complex concepts (Faces, Cars).</li>
-                    <li>We go from <em>meaningless numbers</em> to <em>meaningful concepts</em>.</li>
+                    <li>CNNs understand images in <strong>layers</strong>.</li>
+                    <li><strong>Bottom:</strong> It sees raw numbers (pixels).</li>
+                    <li><strong>Middle:</strong> It finds lines, curves, and blobs.</li>
+                    <li><strong>Top:</strong> It combines them into eyes, noses, and finally... a Dog!</li>
+                    <li>Hover over the pyramid to see what each layer "sees".</li>
                 </ul>
             </ExplainPanel>
         </>

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ConceptStage } from '../../components/core/ConceptStage';
 import { ExplainPanel } from '../../components/core/ExplainPanel';
+import cuteDogImg from '../../assets/cute_dog.png';
 
 const KERNELS = {
     Identity: [
@@ -38,23 +39,21 @@ export const Slide4_FilterGallery: React.FC = () => {
     // Better approach: Store original image data
     const [originalData, setOriginalData] = useState<ImageData | null>(null);
 
+    // Load Image
     useEffect(() => {
-        // Generate Image Once
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = 300;
-        tempCanvas.height = 300;
-        const ctx = tempCanvas.getContext('2d');
-        if (ctx) {
-            ctx.fillStyle = '#ecf0f1';
-            ctx.fillRect(0, 0, 300, 300);
-            ctx.fillStyle = '#2d3436';
-            ctx.fillRect(50, 100, 200, 20); // Horiz
-            ctx.fillRect(140, 50, 20, 200); // Vert
-            ctx.beginPath();
-            ctx.arc(220, 220, 40, 0, Math.PI * 2);
-            ctx.fill();
-            setOriginalData(ctx.getImageData(0, 0, 300, 300));
-        }
+        const img = new Image();
+        img.src = cuteDogImg;
+        img.onload = () => {
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = 300;
+            tempCanvas.height = 300;
+            const ctx = tempCanvas.getContext('2d');
+            if (ctx) {
+                // Draw image to fit 300x300
+                ctx.drawImage(img, 0, 0, 300, 300);
+                setOriginalData(ctx.getImageData(0, 0, 300, 300));
+            }
+        };
     }, []);
 
     useEffect(() => {
