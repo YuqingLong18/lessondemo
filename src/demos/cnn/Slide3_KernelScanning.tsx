@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ConceptStage } from '../../components/core/ConceptStage';
 import { ExplainPanel } from '../../components/core/ExplainPanel';
+import { useLanguage } from '../../components/core/LanguageContext';
 
 // Larger 9x9 Pattern: Cross + Isolated Point
 // Updated Grid: Vertical line at col 4. Horizontal at row 4. Isolated point at [7,7].
@@ -15,8 +16,9 @@ GRID_9x9[4][4] = 10; // Intersection explicitly set (already 10)
 
 const KERNELS = [
     {
-        name: 'Vertical Edge',
-        desc: 'Detects vertical lines',
+        id: 'vertical',
+        label: { en: 'Vertical Edge', zh: '垂直边缘' },
+        desc: { en: 'Detects vertical lines', zh: '检测垂直线' },
         threshold: 20, // Sum can be 30
         matrix: [
             [-1, 0, 1],
@@ -25,8 +27,9 @@ const KERNELS = [
         ]
     },
     {
-        name: 'Horizontal Edge',
-        desc: 'Detects horizontal lines',
+        id: 'horizontal',
+        label: { en: 'Horizontal Edge', zh: '水平边缘' },
+        desc: { en: 'Detects horizontal lines', zh: '检测水平线' },
         threshold: 20,
         matrix: [
             [-1, -1, -1],
@@ -35,8 +38,9 @@ const KERNELS = [
         ]
     },
     {
-        name: 'Point / Corner',
-        desc: 'Detects isolated points',
+        id: 'point',
+        label: { en: 'Point / Corner', zh: '点 / 角点' },
+        desc: { en: 'Detects isolated points', zh: '检测孤立点' },
         threshold: 70, // Lines are 60, Isolated is 80 (perfect match)
         matrix: [
             [-1, -1, -1],
@@ -50,11 +54,64 @@ const CELL_SIZE = 36;
 const GAP = 2;
 const TOTAL_CELL_SIZE = CELL_SIZE + GAP;
 
+const copy = {
+    en: {
+        inputImage: 'Input Image (9x9)',
+        dragMe: 'DRAG ME',
+        convolutionOp: 'convolution operation',
+        kernel: 'Kernel',
+        featureMap: 'Feature Map',
+        operationLabel: 'Operation:',
+        dotProduct: 'Dot Product',
+        resultLabel: 'Result:',
+        matchLabel: '🔥 Match!',
+        title: '3. The "Kernel" Scan',
+        bullets: [
+            <>The input image contains vertical, horizontal, and point features.</>,
+            <>
+                <strong>Choose a Kernel</strong> to tell the scanner what to look for. (Vertical, Horizontal, or Corner).
+            </>,
+            <>
+                <strong>Drag the blue box</strong> to scan the image.
+            </>,
+            <>
+                Notice: The "Point" kernel now <strong>ignores</strong> lines and looks only for the isolated dot!
+            </>,
+        ],
+    },
+    zh: {
+        inputImage: '输入图像 (9x9)',
+        dragMe: '拖动我',
+        convolutionOp: '卷积操作',
+        kernel: '卷积核',
+        featureMap: '特征图',
+        operationLabel: '运算：',
+        dotProduct: '点积',
+        resultLabel: '结果：',
+        matchLabel: '🔥 匹配！',
+        title: '3. “卷积核”扫描',
+        bullets: [
+            <>输入图像包含垂直、水平和点状特征。</>,
+            <>
+                <strong>选择一个卷积核</strong>，告诉扫描器要找什么（垂直、水平或角点）。
+            </>,
+            <>
+                <strong>拖动蓝色框</strong>在图像上扫描。
+            </>,
+            <>
+                注意：“点”卷积核会<strong>忽略</strong>线条，只寻找孤立点！
+            </>,
+        ],
+    },
+};
+
 export const Slide3_KernelScanning: React.FC = () => {
     const [kernelPos, setKernelPos] = useState({ r: 0, c: 0 });
     const [isDragging, setIsDragging] = useState(false);
     const [activeKernelIndex, setActiveKernelIndex] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
+    const { language } = useLanguage();
+    const t = copy[language];
 
     // Input 9x9, Kernel 3x3 -> Output 7x7
     const outputGridSize = 7;
@@ -120,7 +177,7 @@ export const Slide3_KernelScanning: React.FC = () => {
                 <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', userSelect: 'none' }}>
                     {/* INPUT GRID */}
                     <div>
-                        <h4 style={{ textAlign: 'center', marginBottom: '0.5rem' }}>Input Image (9x9)</h4>
+                        <h4 style={{ textAlign: 'center', marginBottom: '0.5rem' }}>{t.inputImage}</h4>
                         <div style={{ position: 'relative' }} ref={containerRef}>
                             <div
                                 style={{
@@ -174,7 +231,7 @@ export const Slide3_KernelScanning: React.FC = () => {
                                     textShadow: '0 0 2px white',
                                 }}
                             >
-                                DRAG ME
+                                {t.dragMe}
                             </div>
                         </div>
                     </div>
@@ -188,18 +245,18 @@ export const Slide3_KernelScanning: React.FC = () => {
                         color: '#b2bec3'
                     }}>
                         <div style={{ fontSize: '1.5rem' }}>➡</div>
-                        <div style={{ fontSize: '0.8rem', width: '80px', textAlign: 'center', lineHeight: 1.2 }}>convolution operation</div>
+                        <div style={{ fontSize: '0.8rem', width: '80px', textAlign: 'center', lineHeight: 1.2 }}>{t.convolutionOp}</div>
                     </div>
 
                     {/* KERNEL SELECTION */}
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <h4 style={{ textAlign: 'center', marginBottom: '0.5rem' }}>Kernel</h4>
+                        <h4 style={{ textAlign: 'center', marginBottom: '0.5rem' }}>{t.kernel}</h4>
 
                         {/* Tabs */}
                         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
                             {KERNELS.map((k, idx) => (
                                 <button
-                                    key={k.name}
+                                    key={k.id}
                                     onClick={() => setActiveKernelIndex(idx)}
                                     style={{
                                         padding: '0.3rem 0.6rem',
@@ -211,7 +268,7 @@ export const Slide3_KernelScanning: React.FC = () => {
                                         cursor: 'pointer',
                                     }}
                                 >
-                                    {k.name}
+                                    {k.label[language]}
                                 </button>
                             ))}
                         </div>
@@ -246,7 +303,7 @@ export const Slide3_KernelScanning: React.FC = () => {
                             )}
                         </div>
                         <div style={{ fontSize: '0.8rem', color: '#636e72', fontStyle: 'italic' }}>
-                            {activeKernel.desc}
+                            {activeKernel.desc[language]}
                         </div>
                     </div>
 
@@ -254,7 +311,7 @@ export const Slide3_KernelScanning: React.FC = () => {
 
                     {/* OUTPUT GRID */}
                     <div>
-                        <h4 style={{ textAlign: 'center', marginBottom: '0.5rem' }}>Feature Map</h4>
+                        <h4 style={{ textAlign: 'center', marginBottom: '0.5rem' }}>{t.featureMap}</h4>
                         <div
                             style={{
                                 display: 'grid',
@@ -318,17 +375,16 @@ export const Slide3_KernelScanning: React.FC = () => {
                         opacity: 0.9,
                     }}
                 >
-                    <strong>Operation:</strong> Dot Product <br />
-                    Result: {currentResult} {currentResult >= activeKernel.threshold ? '🔥 Match!' : ''}
+                    <strong>{t.operationLabel}</strong> {t.dotProduct} <br />
+                    {t.resultLabel} {currentResult} {currentResult >= activeKernel.threshold ? t.matchLabel : ''}
                 </div>
             </ConceptStage>
             <ExplainPanel>
-                <h3>3. The "Kernel" Scan</h3>
+                <h3>{t.title}</h3>
                 <ul>
-                    <li>The input image contains vertical, horizontal, and point features.</li>
-                    <li><strong>Choose a Kernel</strong> to tell the scanner what to look for. (Vertical, Horizontal, or Corner).</li>
-                    <li><strong>Drag the blue box</strong> to scan the image.</li>
-                    <li>Notice: The "Point" kernel now <strong>ignores</strong> lines and looks only for the isolated dot!</li>
+                    {t.bullets.map((item, index) => (
+                        <li key={index}>{item}</li>
+                    ))}
                 </ul>
             </ExplainPanel>
         </>

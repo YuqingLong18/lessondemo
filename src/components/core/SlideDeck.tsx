@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { SlideShell } from './SlideShell';
+import { LocalizedText, useLanguage } from './LanguageContext';
 
 interface SlideData {
-    title: string;
-    subConcept?: string;
+    title: LocalizedText;
+    subConcept?: LocalizedText;
     component: React.ComponentType<any>;
 }
 
@@ -13,6 +14,7 @@ interface SlideDeckProps {
 
 export const SlideDeck: React.FC<SlideDeckProps> = ({ slides }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const { language } = useLanguage();
 
     const nextSlide = useCallback(() => {
         setCurrentIndex((prev) => Math.min(prev + 1, slides.length - 1));
@@ -44,8 +46,8 @@ export const SlideDeck: React.FC<SlideDeckProps> = ({ slides }) => {
 
     return (
         <SlideShell
-            title={slides[currentIndex].title}
-            subConcept={slides[currentIndex].subConcept}
+            title={slides[currentIndex].title[language]}
+            subConcept={slides[currentIndex].subConcept?.[language]}
             currentSlide={currentIndex}
             totalSlides={slides.length}
             onNext={nextSlide}

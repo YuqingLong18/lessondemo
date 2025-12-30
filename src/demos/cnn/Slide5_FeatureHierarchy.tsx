@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ConceptStage } from '../../components/core/ConceptStage';
 import { ExplainPanel } from '../../components/core/ExplainPanel';
+import { useLanguage } from '../../components/core/LanguageContext';
 import cuteDogImg from '../../assets/cute_dog.png';
 import cuteCatImg from '../../assets/cute_cat.png';
 
@@ -13,9 +14,64 @@ import featDogShape from '../../assets/feat_dog_shape.png';
 
 type InputType = 'cat' | 'dog';
 
+const copy = {
+    en: {
+        catInput: 'Cat Input 🐱',
+        dogInput: 'Dog Input 🐶',
+        input: 'Input',
+        simpleFeatures: 'Simple Features',
+        partialFeatures: 'Partial Features',
+        highLevelFeatures: 'High Level Features',
+        output: 'Output',
+        cat: 'Cat',
+        dog: 'Dog',
+        catEars: 'Cat Ears',
+        dogEars: 'Dog Ears',
+        title: '5. Feature Hierarchy',
+        bullets: (earLabel: string, classLabel: string) => [
+            <>
+                <strong>Simple Features</strong>: The first layers detect fuzzy edges and lines (shown as abstract sketches).
+            </>,
+            <>
+                <strong>Partial Features</strong>: Deeper layers combine these into recognizable parts like <strong>{earLabel}</strong>.
+            </>,
+            <>
+                <strong>High Level Features</strong>: The final layers see the whole shape, ready to classify it as a <strong>{classLabel}</strong>!
+            </>,
+        ],
+    },
+    zh: {
+        catInput: '猫输入 🐱',
+        dogInput: '狗输入 🐶',
+        input: '输入',
+        simpleFeatures: '简单特征',
+        partialFeatures: '局部特征',
+        highLevelFeatures: '高层特征',
+        output: '输出',
+        cat: '猫',
+        dog: '狗',
+        catEars: '猫耳',
+        dogEars: '狗耳',
+        title: '5. 特征层级',
+        bullets: (earLabel: string, classLabel: string) => [
+            <>
+                <strong>简单特征</strong>：前几层检测模糊的边缘和线条（以抽象草图表示）。
+            </>,
+            <>
+                <strong>局部特征</strong>：更深层把这些组合成可识别的部件，如<strong>{earLabel}</strong>。
+            </>,
+            <>
+                <strong>高层特征</strong>：最后几层看到整体形状，准备将其分类为<strong>{classLabel}</strong>！
+            </>,
+        ],
+    },
+};
+
 export const Slide5_FeatureHierarchy: React.FC = () => {
     const [input, setInput] = useState<InputType>('cat');
     const [activeStage, setActiveStage] = useState(0); // 0: Input, 1: Simple, 2: Partial, 3: High, 4: Out
+    const { language } = useLanguage();
+    const t = copy[language];
 
     useEffect(() => {
         // Trigger animation when input changes
@@ -29,6 +85,9 @@ export const Slide5_FeatureHierarchy: React.FC = () => {
     }, [input]);
 
     const currentImg = input === 'cat' ? cuteCatImg : cuteDogImg;
+    const earLabel = input === 'cat' ? t.catEars : t.dogEars;
+    const classLabel = input === 'cat' ? t.cat : t.dog;
+    const bullets = t.bullets(earLabel, classLabel);
 
     // Perspectve container style
     const stageStyle: React.CSSProperties = {
@@ -138,7 +197,7 @@ export const Slide5_FeatureHierarchy: React.FC = () => {
                                 transition: 'all 0.2s'
                             }}
                         >
-                            Cat Input 🐱
+                            {t.catInput}
                         </button>
                         <button
                             onClick={() => setInput('dog')}
@@ -153,7 +212,7 @@ export const Slide5_FeatureHierarchy: React.FC = () => {
                                 transition: 'all 0.2s'
                             }}
                         >
-                            Dog Input 🐶
+                            {t.dogInput}
                         </button>
                     </div>
 
@@ -168,7 +227,7 @@ export const Slide5_FeatureHierarchy: React.FC = () => {
                                 transition: 'all 0.5s',
                                 opacity: activeStage >= 0 ? 1 : 0.5
                             }}>
-                                <div style={{ marginBottom: '10px', textAlign: 'center', fontSize: '0.9rem', fontWeight: 'bold', transform: 'translateY(-10px)' }}>Input</div>
+                                <div style={{ marginBottom: '10px', textAlign: 'center', fontSize: '0.9rem', fontWeight: 'bold', transform: 'translateY(-10px)' }}>{t.input}</div>
                                 <img
                                     src={currentImg}
                                     style={{ width: '100%', height: '100%', border: '3px solid #2d3436', borderRadius: '4px', backgroundColor: 'white', boxShadow: '5px 5px 15px rgba(0,0,0,0.2)' }}
@@ -176,13 +235,13 @@ export const Slide5_FeatureHierarchy: React.FC = () => {
                             </div>
 
                             {/* 2. Simple Features (Edges) */}
-                            {renderLayer("Simple Features", 6, 80, 1, 15, featEdges)}
+                            {renderLayer(t.simpleFeatures, 6, 80, 1, 15, featEdges)}
 
                             {/* 3. Partial Features (Ears) */}
-                            {renderLayer("Partial Features", 6, 50, 2, 10, input === 'cat' ? featCatEar : featDogEar)}
+                            {renderLayer(t.partialFeatures, 6, 50, 2, 10, input === 'cat' ? featCatEar : featDogEar)}
 
                             {/* 4. High Level Features (Shapes) */}
-                            {renderLayer("High Level Features", 10, 30, 3, 6, input === 'cat' ? featCatShape : featDogShape)}
+                            {renderLayer(t.highLevelFeatures, 10, 30, 3, 6, input === 'cat' ? featCatShape : featDogShape)}
 
                             {/* 5. OUTPUT: Fully Connected */}
                             <div style={{
@@ -195,7 +254,7 @@ export const Slide5_FeatureHierarchy: React.FC = () => {
                                 transform: 'rotateY(15deg)',
                                 marginLeft: '20px'
                             }}>
-                                <div style={{ textAlign: 'center', fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '5px' }}>Output</div>
+                                <div style={{ textAlign: 'center', fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '5px' }}>{t.output}</div>
 
                                 {/* Cat Prob */}
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
@@ -233,11 +292,11 @@ export const Slide5_FeatureHierarchy: React.FC = () => {
                 </div>
             </ConceptStage>
             <ExplainPanel>
-                <h3>5. Feature Hierarchy</h3>
+                <h3>{t.title}</h3>
                 <ul>
-                    <li><strong>Simple Features</strong>: The first layers detect fuzzy edges and lines (shown as abstract sketches).</li>
-                    <li><strong>Partial Features</strong>: Deeper layers combine these into recognizable parts like <strong>{input === 'cat' ? 'Cat Ears' : 'Dog Ears'}</strong>.</li>
-                    <li><strong>High Level Features</strong>: The final layers see the whole shape, ready to classify it as a <strong>{input === 'cat' ? 'Cat' : 'Dog'}</strong>!</li>
+                    {bullets.map((item, index) => (
+                        <li key={index}>{item}</li>
+                    ))}
                 </ul>
             </ExplainPanel>
         </>

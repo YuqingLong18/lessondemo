@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ConceptStage } from '../../components/core/ConceptStage';
 import { ExplainPanel } from '../../components/core/ExplainPanel';
+import { useLanguage } from '../../components/core/LanguageContext';
 
 // A simple gradient pattern
 const PRESETS = [
@@ -24,6 +25,37 @@ const PRESETS = [
     ],
 ];
 
+const copy = {
+    en: {
+        targetImage: 'Target Image',
+        yourReconstruction: 'Your Reconstruction',
+        newChallenge: '🔄 New Challenge',
+        checkScore: 'Check Score',
+        scoreLabel: 'Score:',
+        title: 'Challenge: Copy the Image!',
+        bullets: [
+            <><strong>0 = Black</strong>, <strong>255 = White</strong>.</>,
+            <>Look at the Target Image on the left.</>,
+            <>Type numbers into the grid on the right to match the brightness.</>,
+            <>Get close to the target brightness to maximize your score!</>,
+        ],
+    },
+    zh: {
+        targetImage: '目标图像',
+        yourReconstruction: '你的重建',
+        newChallenge: '🔄 新挑战',
+        checkScore: '查看得分',
+        scoreLabel: '得分：',
+        title: '挑战：临摹图像！',
+        bullets: [
+            <><strong>0 = 黑色</strong>，<strong>255 = 白色</strong>。</>,
+            <>观察左侧的目标图像。</>,
+            <>在右侧网格输入数字，匹配亮度。</>,
+            <>越接近目标亮度，得分越高！</>,
+        ],
+    },
+};
+
 export const Slide1b_IntensityChallenge: React.FC = () => {
     const [presetIndex, setPresetIndex] = useState(0);
     const [userGrid, setUserGrid] = useState<number[][]>([
@@ -32,6 +64,8 @@ export const Slide1b_IntensityChallenge: React.FC = () => {
         [0, 0, 0],
     ]);
     const [score, setScore] = useState<number | null>(null);
+    const { language } = useLanguage();
+    const t = copy[language];
 
     const targetGrid = PRESETS[presetIndex];
 
@@ -71,7 +105,7 @@ export const Slide1b_IntensityChallenge: React.FC = () => {
 
                         {/* Target Block */}
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <h4 style={{ marginBottom: '1rem', color: '#636e72' }}>Target Image</h4>
+                            <h4 style={{ marginBottom: '1rem', color: '#636e72' }}>{t.targetImage}</h4>
                             <div style={gridStyle}>
                                 {targetGrid.map((row, r) =>
                                     row.map((val, c) => (
@@ -99,7 +133,7 @@ export const Slide1b_IntensityChallenge: React.FC = () => {
                                     borderRadius: '4px',
                                 }}
                             >
-                                🔄 New Challenge
+                                {t.newChallenge}
                             </button>
                         </div>
 
@@ -108,7 +142,7 @@ export const Slide1b_IntensityChallenge: React.FC = () => {
 
                         {/* User Block */}
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <h4 style={{ marginBottom: '1rem', color: '#0984e3' }}>Your Reconstruction</h4>
+                            <h4 style={{ marginBottom: '1rem', color: '#0984e3' }}>{t.yourReconstruction}</h4>
                             <div style={gridStyle}>
                                 {userGrid.map((row, r) =>
                                     row.map((val, c) => (
@@ -154,7 +188,7 @@ export const Slide1b_IntensityChallenge: React.FC = () => {
                                     boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
                                 }}
                             >
-                                Check Score
+                                {t.checkScore}
                             </button>
                         </div>
 
@@ -168,19 +202,18 @@ export const Slide1b_IntensityChallenge: React.FC = () => {
                             color: score === 1000 ? '#f1c40f' : score > 800 ? '#00b894' : '#d63031',
                             animation: 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
                         }}>
-                            Score: {score} / 1000
+                            {t.scoreLabel} {score} / 1000
                         </div>
                     )}
 
                 </div>
             </ConceptStage>
             <ExplainPanel>
-                <h3>Challenge: Copy the Image!</h3>
+                <h3>{t.title}</h3>
                 <ul>
-                    <li><strong>0 = Black</strong>, <strong>255 = White</strong>.</li>
-                    <li>Look at the Target Image on the left.</li>
-                    <li>Type numbers into the grid on the right to match the brightness.</li>
-                    <li>Get close to the target brightness to maximize your score!</li>
+                    {t.bullets.map((item, index) => (
+                        <li key={index}>{item}</li>
+                    ))}
                 </ul>
             </ExplainPanel>
             <style>{`

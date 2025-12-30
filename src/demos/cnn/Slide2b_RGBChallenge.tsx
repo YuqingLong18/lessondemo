@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ConceptStage } from '../../components/core/ConceptStage';
 import { ExplainPanel } from '../../components/core/ExplainPanel';
+import { useLanguage } from '../../components/core/LanguageContext';
 
 const PRESETS = [
     { name: 'Purple', r: 128, g: 0, b: 128 },
@@ -8,10 +9,41 @@ const PRESETS = [
     { name: 'Teal', r: 0, g: 128, b: 128 },
 ];
 
+const copy = {
+    en: {
+        targetColor: 'Target Color',
+        newColor: '🔄 New Color',
+        yourMix: 'Your Mix',
+        checkScore: 'Check Score',
+        scoreLabel: 'Score:',
+        title: 'Challenge: Match the Color!',
+        bullets: [
+            <>Can you guess the recipe for this color?</>,
+            <>Drag the <strong>Red</strong>, <strong>Green</strong>, and <strong>Blue</strong> sliders to match the color.</>,
+            <>The closer your color looks to the target, the higher your score.</>,
+        ],
+    },
+    zh: {
+        targetColor: '目标颜色',
+        newColor: '🔄 新颜色',
+        yourMix: '你的配色',
+        checkScore: '查看得分',
+        scoreLabel: '得分：',
+        title: '挑战：匹配颜色！',
+        bullets: [
+            <>你能猜出这种颜色的配方吗？</>,
+            <>拖动<strong>红</strong>、<strong>绿</strong>、<strong>蓝</strong>滑块来匹配颜色。</>,
+            <>你的颜色越接近目标，得分越高。</>,
+        ],
+    },
+};
+
 export const Slide2b_RGBChallenge: React.FC = () => {
     const [presetIndex, setPresetIndex] = useState(0);
     const [userColor, setUserColor] = useState({ r: 0, g: 0, b: 0 });
     const [score, setScore] = useState<number | null>(null);
+    const { language } = useLanguage();
+    const t = copy[language];
 
     const target = PRESETS[presetIndex];
 
@@ -47,7 +79,7 @@ export const Slide2b_RGBChallenge: React.FC = () => {
 
                         {/* Target */}
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <h4 style={{ color: '#636e72', marginBottom: '1rem' }}>Target Color</h4>
+                            <h4 style={{ color: '#636e72', marginBottom: '1rem' }}>{t.targetColor}</h4>
                             <div
                                 style={{
                                     width: '150px',
@@ -69,13 +101,13 @@ export const Slide2b_RGBChallenge: React.FC = () => {
                                     borderRadius: '4px',
                                 }}
                             >
-                                🔄 New Color
+                                {t.newColor}
                             </button>
                         </div>
 
                         {/* User Input */}
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <h4 style={{ color: '#0984e3', marginBottom: '1rem' }}>Your Mix</h4>
+                            <h4 style={{ color: '#0984e3', marginBottom: '1rem' }}>{t.yourMix}</h4>
                             <div
                                 style={{
                                     width: '150px',
@@ -110,7 +142,7 @@ export const Slide2b_RGBChallenge: React.FC = () => {
                                     boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
                                 }}
                             >
-                                Check Score
+                                {t.checkScore}
                             </button>
                         </div>
                     </div>
@@ -123,18 +155,18 @@ export const Slide2b_RGBChallenge: React.FC = () => {
                             color: score === 1000 ? '#f1c40f' : score > 850 ? '#00b894' : '#d63031',
                             animation: 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
                         }}>
-                            Score: {score} / 1000
+                            {t.scoreLabel} {score} / 1000
                         </div>
                     )}
 
                 </div>
             </ConceptStage>
             <ExplainPanel>
-                <h3>Challenge: Match the Color!</h3>
+                <h3>{t.title}</h3>
                 <ul>
-                    <li>Can you guess the recipe for this color?</li>
-                    <li>Drag the <strong>Red</strong>, <strong>Green</strong>, and <strong>Blue</strong> sliders to match the color.</li>
-                    <li>The closer your color looks to the target, the higher your score.</li>
+                    {t.bullets.map((item, index) => (
+                        <li key={index}>{item}</li>
+                    ))}
                 </ul>
             </ExplainPanel>
             <style>{`

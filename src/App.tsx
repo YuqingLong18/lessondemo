@@ -1,4 +1,5 @@
 import { SlideDeck } from './components/core/SlideDeck';
+import { LanguageProvider } from './components/core/LanguageContext';
 import { Slide1_PixelMatrix } from './demos/cnn/Slide1_PixelMatrix';
 import { Slide1b_IntensityChallenge } from './demos/cnn/Slide1b_IntensityChallenge';
 import { Slide2_RGBExploration } from './demos/cnn/Slide2_RGBExploration';
@@ -9,44 +10,48 @@ import { Slide5_FeatureHierarchy } from './demos/cnn/Slide5_FeatureHierarchy';
 
 const slides = [
   {
-    title: 'Input Layer',
-    subConcept: 'Pixels as Numbers',
+    title: { zh: '输入层', en: 'Input Layer' },
+    subConcept: { zh: '像素是数字', en: 'Pixels as Numbers' },
     component: Slide1_PixelMatrix,
   },
   {
-    title: 'Challenge',
-    subConcept: 'Match the Intensity',
+    title: { zh: '挑战', en: 'Challenge' },
+    subConcept: { zh: '匹配亮度', en: 'Match the Intensity' },
     component: Slide1b_IntensityChallenge,
   },
   {
-    title: 'Input Layer',
-    subConcept: 'RGB Channels',
+    title: { zh: '输入层', en: 'Input Layer' },
+    subConcept: { zh: 'RGB 通道', en: 'RGB Channels' },
     component: Slide2_RGBExploration,
   },
   {
-    title: 'Challenge',
-    subConcept: 'Match the Color',
+    title: { zh: '挑战', en: 'Challenge' },
+    subConcept: { zh: '匹配颜色', en: 'Match the Color' },
     component: Slide2b_RGBChallenge,
   },
   {
-    title: 'Convolution',
-    subConcept: 'The "Scanning" Mechanism',
+    title: { zh: '卷积', en: 'Convolution' },
+    subConcept: { zh: '“扫描”机制', en: 'The "Scanning" Mechanism' },
     component: Slide3_KernelScanning,
   },
   {
-    title: 'Convolution',
-    subConcept: 'Visualizing Features',
+    title: { zh: '卷积', en: 'Convolution' },
+    subConcept: { zh: '特征可视化', en: 'Visualizing Features' },
     component: Slide4_FilterGallery,
   },
   {
-    title: 'Network Architecture',
-    subConcept: 'Feature Hierarchy',
+    title: { zh: '网络结构', en: 'Network Architecture' },
+    subConcept: { zh: '特征层级', en: 'Feature Hierarchy' },
     component: Slide5_FeatureHierarchy,
   },
 ];
 
 function App() {
-  return <SlideDeck slides={slides} />;
+  return (
+    <LanguageProvider>
+      <SlideDeck slides={slides} />
+    </LanguageProvider>
+  );
 }
 
 export default App;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from './LanguageContext';
 
 interface SlideShellProps {
   title: string;
@@ -21,6 +22,10 @@ export const SlideShell: React.FC<SlideShellProps> = ({
   onReset,
   children,
 }) => {
+  const { language, setLanguage } = useLanguage();
+  const slideLabel = language === 'zh' ? `第 ${currentSlide + 1} / ${totalSlides} 页` : `Slide ${currentSlide + 1} / ${totalSlides}`;
+  const resetLabel = language === 'zh' ? '重置' : 'Reset';
+
   return (
     <div
       className="slide-shell"
@@ -85,17 +90,54 @@ export const SlideShell: React.FC<SlideShellProps> = ({
           <button onClick={onPrev} disabled={currentSlide === 0} style={buttonStyle}>
             ◀
           </button>
-          <span style={{ fontVariantNumeric: 'tabular-nums' }}>
-            Slide {currentSlide + 1} / {totalSlides}
-          </span>
+          <span style={{ fontVariantNumeric: 'tabular-nums' }}>{slideLabel}</span>
           <button onClick={onNext} disabled={currentSlide === totalSlides - 1} style={buttonStyle}>
             ▶
           </button>
         </div>
 
-        <button onClick={onReset} style={{ ...buttonStyle, borderColor: '#d63031', color: '#d63031' }}>
-          Reset
-        </button>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <div
+            role="group"
+            aria-label="Language toggle"
+            style={{
+              display: 'flex',
+              border: '1px solid #b2bec3',
+              borderRadius: '999px',
+              overflow: 'hidden',
+              backgroundColor: '#fff',
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setLanguage('zh')}
+              aria-pressed={language === 'zh'}
+              style={{
+                ...toggleButtonStyle,
+                backgroundColor: language === 'zh' ? '#0984e3' : 'transparent',
+                color: language === 'zh' ? '#fff' : '#636e72',
+              }}
+            >
+              中文
+            </button>
+            <button
+              type="button"
+              onClick={() => setLanguage('en')}
+              aria-pressed={language === 'en'}
+              style={{
+                ...toggleButtonStyle,
+                backgroundColor: language === 'en' ? '#0984e3' : 'transparent',
+                color: language === 'en' ? '#fff' : '#636e72',
+              }}
+            >
+              English
+            </button>
+          </div>
+
+          <button onClick={onReset} style={{ ...buttonStyle, borderColor: '#d63031', color: '#d63031' }}>
+            {resetLabel}
+          </button>
+        </div>
       </footer>
     </div>
   );
@@ -108,4 +150,13 @@ const buttonStyle: React.CSSProperties = {
   border: '1px solid #b2bec3',
   borderRadius: '4px',
   fontSize: '0.9rem',
+};
+
+const toggleButtonStyle: React.CSSProperties = {
+  padding: '0.4rem 0.9rem',
+  cursor: 'pointer',
+  backgroundColor: 'transparent',
+  border: 'none',
+  fontSize: '0.85rem',
+  fontWeight: 600,
 };

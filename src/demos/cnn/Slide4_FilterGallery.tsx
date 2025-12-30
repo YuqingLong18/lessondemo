@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ConceptStage } from '../../components/core/ConceptStage';
 import { ExplainPanel } from '../../components/core/ExplainPanel';
+import { useLanguage } from '../../components/core/LanguageContext';
 import cuteDogImg from '../../assets/cute_dog.png';
 
 const KERNELS = {
@@ -31,9 +32,53 @@ const KERNELS = {
     ],
 };
 
+type FilterKey = keyof typeof KERNELS;
+
+const FILTER_LABELS: Record<FilterKey, { en: string; zh: string }> = {
+    Identity: { en: 'Identity', zh: '原图' },
+    'Vertical Edge': { en: 'Vertical Edge', zh: '垂直边缘' },
+    'Horizontal Edge': { en: 'Horizontal Edge', zh: '水平边缘' },
+    Sharpen: { en: 'Sharpen', zh: '锐化' },
+    Emboss: { en: 'Emboss', zh: '浮雕' },
+};
+
+const copy = {
+    en: {
+        selectFilter: 'Select a Filter',
+        uploadPhoto: '📸 Upload Your Photo',
+        resizedNote: '(Resized to 300x300)',
+        currentFilter: 'Current Filter:',
+        title: '4. Filter Gallery',
+        bullets: [
+            <><strong>Convolution</strong> applies a kernel to every pixel.</>,
+            <><strong>Edge Detection:</strong> Finds sudden changes in brightness.</>,
+            <><strong>Blur:</strong> Averages neighbors to smooth things out.</>,
+            <><strong>Sharpen:</strong> Enhances differences between neighbors.</>,
+            <><strong>Try Uploading:</strong> See how these math operations look on your own photos!</>,
+        ],
+    },
+    zh: {
+        selectFilter: '选择滤镜',
+        uploadPhoto: '📸 上传你的照片',
+        resizedNote: '（已缩放到 300x300）',
+        currentFilter: '当前滤镜：',
+        title: '4. 滤镜画廊',
+        bullets: [
+            <><strong>卷积</strong>把卷积核应用到每个像素。</>,
+            <><strong>边缘检测：</strong>发现亮度的突变。</>,
+            <><strong>模糊：</strong>对邻域取平均以平滑。</>,
+            <><strong>锐化：</strong>增强邻近像素之间的差异。</>,
+            <><strong>尝试上传：</strong>看看这些运算在你的照片上是什么效果！</>,
+        ],
+    },
+};
+
 export const Slide4_FilterGallery: React.FC = () => {
-    const [activeFilter, setActiveFilter] = useState<keyof typeof KERNELS>('Identity');
+    const [activeFilter, setActiveFilter] = useState<FilterKey>('Identity');
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const { language } = useLanguage();
+    const t = copy[language];
+    const filterKeys = Object.keys(KERNELS) as FilterKey[];
 
 
     // Better approach: Store original image data
@@ -130,11 +175,11 @@ export const Slide4_FilterGallery: React.FC = () => {
 
                     {/* Controls */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', width: '180px' }}>
-                        <h3>Select a Filter</h3>
-                        {Object.keys(KERNELS).map((filterName) => (
+                        <h3>{t.selectFilter}</h3>
+                        {filterKeys.map((filterName) => (
                             <button
                                 key={filterName}
-                                onClick={() => setActiveFilter(filterName as keyof typeof KERNELS)}
+                                onClick={() => setActiveFilter(filterName)}
                                 style={{
                                     padding: '0.5rem',
                                     backgroundColor: activeFilter === filterName ? '#0984e3' : 'white',
@@ -146,7 +191,7 @@ export const Slide4_FilterGallery: React.FC = () => {
                                     transition: 'all 0.2s'
                                 }}
                             >
-                                {filterName}
+                                {FILTER_LABELS[filterName][language]}
                             </button>
                         ))}
 
@@ -163,7 +208,7 @@ export const Slide4_FilterGallery: React.FC = () => {
                                     fontSize: '0.9rem'
                                 }}
                             >
-                                📸 Upload Your Photo
+                                {t.uploadPhoto}
                                 <input
                                     type="file"
                                     accept="image/*"
@@ -172,7 +217,7 @@ export const Slide4_FilterGallery: React.FC = () => {
                                 />
                             </label>
                             <div style={{ fontSize: '0.7rem', color: '#b2bec3', marginTop: '4px', textAlign: 'center' }}>
-                                (Resized to 300x300)
+                                {t.resizedNote}
                             </div>
                         </div>
                     </div>
@@ -191,20 +236,18 @@ export const Slide4_FilterGallery: React.FC = () => {
                             }}
                         />
                         <div style={{ marginTop: '1rem', color: '#636e72' }}>
-                            Current Filter: <strong>{activeFilter}</strong>
+                            {t.currentFilter} <strong>{FILTER_LABELS[activeFilter][language]}</strong>
                         </div>
                     </div>
 
                 </div>
             </ConceptStage>
             <ExplainPanel>
-                <h3>4. Filter Gallery</h3>
+                <h3>{t.title}</h3>
                 <ul>
-                    <li><strong>Convolution</strong> applies a kernel to every pixel.</li>
-                    <li><strong>Edge Detection:</strong> Finds sudden changes in brightness.</li>
-                    <li><strong>Blur:</strong> Averages neighbors to smooth things out.</li>
-                    <li><strong>Sharpen:</strong> Enhances differences between neighbors.</li>
-                    <li><strong>Try Uploading:</strong> See how these math operations look on your own photos!</li>
+                    {t.bullets.map((item, index) => (
+                        <li key={index}>{item}</li>
+                    ))}
                 </ul>
             </ExplainPanel>
         </>

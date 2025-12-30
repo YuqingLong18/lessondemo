@@ -1,11 +1,39 @@
 import React, { useState } from 'react';
 import { ConceptStage } from '../../components/core/ConceptStage';
 import { ExplainPanel } from '../../components/core/ExplainPanel';
+import { useLanguage } from '../../components/core/LanguageContext';
+
+const copy = {
+    en: {
+        title: '2. Color = 3 Matrices',
+        red: 'Red',
+        green: 'Green',
+        blue: 'Blue',
+        bullets: [
+            <>Colored images aren&apos;t just one grid; they are a stack of <strong>three grids</strong> (Red, Green, Blue).</>,
+            <>We call these "Channels".</>,
+            <>For a 10x10 color image, the computer sees a 10x10x3 block of numbers.</>,
+        ],
+    },
+    zh: {
+        title: '2. 颜色 = 3 个矩阵',
+        red: '红',
+        green: '绿',
+        blue: '蓝',
+        bullets: [
+            <>彩色图像不是一张网格，而是<strong>三张网格</strong>叠在一起（红、绿、蓝）。</>,
+            <>这些网格称为“通道”。</>,
+            <>对于 10x10 的彩色图像，计算机看到的是 10x10x3 的数字块。</>,
+        ],
+    },
+};
 
 export const Slide2_RGBExploration: React.FC = () => {
     const [r, setR] = useState(100);
     const [g, setG] = useState(149);
     const [b, setB] = useState(237); // Default: Cornflower Blueish
+    const { language } = useLanguage();
+    const t = copy[language];
 
     return (
         <>
@@ -31,9 +59,9 @@ export const Slide2_RGBExploration: React.FC = () => {
 
                     {/* Matrix Decomposition */}
                     <div style={{ display: 'flex', gap: '2rem' }}>
-                        <ChannelBox label="Red" val={r} color="#ff7675" />
-                        <ChannelBox label="Green" val={g} color="#55efc4" />
-                        <ChannelBox label="Blue" val={b} color="#74b9ff" />
+                        <ChannelBox label={t.red} val={r} color="#ff7675" />
+                        <ChannelBox label={t.green} val={g} color="#55efc4" />
+                        <ChannelBox label={t.blue} val={b} color="#74b9ff" />
                     </div>
 
                     {/* Controls */}
@@ -45,11 +73,11 @@ export const Slide2_RGBExploration: React.FC = () => {
                 </div>
             </ConceptStage>
             <ExplainPanel>
-                <h3>2. Color = 3 Matrices</h3>
+                <h3>{t.title}</h3>
                 <ul>
-                    <li>Colored images aren't just one grid; they are a stack of <strong>three grids</strong> (Red, Green, Blue).</li>
-                    <li>We call these "Channels".</li>
-                    <li>For a 10x10 color image, the computer sees a 10x10x3 block of numbers.</li>
+                    {t.bullets.map((item, index) => (
+                        <li key={index}>{item}</li>
+                    ))}
                 </ul>
             </ExplainPanel>
         </>
