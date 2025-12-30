@@ -98,47 +98,113 @@ export const Slide4_FilterGallery: React.FC = () => {
             }
         }
         ctx.putImageData(outputImg, 0, 0);
-
     }, [activeFilter, originalData]);
 
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target?.result as string;
+            img.onload = () => {
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = 300;
+                tempCanvas.height = 300;
+                const ctx = tempCanvas.getContext('2d');
+                if (ctx) {
+                    ctx.drawImage(img, 0, 0, 300, 300);
+                    setOriginalData(ctx.getImageData(0, 0, 300, 300));
+                    setActiveFilter('Identity'); // Reset filter to show raw image first
+                }
+            };
+        };
+        reader.readAsDataURL(file);
+    };
 
     return (
         <>
             <ConceptStage>
-                <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        {Object.keys(KERNELS).map((k) => (
+                <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
+
+                    {/* Controls */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', width: '180px' }}>
+                        <h3>Select a Filter</h3>
+                        {Object.keys(KERNELS).map((filterName) => (
                             <button
-                                key={k}
-                                onClick={() => setActiveFilter(k as any)}
+                                key={filterName}
+                                onClick={() => setActiveFilter(filterName as keyof typeof KERNELS)}
                                 style={{
-                                    padding: '0.8rem 1.5rem',
+                                    padding: '0.5rem',
+                                    backgroundColor: activeFilter === filterName ? '#0984e3' : 'white',
+                                    color: activeFilter === filterName ? 'white' : '#2d3436',
                                     border: '1px solid #dfe6e9',
                                     borderRadius: '4px',
-                                    backgroundColor: activeFilter === k ? '#0984e3' : '#fff',
-                                    color: activeFilter === k ? '#fff' : '#2d3436',
                                     cursor: 'pointer',
-                                    fontSize: '1rem',
-                                    fontWeight: 500,
                                     textAlign: 'left',
+                                    transition: 'all 0.2s'
                                 }}
                             >
-                                {k}
+                                {filterName}
                             </button>
                         ))}
+
+                        <div style={{ marginTop: '1rem', borderTop: '1px solid #ecf0f1', paddingTop: '1rem' }}>
+                            <label
+                                style={{
+                                    display: 'block',
+                                    padding: '0.5rem',
+                                    backgroundColor: '#6c5ce7',
+                                    color: 'white',
+                                    textAlign: 'center',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer',
+                                    fontSize: '0.9rem'
+                                }}
+                            >
+                                📸 Upload Your Photo
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageUpload}
+                                    style={{ display: 'none' }}
+                                />
+                            </label>
+                            <div style={{ fontSize: '0.7rem', color: '#b2bec3', marginTop: '4px', textAlign: 'center' }}>
+                                (Resized to 300x300)
+                            </div>
+                        </div>
                     </div>
 
-                    <div style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }}>
-                        <canvas ref={canvasRef} width={300} height={300} />
+                    {/* Canvas */}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <canvas
+                            ref={canvasRef}
+                            width={300}
+                            height={300}
+                            style={{
+                                border: '4px solid #2d3436',
+                                borderRadius: '4px',
+                                boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
+                                backgroundColor: '#fff'
+                            }}
+                        />
+                        <div style={{ marginTop: '1rem', color: '#636e72' }}>
+                            Current Filter: <strong>{activeFilter}</strong>
+                        </div>
                     </div>
+
                 </div>
             </ConceptStage>
             <ExplainPanel>
-                <h3>4. Different Kernels = Different Features</h3>
+                <h3>4. Filter Gallery</h3>
                 <ul>
-                    <li>We can change the numbers in the kernel to find different things.</li>
-                    <li>Some kernels find <strong>vertical edges</strong>, some find <strong>horizontal lines</strong>.</li>
-                    <li><strong>Interact:</strong> Try the buttons to see how different kernels transform the image.</li>
+                    <li><strong>Convolution</strong> applies a kernel to every pixel.</li>
+                    <li><strong>Edge Detection:</strong> Finds sudden changes in brightness.</li>
+                    <li><strong>Blur:</strong> Averages neighbors to smooth things out.</li>
+                    <li><strong>Sharpen:</strong> Enhances differences between neighbors.</li>
+                    <li><strong>Try Uploading:</strong> See how these math operations look on your own photos!</li>
                 </ul>
             </ExplainPanel>
         </>
