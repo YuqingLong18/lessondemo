@@ -1,0 +1,108 @@
+2.5 The Four Major Schools of Machine Learning
+Learning Objectives
+	Understand the core ideas and historical backgrounds of the four major schools of machine learning (Symbolic School, Bayesian School, Connectionist School, and Evolutionary School), along with their basic assumptions and methodological characteristics.
+	Recognize the knowledge representation and logical reasoning mechanisms of the Symbolic School, and understand the applications and limitations of expert systems.
+	Understand the basic principles and methods of the Bayesian School, grasp the construction and inference processes of Bayesian networks, and recognize their advantages in handling uncertainty.
+	Understand the neural network models of the Connectionist School, the structure and learning mechanisms of artificial neural networks, and their applicable tasks and limitations.
+	Understand the optimization concepts of the Evolutionary School, grasp the implementation principles and applicable scenarios of genetic algorithms, and be aware of their strengths and computational limitations.
+	Analyze the characteristics and strengths and weaknesses of each school, and explore the trends of integration in modern AI.
+
+The goal of machine learning is to enable machines to automatically learn patterns from data and transform these patterns into knowledge for reasoning and decision-making. In response to this challenge, many theories and methods have emerged throughout histoover the course of machine learning’s historyry, eventually forming four main schools (Figure 2-34): the Symbolic School, the Bayesian School, the Connectionist School, and the Evolutionary School. Each of these schools has approached the question of "how can machines learn autonomously" from a different perspective and proposed distinctive models and algorithms, contributing diversity and depth to the developmentprogress of machine learning.
+
+This section will discuss the representative methods of each school, as well as the thinking patterns and applicable scenarios behind them. By learning about these four schools, readers will not only master different technical approaches to machine learning but also cultivate the general ability to analyze and solve problems from multiple angles, thus building a comprehensive framework for future learning and practice.
+
+1. Symbolic School
+1) Core Ideas
+The Symbolic School believes that the fundamental units of cognition are symbols, and cognitive processes are operations on these symbols. Therefore, it is possible to simulate human intelligence by enabling computers to perform symbolic manipulation. Researchers in this school are convincedhold that as long as symbols can be accurately represented and operated upon, computers can exhibit intelligent behavior. From the mid-1950s to the late 1980s, the Symbolic School dominated AI research, with symbolic computation theories and practices holding a central place.
+
+Traditionally, knowledge in symbolic systems is defined in advance by human experts. However, in real-world applications, predefined rules may not cover all situations. To address this, researchers in the Symbolic School introduced learning methods that extract new patterns from data, allowing symbolic systems to better adapt to complex and dynamic environments.
+
+Let’s take expert systems as an example of symbolic learning. These systems often use production rules in the form of “if...then...” to carry out symbolic reasoning. For example, if the system observes the conditions “cloudy sky” and “high humidity,” it might infer that “it may rain.” These rules are usually derived from expert knowledge but can also be learned from data, making the system extensibleable to extend its knowledge.
+
+As shown in Figure 2-35, when both “cloudy sky” and “high humidity” are present, rainfall often occurs. Based on this, the system can summarize a new rule: “If the sky is cloudy and humidity exceeds 80%, then it may rain.” This new rule can be added to the knowledge base for future reasoning, enhancing the adaptability of the expert system.
+
+2) Strengths and Limitations
+Although the Symbolic School made important contributions in the early days of AI, its limitations have gradually becaome apparent. One key issue is its limited learning capacity: — symbolic systems usually cannot undergo large-scale knowledge updates without risking system instability.
+
+Specifically, symbolic systems are characterized by determinism in their symbols and rules. This guarantees logical clarity but restricts flexibility. Once rules have beenare defined, altering them may disrupt the system and lead to unreliable inferences.
+
+For instance, in a symbolic system describing celestial bodies (Figure 2-36), each object is represented by a clear symbol: the sun as S, the Earth as E, and the moon as M. These fixed definitions allow for logical reasoning. However, if the symbols are changed arbitrarily (e.g., S becomes Earth and E becomes the sun), all related rules will be disruptedcome confused.
+
+2. Bayesian School
+1) Core Ideas
+The Bayesian School proceeds from the assumption thatviews the world ias full of uncertainty. Therefore, reasoning must account for the probability of events. Specifically, it treats real-world conditions or events as random variables, and represents relationships between events through “conditional probabilities.” For instance, P(rain∣season=autumn) indicates the probability of rain during autumn.
+
+Using this definition, a real-world system can be modeled as a probabilistic network or "Bayesian network." In this network, nodes represent events, and the edges represent conditional dependencies. Figure 2-37 shows a Bayesian network for weather prediction, including variables like “season,” “location,” and “rainfall,” with complex probabilistic relationships among them.
+
+With Bayesian networks, researchers have developed comprehensive reasoning methods to evaluate how one event affects another. For example, in Figure 2-37, a change in temperature allows us to calculate how the probability of flooding may change.
+
+Moreover, Bayesian networks allow conditional probabilities to be updated based on new observations. For instance, if we frequently observe rainfall with high humidity, we can increase the conditional probability of rain under high humidity — and this update is grounded in probabilistic principles, ensuring optimal inference.
+
+2) Example: Weather Prediction
+Figure 2-38 presents a Bayesian probabilistic model that captures the relationship among rainfall, cloud cover, and humidity. The formula is expressed as:
+P(rain∣cloud, humidity)=σ(a×cloud+b×humidity+c)
+where σ(x)=1/(1+e^(-x)) is a transformation function that maps values into the [0,1] range, making the value appropriate for representing a probability. The parameters a, b, and c control how each variable affects rainfall likelihood.
+
+The conditional probability of rainfall given specific atmospheric conditions is denoted by P(Rain | Cloud Cover, Humidity). This expression models the probability of rain as a function of two predictor variables: cloud cover and humidity. The parameters, or coefficients, a and b determine the magnitude of influence that cloud cover and humidity have on the likelihood of rain. A positive sign for both parameters (a>0,b>0) indicates a positive correlation, where the probability of rain increases as values for cloud cover and humidity rise.
+
+During the model training phase, a training dataset is first assembled, where each sample includes observations of cloud cover, humidity, and a rain/no-rain label. The model is then trained by adjusting parameters a,b, and c to optimize its predictive performance. The goal is for the model to output probabilities close to 0 for no-rain events and close to 1 for rain events. Once trained, this model can be used to predict the likelihood of future rain by feeding it current cloud cover and humidity data, thereby serving as a weather forecasting tool.
+
+3) Strengths and Limitations
+Bayesian methods excel in handling uncertainty and complex systems, especially when data is sparse or incomplete, since they can incorporate prior knowledge effectively. However, Bayesian models also have their limitations. First, they often require intensive computation, especially in high-dimensional data scenarios. Second, the dependencies between variables must be defined by experts. If this domain knowledge is flawed, the model’s performance will be compromised.
+
+3. Connectionist School
+1) Core Ideas
+The core idea of the Connectionist School is to simulate human intelligence by modeling the structure and function of the nervous system. The human brain contains 50 to 100 billion neurons connected in complex networks. Each neuron is relatively simple, but their interconnectedness gives rise to complex behavior.
+
+Inspired by this, the Connectionist School developed artificial neural networks to mimic biological neural processing. As shown in Figure 2-39, each node simulates a neuron, and connections between them carry weights. At first, weights are randomly initiated; through learning, they are gradually adjusted to match target outputs. In essence, neural networks learn by adjusting these connections.
+
+2) Example: Weather Prediction
+In the example shown in Figure 2-40, cloud cover and humidity serve as inputs to an artificial neural network, which then outputs the probability of rainfall. By adjusting connection weights through training, the network improves its predictive accuracy.
+
+3) Strengths and Limitations
+Artificial neural networks are conceptually intuitive, structurally simple, and highly capable of learning. Though they drew someearly attention in the early development of AI, their true success came in recent years with the rise of big data and deep learning.
+
+However, they also have downsides. Neural networks are often composed of many nodes, making their decision processes difficult to interpret. They also require large datasets and computational resources, and — their performance suffers when these are lacking.
+
+4. Comparison Among Symbolic, Bayesian, and Connectionist Schools
+Criterion	Symbolic School	Bayesian School	Connectionist School
+Knowledge reliance	High	Medium	Low
+Data reliance	Low	Medium	High
+Learnability	Low	Medium	High
+Interpretability	High	Medium	Low
+
+The Symbolic School depends heavily on predefined rules, while the Bayesian School also requires some prior knowledge but is less constrained. The Connectionist School needs the least prior knowledge,  — mainly the design of the network structure.
+
+In terms of learning ability, the Symbolic School is the least flexible, though it requires little data and is highly interpretable. The Bayesian School has moderate flexibility and learnability, using statistical inference methods. Neural networks are the most flexible and capable learners but demand the most data and are the hardest to interpret.
+
+5. Evolutionary School
+1) Core Ideas
+The Evolutionary School proposes that intelligence can be achieved by mimicking biological evolution. Human intelligence is the result of long-term evolution involving mechanisms like crossover, mutation, and natural selection. Its rResearchers believe that by simulating this evolutionary process, machines can also develop intelligence.
+
+Extension Reading: Genetic Algorithms
+Figure 2-41 shows how turtles evolved in nature. Starting from a population on the right, shell-less turtles are eliminated by natural selection. Shell-bearing turtles survive, reproduce, and mutate, eventually producing a new generation with different traits.
+
+Genetic algorithms simulate this process to solve problems. They treat the objective function as the "fitness evaluator" and each possible solution as an individual in the population. Through crossover and mutation, new solutions are generated, evaluated, and selected repeatedly — eventually converging on an optimized solution.
+
+2) A Distinct Approach
+Unlike the other three schools, the Evolutionary School is not a specific model but a general optimization method. It can be applied to various models (— symbolic systems, Bayesian networks, neural networks) — or problems without clear structures. As shown in Figure 2-42, genetic algorithms can optimize complex antenna designs with no fixed model. The position and angle of each bend can be treated as genetic parameters. Through iterative evolution, the algorithm finds the optimal design.
+
+The primary advantage of the evolutionary school of thought lies in its generality and flexibility, making it particularly well-suited for solving problems that lack a clearly defined model structure. However, this approach also has certain limitations. For example, Genetic Algorithms (GA) are computationally expensive, and their rate of convergence can be slow, especially when applied to large-scale problems. Second, GAs are susceptible to becoming trapped in local optima. Consequently, it is often necessary to hybridize them with other optimization techniques to enhance their overall performance and ensure the discovery of a globally optimal solution.
+
+6. Integration of Schools
+With the advancement of the field, the different schools of thought in artificial intelligence have begun to integrate with one another. This trend is guided by the "No Free Lunch" theorem, which posits that no single algorithm or model is universally superior to others across all possible scenarios. Consequently, in practical applications, selecting the most appropriate method for a given problem is more critical than rigidly adhering to the school of thought to which an algorithm belongs. Indeed, integrating techniques and methods from different paradigms when addressing complex problems often yields superior results.
+
+A quintessential example of this intellectual fusion is the integration of Knowledge Graphs and Neural Networks. Knowledge Graphs are a representative achievement of the symbolic school, valued for their ability to organize and store vast amounts of knowledge and information in a structured, accessible manner. However, performing complex reasoning directly on a knowledge graph can be challenging for purely symbolic systems. To overcome this limitation, researchers have recently applied neural networks to perform multi-step reasoning over knowledge graphs, a combination that has significantly enhanced the intelligent capabilities of these systems.
+
+Similarly, the synergy between the Bayesian and connectionist schools has given rise to Bayesian Neural Networks (BNNs). This model class amalgamates the probabilistic representation of uncertainty, characteristic of Bayesian methods, with the powerful learning capacity of neural networks. As a result, BNNs excel at handling problems involving uncertainty. In medical diagnostics, for instance, a Bayesian Neural Network can not only provide a diagnosis but also quantify the confidence level of its prediction, thereby empowering clinicians to make more informed and reliable decisions.
+
+These developments offer a clear directive: in the study and application of artificial intelligence, one must cultivate a comprehensive understanding of the foundational ideas and representative technologies of each major school of thought. It is essential to flexibly apply a diverse range of methods to solve problems effectively. Concurrently, it is imperative to maintain an awareness of emerging technologies to capably address the field's ever-evolving challenges.
+
+Section Summary
+The four major schools of machine learning reflect different understandings and implementations of intelligence. Each uses different tools and has distinct data and computational needs:
+	The Symbolic School uses symbolic reasoning to discover and apply new rules from data. It emphasizes logic and rule-based reasoning but has limited learning capacity.
+	The Bayesian School uses probability to learn by updating conditional probabilities between events. It excels at uncertainty but requires domain-specific knowledge to build models.
+	The Connectionist School uses neural networks to learn by updating connection weights. It mimics the brain and has strong learning capacity, especially for large-scale data.
+	The Evolutionary School uses trial-and-error, mimicking natural selection to optimize models. It is suited tos unstructured problems but tends to be computationally inefficient.
+
+Each school has contributed significantly to AI and deserves serious study. Understanding their core ideas helps build a well-rounded AI knowledge framework and enables flexible, problem-specific solutions in practice.

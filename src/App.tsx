@@ -4,6 +4,7 @@ import { MainLayout } from './layouts/MainLayout';
 import { CNNLesson } from './pages/CNNLesson';
 import { RNNLesson } from './pages/RNNLesson';
 import { NeuronLesson } from './pages/NeuronLesson';
+import { FourSchoolsDemo } from './demos/fourschools/FourSchoolsDemo';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Route path="neuron" element={<NeuronLesson />} />
             <Route path="cnn" element={<CNNLesson />} />
             <Route path="rnn" element={<RNNLesson />} />
+            <Route path="fourschools" element={<FourSchoolsDemo />} />
           </Route>
         </Routes>
       </LanguageProvider>
