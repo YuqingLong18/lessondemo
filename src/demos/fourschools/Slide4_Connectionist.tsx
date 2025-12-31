@@ -133,6 +133,37 @@ export const Slide4_Connectionist: React.FC = () => {
         output: [150]
     };
 
+    const signalEdges = [
+        ...nodeY.input.flatMap((y1) =>
+            nodeY.hidden.map((y2) => ({
+                x1: layerX[0],
+                y1,
+                x2: layerX[1],
+                y2,
+                delay: 0,
+                startOffset: 0.28,
+            }))
+        ),
+        ...nodeY.hidden.flatMap((y1) =>
+            nodeY.hidden.map((y2) => ({
+                x1: layerX[1],
+                y1,
+                x2: layerX[2],
+                y2,
+                delay: 0.3,
+                startOffset: 0,
+            }))
+        ),
+        ...nodeY.hidden.map((y1) => ({
+            x1: layerX[2],
+            y1,
+            x2: layerX[3],
+            y2: nodeY.output[0],
+            delay: 0.6,
+            startOffset: 0,
+        })),
+    ];
+
     return (
         <div className="flex h-full gap-4 w-full">
             <ConceptStage>
@@ -143,71 +174,112 @@ export const Slide4_Connectionist: React.FC = () => {
                         Epoch: {epoch}
                     </div>
 
-                    <svg width="500" height="300" className="overflow-visible">
-                        <defs>
-                            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                                <feGaussianBlur stdDeviation="2" result="blur" />
-                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                            </filter>
-                        </defs>
+                    <div className="relative w-[500px] h-[300px]">
+                        <style>
+                            {`
+                                @keyframes signal-flow {
+                                    0% { transform: translate(0px, 0px); opacity: 0; }
+                                    15% { opacity: 1; }
+                                    100% { transform: translate(var(--dx), var(--dy)); opacity: 0; }
+                                }
+                                @keyframes node-pulse {
+                                    0% { transform: scale(0.7); opacity: 0.85; }
+                                    100% { transform: scale(1.35); opacity: 0; }
+                                }
+                            `}
+                        </style>
+                        <svg width="500" height="300" className="absolute inset-0 overflow-visible">
+                            <defs>
+                                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feGaussianBlur stdDeviation="2" result="blur" />
+                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                </filter>
+                            </defs>
 
-                        {/* Connections Layer 0 -> 1 */}
-                        {nodeY.input.map((y1, i) =>
-                            nodeY.hidden.map((y2, j) => (
-                                <Connection key={`l0-${i}-${j}`}
-                                    x1={layerX[0]} y1={y1} x2={layerX[1]} y2={y2}
-                                    weight={w1[i][j]} animating={animating} delay={0}
+                            {/* Connections Layer 0 -> 1 */}
+                            {nodeY.input.map((y1, i) =>
+                                nodeY.hidden.map((y2, j) => (
+                                    <Connection key={`l0-${i}-${j}`}
+                                        x1={layerX[0]} y1={y1} x2={layerX[1]} y2={y2}
+                                        weight={w1[i][j]}
+                                    />
+                                ))
+                            )}
+
+                            {/* Connections Layer 1 -> 2 */}
+                            {nodeY.hidden.map((y1, i) =>
+                                nodeY.hidden.map((y2, j) => (
+                                    <Connection key={`l1-${i}-${j}`}
+                                        x1={layerX[1]} y1={y1} x2={layerX[2]} y2={y2}
+                                        weight={w2[i][j]}
+                                    />
+                                ))
+                            )}
+
+                            {/* Connections Layer 2 -> 3 */}
+                            {nodeY.hidden.map((y1, i) =>
+                                nodeY.output.map((y2, j) => (
+                                    <Connection key={`l2-${i}-${j}`}
+                                        x1={layerX[2]} y1={y1} x2={layerX[3]} y2={y2}
+                                        weight={w3[i][0]}
+                                    />
+                                ))
+                            )}
+
+                            {/* Nodes */}
+                            {/* Input */}
+                            {nodeY.input.map((y, i) => (
+                                <g key={`in-${i}`}>
+                                    <circle cx={layerX[0]} cy={y} r="25" fill="#e5e7eb" stroke="#374151" strokeWidth="2" />
+                                    <text x={layerX[0]} y={y + 5} textAnchor="middle" fontSize="10" fontWeight="bold">{i === 0 ? 'Cloud' : 'Humid'}</text>
+                                </g>
+                            ))}
+
+                            {/* Hidden 1 */}
+                            {nodeY.hidden.map((y, i) => (
+                                <circle key={`h1-${i}`} cx={layerX[1]} cy={y} r="18" fill="#f3e8ff" stroke="#9333ea" strokeWidth="2" />
+                            ))}
+
+                            {/* Hidden 2 */}
+                            {nodeY.hidden.map((y, i) => (
+                                <circle key={`h2-${i}`} cx={layerX[2]} cy={y} r="18" fill="#f3e8ff" stroke="#9333ea" strokeWidth="2" />
+                            ))}
+
+                            {/* Output */}
+                            <circle cx={layerX[3]} cy={nodeY.output[0]} r="30"
+                                fill={`rgba(147, 51, 234, ${activations.out})`} stroke="#9333ea" strokeWidth="4"
+                            />
+                            <text x={layerX[3]} y={nodeY.output[0] + 5} textAnchor="middle" fontSize="12" fill={activations.out > 0.5 ? 'white' : 'black'} fontWeight="bold">Rain?</text>
+                            <text x={layerX[3]} y={nodeY.output[0] + 45} textAnchor="middle" fontSize="12" className="font-mono">Out: {activations.out.toFixed(2)}</text>
+                        </svg>
+
+                        <div className="absolute inset-0 pointer-events-none">
+                            {signalEdges.map((edge, index) => (
+                                <SignalDot
+                                    key={`sig-${index}`}
+                                    x1={edge.x1}
+                                    y1={edge.y1}
+                                    x2={edge.x2}
+                                    y2={edge.y2}
+                                    delay={edge.delay}
+                                    startOffset={edge.startOffset}
+                                    active={animating}
                                 />
-                            ))
-                        )}
-
-                        {/* Connections Layer 1 -> 2 */}
-                        {nodeY.hidden.map((y1, i) =>
-                            nodeY.hidden.map((y2, j) => (
-                                <Connection key={`l1-${i}-${j}`}
-                                    x1={layerX[1]} y1={y1} x2={layerX[2]} y2={y2}
-                                    weight={w2[i][j]} animating={animating} delay={0.3}
-                                />
-                            ))
-                        )}
-
-                        {/* Connections Layer 2 -> 3 */}
-                        {nodeY.hidden.map((y1, i) =>
-                            nodeY.output.map((y2, j) => (
-                                <Connection key={`l2-${i}-${j}`}
-                                    x1={layerX[2]} y1={y1} x2={layerX[3]} y2={y2}
-                                    weight={w3[i][0]} animating={animating} delay={0.6}
-                                />
-                            ))
-                        )}
-
-                        {/* Nodes */}
-                        {/* Input */}
-                        {nodeY.input.map((y, i) => (
-                            <g key={`in-${i}`}>
-                                <circle cx={layerX[0]} cy={y} r="25" fill="#e5e7eb" stroke="#374151" strokeWidth="2" />
-                                <text x={layerX[0]} y={y + 5} textAnchor="middle" fontSize="10" fontWeight="bold">{i === 0 ? 'Cloud' : 'Humid'}</text>
-                            </g>
-                        ))}
-
-                        {/* Hidden 1 */}
-                        {nodeY.hidden.map((y, i) => (
-                            <circle key={`h1-${i}`} cx={layerX[1]} cy={y} r="18" fill="#f3e8ff" stroke="#9333ea" strokeWidth="2" />
-                        ))}
-
-                        {/* Hidden 2 */}
-                        {nodeY.hidden.map((y, i) => (
-                            <circle key={`h2-${i}`} cx={layerX[2]} cy={y} r="18" fill="#f3e8ff" stroke="#9333ea" strokeWidth="2" />
-                        ))}
-
-                        {/* Output */}
-                        <circle cx={layerX[3]} cy={nodeY.output[0]} r="30"
-                            fill={`rgba(147, 51, 234, ${activations.out})`} stroke="#9333ea" strokeWidth="4"
-                        />
-                        <text x={layerX[3]} y={nodeY.output[0] + 5} textAnchor="middle" fontSize="12" fill={activations.out > 0.5 ? 'white' : 'black'} fontWeight="bold">Rain?</text>
-                        <text x={layerX[3]} y={nodeY.output[0] + 45} textAnchor="middle" fontSize="12" className="font-mono">Out: {activations.out.toFixed(2)}</text>
-
-                    </svg>
+                            ))}
+                            {nodeY.input.map((y, i) => (
+                                <NodeRing key={`ring-in-${i}`} x={layerX[0]} y={y} radius={25} delay={0} active={animating} />
+                            ))}
+                            {nodeY.hidden.map((y, i) => (
+                                <NodeRing key={`ring-h1-${i}`} x={layerX[1]} y={y} radius={18} delay={0.3} active={animating} />
+                            ))}
+                            {nodeY.hidden.map((y, i) => (
+                                <NodeRing key={`ring-h2-${i}`} x={layerX[2]} y={y} radius={18} delay={0.6} active={animating} />
+                            ))}
+                            {nodeY.output.map((y, i) => (
+                                <NodeRing key={`ring-out-${i}`} x={layerX[3]} y={y} radius={30} delay={0.9} active={animating} />
+                            ))}
+                        </div>
+                    </div>
 
                     {/* Controls */}
                     <div className="flex gap-4 mt-8">
@@ -244,8 +316,8 @@ export const Slide4_Connectionist: React.FC = () => {
 
 // Subcomponent for Connection + Animation
 const Connection: React.FC<{
-    x1: number, y1: number, x2: number, y2: number, weight: number, animating: boolean, delay: number
-}> = ({ x1, y1, x2, y2, weight, animating, delay }) => {
+    x1: number, y1: number, x2: number, y2: number, weight: number
+}> = ({ x1, y1, x2, y2, weight }) => {
     return (
         <>
             {/* Static Line */}
@@ -255,19 +327,68 @@ const Connection: React.FC<{
                 strokeWidth={Math.min(Math.abs(weight) * 3 + 1, 8)}
                 opacity="0.3"
             />
-            {/* Pulse Animation */}
-            {animating && (
-                <circle r="4" fill={weight > 0 ? "#9333ea" : "#ef4444"}>
-                    <animateMotion
-                        dur="0.5s"
-                        begin={`${delay}s`}
-                        fill="freeze"
-                        repeatCount="1"
-                        path={`M${x1},${y1} L${x2},${y2}`}
-                    />
-                    <animate attributeName="opacity" values="1;0" dur="0.5s" begin={`${delay}s`} fill="freeze" />
-                </circle>
-            )}
         </>
+    );
+};
+
+const SignalDot: React.FC<{
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+    delay: number;
+    startOffset: number;
+    active: boolean;
+}> = ({ x1, y1, x2, y2, delay, startOffset, active }) => {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const startX = x1 + dx * startOffset;
+    const startY = y1 + dy * startOffset;
+    const travelX = dx * (1 - startOffset);
+    const travelY = dy * (1 - startOffset);
+    const style = {
+        left: startX - 5,
+        top: startY - 5,
+        width: 10,
+        height: 10,
+        opacity: active ? 1 : 0,
+        animation: active ? `signal-flow 0.7s linear ${delay}s 1` : 'none',
+        boxShadow: '0 0 12px rgba(250, 204, 21, 0.9)',
+        ['--dx' as any]: `${travelX}px`,
+        ['--dy' as any]: `${travelY}px`,
+    } as React.CSSProperties;
+
+    return (
+        <span
+            className="absolute rounded-full bg-yellow-300"
+            style={style}
+        />
+    );
+};
+
+const NodeRing: React.FC<{
+    x: number;
+    y: number;
+    radius: number;
+    delay: number;
+    active: boolean;
+}> = ({ x, y, radius, delay, active }) => {
+    const size = radius * 2 + 12;
+    const style = {
+        left: x - size / 2,
+        top: y - size / 2,
+        width: size,
+        height: size,
+        opacity: active ? 1 : 0,
+        animation: active ? `node-pulse 0.45s ease-out ${delay}s 1` : 'none',
+        border: '2px solid #facc15',
+        boxShadow: '0 0 10px rgba(250, 204, 21, 0.6)',
+    } as React.CSSProperties;
+
+    return (
+        <span
+            className="absolute rounded-full"
+            style={style}
+        />
     );
 };
