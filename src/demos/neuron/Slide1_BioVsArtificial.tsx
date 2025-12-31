@@ -47,36 +47,57 @@ export const Slide1_BioVsArtificial: React.FC = () => {
     return (
         <>
             <ConceptStage>
-                <div className="flex flex-col items-center justify-center gap-12 w-full max-w-4xl">
+                <div className="flex flex-col items-center justify-center gap-12 w-full max-w-5xl select-none">
 
                     {/* Biological Neuron */}
-                    <div className="flex items-center gap-8 w-full justify-center">
+                    <div className="flex items-center gap-4 w-full justify-center">
                         <div className="w-24 text-right font-bold text-gray-500">{t.bio[language]}</div>
 
-                        <div className="relative flex items-center bg-green-50 rounded-full p-4 border border-green-200 w-96 h-32 overflow-hidden shadow-inner">
-                            {/* Dendrites (Inputs) */}
-                            <div className="absolute left-2 flex flex-col gap-2">
-                                <div className="w-8 h-1 bg-green-300 rounded-full rotate-12"></div>
-                                <div className="w-8 h-1 bg-green-300 rounded-full -rotate-12"></div>
-                                <div className="w-8 h-1 bg-green-300 rounded-full"></div>
+                        <div className="relative flex items-center bg-green-50/50 rounded-full px-8 py-4 border border-green-100/50 w-[500px] h-40 overflow-visible shadow-sm ml-16 mr-36">
+
+                            {/* Input Neurons Icon area */}
+                            <div className="absolute -left-16 top-1/2 -translate-y-1/2 flex flex-col gap-4">
+                                <div className="flex flex-col gap-1 items-end opacity-60">
+                                    <Activity size={24} className="text-green-600 rotate-180" />
+                                    <Activity size={24} className="text-green-600 rotate-180" />
+                                    <Activity size={24} className="text-green-600 rotate-180" />
+                                </div>
                             </div>
 
-                            {/* Soma (Body) */}
-                            <div className="absolute left-10 w-20 h-20 bg-green-400 rounded-full flex items-center justify-center shadow-lg z-10">
-                                <Activity className="text-white w-10 h-10" />
+                            {/* Dendrites (Inputs) */}
+                            <div className="absolute left-0 flex flex-col gap-1">
+                                <div className="w-16 h-1 bg-green-300 rounded-full rotate-12 translate-y-2 origin-right"></div>
+                                <div className="w-16 h-1 bg-green-300 rounded-full -rotate-12 -translate-y-2 origin-right"></div>
+                                <div className="w-16 h-1 bg-green-300 rounded-full"></div>
+                            </div>
+
+                            {/* Organic Cell Body (SVG) */}
+                            <div className="absolute left-10 top-1/2 -translate-y-1/2 z-10 w-28 h-28 flex items-center justify-center">
+                                <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-md text-green-400 fill-current">
+                                    <path d="M45.6,18.8c-7.3-2.1-15.6,0.8-21.2,5.5c-6.8,5.7-9.4,14.8-11.3,23.4c-1.8,8.1-4.7,16.5-1.1,24.3c3.7,8.2,13.2,12.5,21.9,13.2c8.9,0.7,18-1.5,25.4-6.8c7.8-5.6,12.4-15.6,12.4-25.2C71.7,39.6,63.1,23.8,45.6,18.8z" />
+                                </svg>
+                                <Activity className="text-white w-10 h-10 absolute animate-pulse" />
                             </div>
 
                             {/* Axon (Path) */}
-                            <div className="absolute left-28 right-4 h-4 bg-green-200 rounded-full overflow-hidden">
+                            <div className="absolute left-32 right-12 h-3 bg-green-200 rounded-full overflow-hidden">
                                 <div
-                                    className={`h-full bg-yellow-400 w-12 transition-transform duration-1000 ease-in-out ${pulseBio ? 'translate-x-60 opacity-100' : '-translate-x-12 opacity-0'}`}
+                                    className={`h-full bg-yellow-400 w-20 blur-sm transition-transform duration-1000 ease-in-out ${pulseBio ? 'translate-x-[400px] opacity-100' : '-translate-x-20 opacity-0'}`}
                                 />
                             </div>
 
                             {/* Terminals */}
-                            <div className="absolute right-2 flex flex-col gap-2">
-                                <div className="w-6 h-1 bg-green-300 rounded-full rotate-45"></div>
-                                <div className="w-6 h-1 bg-green-300 rounded-full -rotate-45"></div>
+                            <div className="absolute right-4 flex flex-col gap-1">
+                                <div className="w-10 h-1 bg-green-300 rounded-full rotate-45 origin-left"></div>
+                                <div className="w-10 h-1 bg-green-300 rounded-full -rotate-45 origin-left"></div>
+                            </div>
+
+                            {/* Right Arrow */}
+                            <div className="absolute -right-32 top-1/2 -translate-y-1/2 flex items-center gap-2 opacity-60">
+                                <div className="h-0.5 w-8 bg-green-400"></div>
+                                <div className="text-xs text-green-600 font-medium w-24 leading-tight">
+                                    Signals keep going to other neurons &rarr;
+                                </div>
                             </div>
                         </div>
 
@@ -86,43 +107,51 @@ export const Slide1_BioVsArtificial: React.FC = () => {
                     <div className="w-full border-t border-dashed border-gray-300" />
 
                     {/* Artificial Neuron */}
-                    <div className="flex items-center gap-8 w-full justify-center">
+                    <div className="flex items-center gap-4 w-full justify-center">
                         <div className="w-24 text-right font-bold text-gray-500">{t.art[language]}</div>
 
-                        <div className="relative flex items-center bg-blue-50 rounded-xl p-4 border border-blue-200 w-96 h-32 overflow-visible shadow-inner">
+                        <div className="relative flex items-center bg-blue-50/50 rounded-xl px-8 py-4 border border-blue-100/50 w-[500px] h-40 overflow-visible shadow-sm ml-20 mr-52">
 
-                            {/* Inputs */}
-                            <div className="absolute -left-8 flex flex-col gap-3">
+                            {/* Input Nodes Icon area */}
+                            <div className="absolute -left-20 flex flex-col gap-3">
                                 {[1, 2, 3].map(i => (
-                                    <div key={i} className="flex items-center gap-2">
-                                        <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-mono">x{i}</div>
-                                        <div className="w-8 h-0.5 bg-gray-300"></div>
+                                    <div key={i} className="flex items-center gap-2 justify-end">
+                                        <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-mono shadow-sm">x{i}</div>
+                                        <div className="w-12 h-0.5 bg-gray-300"></div>
                                     </div>
                                 ))}
                             </div>
 
                             {/* Summation Node */}
-                            <div className={`absolute left-16 w-16 h-16 rounded-full border-4 flex items-center justify-center text-2xl font-bold bg-white transition-all duration-300 ${pulseArt ? 'border-yellow-400 scale-110 shadow-yellow-200 shadow-lg' : 'border-blue-500 shadow-md'}`}>
+                            <div className={`absolute left-16 w-20 h-20 rounded-full border-4 flex items-center justify-center text-3xl font-bold bg-white transition-all duration-300 z-10 ${pulseArt ? 'border-yellow-400 scale-110 shadow-yellow-200 shadow-lg' : 'border-blue-500 shadow-md'}`}>
                                 ∑
                             </div>
 
                             {/* Connection */}
-                            <div className="absolute left-32 right-20 h-1 bg-gray-800">
+                            <div className="absolute left-32 right-24 h-1 bg-gray-800">
                                 <div
-                                    className={`h-2 w-2 rounded-full bg-yellow-400 absolute top-1/2 -translate-y-1/2 transition-all duration-1000 ease-linear ${pulseArt ? 'left-full opacity-100' : 'left-0 opacity-0'}`}
+                                    className={`h-2 w-4 rounded-full bg-yellow-400 absolute top-1/2 -translate-y-1/2 transition-all duration-1000 ease-linear ${pulseArt ? 'left-full opacity-100' : 'left-0 opacity-0'}`}
                                 />
                             </div>
 
                             {/* Activation Node (Optional visual) */}
-                            <div className="absolute right-10 w-14 h-14 rounded-md border-2 border-gray-400 flex items-center justify-center bg-white text-xs">
+                            <div className="absolute right-12 w-16 h-16 rounded-lg border-2 border-gray-400 flex items-center justify-center bg-white text-sm font-mono shadow-sm z-10">
                                 f(x)
                             </div>
 
                             {/* Output */}
                             <div className="absolute -right-8 flex items-center">
-                                <div className="w-8 h-1 bg-gray-800"></div>
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${pulseArt && !pulseBio ? 'bg-yellow-400 scale-125' : 'bg-gray-200'} `}>
+                                <div className="w-12 h-1 bg-gray-800"></div>
+                                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 shadow-sm ${pulseArt && !pulseBio ? 'bg-yellow-400 scale-125' : 'bg-gray-200'} `}>
                                     y
+                                </div>
+                            </div>
+
+                            {/* Right Arrow */}
+                            <div className="absolute -right-48 top-1/2 -translate-y-1/2 flex items-center gap-2 opacity-60">
+                                <div className="h-0.5 w-8 bg-blue-400"></div>
+                                <div className="text-xs text-blue-600 font-medium w-24 leading-tight">
+                                    Output passed to next layer &rarr;
                                 </div>
                             </div>
 

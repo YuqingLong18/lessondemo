@@ -13,14 +13,22 @@ export const Slide2_MPNeuron: React.FC = () => {
     const isFiring = sum >= threshold;
 
     const t = {
-        title: { zh: 'M-P 神经元 (1943)', en: 'The M-P Neuron (1943)' },
-        subConcept: { zh: '简单逻辑门', en: 'Simple Logic Gates' },
+        title: { zh: 'M-P 神经元', en: 'The M-P Neuron' },
         inputs: { zh: '输入信号', en: 'Inputs' },
-        threshold: { zh: '阈值 (Threshold)', en: 'Threshold (T)' },
+        threshold: { zh: '阈值', en: 'Threshold (T)' },
         sum: { zh: '总和:', en: 'Sum:' },
         status: { zh: '状态:', en: 'Status:' },
         active: { zh: '激活 🔥', en: 'Active 🔥' },
         inactive: { zh: '静默 💤', en: 'Inactive 💤' },
+        outputLabel: { zh: '出去玩！', en: 'Play outside!' },
+        inputLabels: {
+            en: ['Finished all homework?', 'Weather is good outside?'],
+            zh: ['作业做完了吗？', '外面天气好吗？']
+        },
+        question: {
+            en: 'What difference does it make to have a threshold of 0, 1, 2 or 3? How does it affect whether I can go out and play?',
+            zh: '阈值为 0、1、2 或 3 有什么区别？它如何影响我能否出去玩？'
+        },
         bullets: {
             en: [
                 'The McCulloch-Pitts (M-P) neuron is the simplest artificial neuron.',
@@ -46,21 +54,21 @@ export const Slide2_MPNeuron: React.FC = () => {
     return (
         <>
             <ConceptStage>
-                <div className="flex flex-col items-center justify-center gap-8 w-full max-w-2xl select-none">
+                <div className="flex flex-col items-center justify-center gap-8 w-full max-w-3xl select-none">
 
                     <div className="flex items-center gap-12">
 
                         {/* Inputs Column */}
-                        <div className="flex flex-col gap-8">
+                        <div className="flex flex-col gap-8 items-end">
                             {inputs.map((val, i) => (
                                 <div key={i} className="flex items-center gap-4">
+                                    <span className="text-gray-600 font-bold text-sm bg-white/50 px-3 py-1 rounded-full shadow-sm">{t.inputLabels[language][i]}</span>
                                     <button
                                         onClick={() => toggleInput(i)}
                                         className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold border-4 transition-all ${val === 1 ? 'bg-green-500 border-green-600 text-white shadow-lg scale-105' : 'bg-gray-100 border-gray-300 text-gray-400'}`}
                                     >
                                         {val}
                                     </button>
-                                    <span className="text-gray-500 font-mono">x{i + 1}</span>
                                     {/* Wire */}
                                     <div className={`h-2 w-16 transition-colors ${val === 1 ? 'bg-green-400' : 'bg-gray-200'}`} />
                                 </div>
@@ -94,7 +102,7 @@ export const Slide2_MPNeuron: React.FC = () => {
                                 <Lightbulb size={40} className={isFiring ? 'fill-current' : ''} />
                             </div>
                             <div className={`font-bold transition-colors ${isFiring ? 'text-yellow-600' : 'text-gray-400'}`}>
-                                {isFiring ? '1' : '0'}
+                                {isFiring ? t.outputLabel[language] : t.inactive[language]}
                             </div>
                         </div>
 
@@ -123,6 +131,11 @@ export const Slide2_MPNeuron: React.FC = () => {
                                 {isFiring ? t.active[language] : t.inactive[language]}
                             </div>
                         </div>
+                    </div>
+
+                    {/* Reflection Question */}
+                    <div className="text-center text-indigo-600 font-medium bg-indigo-50 px-6 py-3 rounded-lg border border-indigo-100 max-w-2xl">
+                        {t.question[language]}
                     </div>
 
                 </div>
