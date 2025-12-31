@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { SlideShell } from './SlideShell';
-import { LocalizedText, useLanguage } from './LanguageContext';
+import { useLanguage, type LocalizedText } from './LanguageContext';
 
 interface SlideData {
     title: LocalizedText;
