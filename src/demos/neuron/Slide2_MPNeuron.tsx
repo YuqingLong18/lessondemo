@@ -21,6 +21,7 @@ export const Slide2_MPNeuron: React.FC = () => {
         active: { zh: '激活 🔥', en: 'Active 🔥' },
         inactive: { zh: '静默 💤', en: 'Inactive 💤' },
         outputLabel: { zh: '出去玩！', en: 'Play outside!' },
+        stayHome: { zh: '待在家里 🏠', en: 'Stay Home 🏠' },
         inputLabels: {
             en: ['Finished all homework?', 'Weather is good outside?'],
             zh: ['作业做完了吗？', '外面天气好吗？']
@@ -102,7 +103,7 @@ export const Slide2_MPNeuron: React.FC = () => {
                                 <Lightbulb size={40} className={isFiring ? 'fill-current' : ''} />
                             </div>
                             <div className={`font-bold transition-colors ${isFiring ? 'text-yellow-600' : 'text-gray-400'}`}>
-                                {isFiring ? t.outputLabel[language] : t.inactive[language]}
+                                {isFiring ? t.outputLabel[language] : t.stayHome[language]}
                             </div>
                         </div>
 

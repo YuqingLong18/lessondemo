@@ -40,6 +40,17 @@ export const Slide3_Perceptron: React.FC = () => {
             en: 'Play Outside!',
             zh: '出去玩！'
         },
+        hintLowerBias: {
+            en: 'Lower bias = Harder to activate',
+            zh: '偏置越低 = 越难激活'
+        },
+        labelBiasThreshold: {
+            en: 'BIAS (THRESHOLD)',
+            zh: '偏置 (阈值)'
+        },
+        sumInputs: { zh: '输入', en: 'Inputs' },
+        sumBias: { zh: '偏置', en: 'Bias' },
+        sumTotal: { zh: '总和', en: 'Sum' },
         guidance: {
             en: 'Try increasing the weights! Notice that when a weight is higher, that specific input matters more for the final decision.',
             zh: '尝试增加权重！注意，当某个权重较高时，该特定输入对最终决定更重要。'
@@ -123,7 +134,7 @@ export const Slide3_Perceptron: React.FC = () => {
 
                             {/* Bias Control (Visualized as a threshold adjustment) */}
                             <div className="absolute left-1/2 bottom-0 transform -translate-x-1/2 translate-y-24 bg-purple-50 p-4 rounded-xl border border-purple-100 shadow-sm flex flex-col gap-2 items-center">
-                                <label className="text-xs font-bold text-purple-700 uppercase tracking-wider">Bias (Threshold)</label>
+                                <label className="text-xs font-bold text-purple-700 uppercase tracking-wider">{t.labelBiasThreshold[language]}</label>
                                 <div className="flex items-center gap-3">
                                     <span className="text-sm font-mono text-purple-600 font-bold">{bias.toFixed(1)}</span>
                                     <input
@@ -137,7 +148,7 @@ export const Slide3_Perceptron: React.FC = () => {
                                     />
                                 </div>
                                 <div className="text-[10px] text-purple-400 text-center max-w-[150px] leading-tight">
-                                    Lower bias = Harder to activate
+                                    {t.hintLowerBias[language]}
                                 </div>
                             </div>
                         </div>
@@ -148,15 +159,15 @@ export const Slide3_Perceptron: React.FC = () => {
 
                             <div className="w-full px-6 space-y-2">
                                 <div className="flex justify-between text-sm text-gray-500 font-mono">
-                                    <span>Inputs</span>
+                                    <span>{t.sumInputs[language]}</span>
                                     <span>{dotProduct.toFixed(1)}</span>
                                 </div>
                                 <div className="flex justify-between text-sm text-purple-500 font-mono border-b border-gray-100 pb-1">
-                                    <span>Bias</span>
+                                    <span>{t.sumBias[language]}</span>
                                     <span>{bias.toFixed(1)}</span>
                                 </div>
                                 <div className={`flex justify-between text-xl font-bold font-mono ${totalSum > 0 ? 'text-green-600' : 'text-red-500'}`}>
-                                    <span>Sum</span>
+                                    <span>{t.sumTotal[language]}</span>
                                     <span>{totalSum.toFixed(1)}</span>
                                 </div>
                             </div>

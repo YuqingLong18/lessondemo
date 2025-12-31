@@ -19,6 +19,8 @@ export const Slide1_BioVsArtificial: React.FC = () => {
         math: { zh: '数学求和', en: 'Math Sum' },
         output: { zh: '输出', en: 'Output' },
         stimulate: { zh: '⚡ 刺激', en: '⚡ Stimulate' },
+        bioSignal: { zh: '信号传递给其他神经元 →', en: 'Signals keep going to other neurons →' },
+        artSignal: { zh: '输出传递给下一层 →', en: 'Output passed to next layer →' },
         bullets: {
             en: [
                 'Biological neurons communicate via electrochemical spikes.',
@@ -96,7 +98,7 @@ export const Slide1_BioVsArtificial: React.FC = () => {
                             <div className="absolute -right-32 top-1/2 -translate-y-1/2 flex items-center gap-2 opacity-60">
                                 <div className="h-0.5 w-8 bg-green-400"></div>
                                 <div className="text-xs text-green-600 font-medium w-24 leading-tight">
-                                    Signals keep going to other neurons &rarr;
+                                    {t.bioSignal[language]}
                                 </div>
                             </div>
                         </div>
@@ -130,7 +132,7 @@ export const Slide1_BioVsArtificial: React.FC = () => {
                             {/* Connection */}
                             <div className="absolute left-32 right-24 h-1 bg-gray-800">
                                 <div
-                                    className={`h-2 w-4 rounded-full bg-yellow-400 absolute top-1/2 -translate-y-1/2 transition-all duration-1000 ease-linear ${pulseArt ? 'left-full opacity-100' : 'left-0 opacity-0'}`}
+                                    className={`h-2 w-4 rounded-full bg-yellow-400 absolute top-1/2 -translate-y-1/2 ${pulseArt ? 'left-full opacity-100 transition-all duration-1000 ease-linear' : 'left-0 opacity-0 transition-none'}`}
                                 />
                             </div>
 
@@ -151,7 +153,7 @@ export const Slide1_BioVsArtificial: React.FC = () => {
                             <div className="absolute -right-48 top-1/2 -translate-y-1/2 flex items-center gap-2 opacity-60">
                                 <div className="h-0.5 w-8 bg-blue-400"></div>
                                 <div className="text-xs text-blue-600 font-medium w-24 leading-tight">
-                                    Output passed to next layer &rarr;
+                                    {t.artSignal[language]}
                                 </div>
                             </div>
 
