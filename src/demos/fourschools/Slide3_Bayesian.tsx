@@ -5,10 +5,40 @@ import { Cloud, Droplets } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
+import { useLanguage } from '../../components/core/LanguageContext';
 
 export const Slide3_Bayesian: React.FC = () => {
     const [cloudiness, setCloudiness] = useState(50);
     const [humidity, setHumidity] = useState(50);
+    const { language } = useLanguage();
+
+    const t = {
+        en: {
+            cloudCover: 'Cloud Cover',
+            humidity: 'Humidity',
+            probLabel: 'P(Rain | Evidence)',
+            model: 'Model: $$P = \\sigma(w_1 \\cdot Cloud + w_2 \\cdot Humid + bias)$$',
+            explain: `
+- **The Bayesian School** views the world as uncertain.
+- Nothing is certainly "True" or "False" (like the Symbolists thought). Everything is a 0% to 100% chance.
+- **Interact**: Move the evidence sliders. See how our **belief** (probability) updates smoothly?
+- We update our beliefs based on new evidence.
+`
+        },
+        zh: {
+            cloudCover: '云量',
+            humidity: '湿度',
+            probLabel: 'P(下雨 | 证据)',
+            model: '模型：$$P = \\sigma(w_1 \\cdot Cloud + w_2 \\cdot Humid + bias)$$',
+            explain: `
+- **贝叶斯学派**认为世界充满不确定性。
+- 没有绝对的“真/假”（不像符号主义）。一切都是 0%–100% 的概率。
+- **互动**：拖动证据滑块，观察**信念**（概率）如何平滑更新。
+- 我们会根据新证据更新信念。
+`
+        },
+    };
+    const text = t[language];
 
     // Bayesian / Probabilistic Model from the text
     // P(rain) = sigmoid(a*cloud + b*humidity + c)
@@ -38,7 +68,7 @@ export const Slide3_Bayesian: React.FC = () => {
                         <div className="flex justify-between mb-12">
                             <div className="flex flex-col items-center">
                                 <Cloud size={48} className="text-gray-500 mb-2" />
-                                <span className="font-bold">Cloud Cover</span>
+                                <span className="font-bold">{text.cloudCover}</span>
                                 <input
                                     type="range" min="0" max="100" value={cloudiness}
                                     onChange={(e) => setCloudiness(Number(e.target.value))}
@@ -49,7 +79,7 @@ export const Slide3_Bayesian: React.FC = () => {
 
                             <div className="flex flex-col items-center">
                                 <Droplets size={48} className="text-blue-500 mb-2" />
-                                <span className="font-bold">Humidity</span>
+                                <span className="font-bold">{text.humidity}</span>
                                 <input
                                     type="range" min="0" max="100" value={humidity}
                                     onChange={(e) => setHumidity(Number(e.target.value))}
@@ -68,7 +98,9 @@ export const Slide3_Bayesian: React.FC = () => {
                         {/* Target Node */}
                         <div className="flex justify-center mt-4">
                             <div className="flex flex-col items-center p-6 bg-white border-4 border-orange-400 rounded-full shadow-lg z-10 w-48">
-                                <span className="text-gray-500 text-sm font-bold uppercase mb-1">P(Rain | Evidence)</span>
+                                <span className={`text-gray-500 text-sm font-bold mb-1 ${language === 'en' ? 'uppercase' : ''}`}>
+                                    {text.probLabel}
+                                </span>
                                 <span className="text-4xl font-bold text-orange-600">{percentRain}%</span>
                             </div>
                         </div>
@@ -83,19 +115,14 @@ export const Slide3_Bayesian: React.FC = () => {
                     </div>
                     <div className="mt-2 text-sm text-gray-500 font-mono">
                         <ReactMarkdown rehypePlugins={[rehypeKatex]}>
-                            {"Model: $$P = \\sigma(w_1 \\cdot Cloud + w_2 \\cdot Humid + bias)$$"}
+                            {text.model}
                         </ReactMarkdown>
                     </div>
 
                 </div>
             </ConceptStage>
             <ExplainPanel>
-                {`
-- **The Bayesian School** views the world as uncertain.
-- Nothing is certainly "True" or "False" (like the Symbolists thought). Everything is a 0% to 100% chance.
-- **Interact**: Move the evidence sliders. See how our **belief** (probability) updates smoothly?
-- We update our beliefs based on new evidence.
-`}
+                {text.explain}
             </ExplainPanel>
         </div>
     );

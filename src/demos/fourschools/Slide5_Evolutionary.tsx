@@ -3,6 +3,7 @@ import { ExplainPanel } from '../../components/core/ExplainPanel';
 import { ConceptStage } from '../../components/core/ConceptStage';
 import { RefreshCw, Play, Users, Trophy, Dna, Sparkles } from 'lucide-react';
 import { ErrorBoundary } from '../../components/core/ErrorBoundary';
+import { useLanguage } from '../../components/core/LanguageContext';
 
 // Simple Genetic Algorithm to fit a curve y = ax + b
 // Target: Fit the points (0.2, 0.3), (0.5, 0.6), (0.8, 0.9) -> y = x + 0.1 approximately
@@ -29,6 +30,63 @@ const Slide5Content: React.FC = () => {
     const [population, setPopulation] = useState<Gene[]>([]);
     const [generation, setGeneration] = useState(0);
     const [mutationRate, setMutationRate] = useState(0.3);
+    const { language } = useLanguage();
+
+    const t = {
+        en: {
+            rejected: 'Rejected',
+            survivors: (count: number) => `Survivors (${count})`,
+            bestFit: 'Best fit',
+            generation: 'Generation',
+            bestFitness: 'Best Fitness',
+            evolve: 'Evolve Next Generation',
+            mutationRate: 'Mutation rate',
+            evolutionLoop: 'Evolution Loop',
+            population: 'Population',
+            populationDesc: (count: number) => `${count} random solutions`,
+            selection: 'Selection',
+            selectionDesc: (count: number) => `Top ${count} survive`,
+            crossover: 'Crossover',
+            crossoverDesc: 'Parents blend a + b',
+            mutation: 'Mutation',
+            mutationDesc: (rate: number) => `${rate}% chance of tweak`,
+            survivorFitness: 'Survivor fitness',
+            resetPopulation: 'Reset population',
+            explain: `
+- **Evolutionary** means _population → selection → variation → new generation_.
+- Gold lines are the **survivors**; the bold green line is the **current best**.
+- Crossover blends parents; mutation adds small random tweaks.
+- **Interact**: Click "Evolve" or adjust mutation to see how diversity changes.
+`
+        },
+        zh: {
+            rejected: '淘汰',
+            survivors: (count: number) => `幸存者（${count}）`,
+            bestFit: '最佳',
+            generation: '代数',
+            bestFitness: '最佳适应度',
+            evolve: '进化下一代',
+            mutationRate: '变异率',
+            evolutionLoop: '进化循环',
+            population: '种群',
+            populationDesc: (count: number) => `${count} 个随机解`,
+            selection: '选择',
+            selectionDesc: (count: number) => `前 ${count} 个存活`,
+            crossover: '交叉',
+            crossoverDesc: '父代参数混合 a + b',
+            mutation: '变异',
+            mutationDesc: (rate: number) => `${rate}% 机会微调`,
+            survivorFitness: '幸存者适应度',
+            resetPopulation: '重置种群',
+            explain: `
+- **进化主义**意味着 _种群 → 选择 → 变异 → 新一代_。
+- 金色线是**幸存者**；粗绿线是**当前最佳**。
+- 交叉会混合父代；变异会加入小的随机扰动。
+- **互动**：点击“进化”或调整变异率，观察多样性变化。
+`
+        },
+    };
+    const text = t[language];
 
     const evaluate = useCallback((pop: Gene[]) => {
         pop.forEach(ind => {
@@ -144,14 +202,14 @@ const Slide5Content: React.FC = () => {
                         </div>
 
                         <div className="flex items-center gap-4 text-xs text-gray-600 mt-3">
-                            <LegendDot colorClass="bg-gray-400" label="Rejected" />
-                            <LegendDot colorClass="bg-amber-400" label={`Survivors (${ELITE_COUNT})`} />
-                            <LegendDot colorClass="bg-green-600" label="Best fit" />
+                            <LegendDot colorClass="bg-gray-400" label={text.rejected} />
+                            <LegendDot colorClass="bg-amber-400" label={text.survivors(ELITE_COUNT)} />
+                            <LegendDot colorClass="bg-green-600" label={text.bestFit} />
                         </div>
 
                         <div className="text-center font-mono mt-3 mb-4">
-                            Generation: {generation} <br />
-                            Best Fitness: {bestGene.fitness.toFixed(2)}
+                            {text.generation}: {generation} <br />
+                            {text.bestFitness}: {bestGene.fitness.toFixed(2)}
                         </div>
 
                         <div className="flex items-end gap-4">
@@ -160,12 +218,12 @@ const Slide5Content: React.FC = () => {
                                 className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 active:scale-95 transition-transform"
                             >
                                 <Play size={20} fill="currentColor" />
-                                Evolve Next Generation
+                                {text.evolve}
                             </button>
 
                             <div className="flex flex-col gap-1">
                                 <label htmlFor="mutation-rate" className="text-xs text-gray-600">
-                                    Mutation rate
+                                    {text.mutationRate}
                                 </label>
                                 <div className="flex items-center gap-2">
                                     <input
@@ -185,7 +243,7 @@ const Slide5Content: React.FC = () => {
                             <button
                                 onClick={reset}
                                 className="p-3 bg-gray-200 rounded-full hover:bg-gray-300"
-                                aria-label="Reset population"
+                                aria-label={text.resetPopulation}
                             >
                                 <RefreshCw size={20} />
                             </button>
@@ -193,36 +251,36 @@ const Slide5Content: React.FC = () => {
                     </div>
 
                     <div className="w-60 flex flex-col gap-3">
-                        <div className="text-[11px] uppercase tracking-widest text-gray-500">Evolution Loop</div>
+                        <div className={`text-[11px] tracking-widest text-gray-500 ${language === 'en' ? 'uppercase' : ''}`}>{text.evolutionLoop}</div>
                         <div className="flex flex-col gap-2">
                             <StepCard
                                 icon={<Users size={16} className="text-gray-600" />}
-                                title="Population"
-                                description={`${POPULATION_SIZE} random solutions`}
+                                title={text.population}
+                                description={text.populationDesc(POPULATION_SIZE)}
                                 tone="bg-gray-50 border-gray-200"
                             />
                             <StepCard
                                 icon={<Trophy size={16} className="text-amber-600" />}
-                                title="Selection"
-                                description={`Top ${ELITE_COUNT} survive`}
+                                title={text.selection}
+                                description={text.selectionDesc(ELITE_COUNT)}
                                 tone="bg-amber-50 border-amber-200"
                             />
                             <StepCard
                                 icon={<Dna size={16} className="text-emerald-600" />}
-                                title="Crossover"
-                                description="Parents blend a + b"
+                                title={text.crossover}
+                                description={text.crossoverDesc}
                                 tone="bg-emerald-50 border-emerald-200"
                             />
                             <StepCard
                                 icon={<Sparkles size={16} className="text-green-600" />}
-                                title="Mutation"
-                                description={`${mutationPercent}% chance of tweak`}
+                                title={text.mutation}
+                                description={text.mutationDesc(mutationPercent)}
                                 tone="bg-green-50 border-green-200"
                             />
                         </div>
 
                         <div className="p-3 border rounded-lg bg-white">
-                            <div className="text-xs font-semibold text-gray-700 mb-2">Survivor fitness</div>
+                            <div className="text-xs font-semibold text-gray-700 mb-2">{text.survivorFitness}</div>
                             <div className="flex flex-col gap-2">
                                 {elite.map((gene, i) => (
                                     <div key={i} className="flex items-center gap-2">
@@ -241,12 +299,7 @@ const Slide5Content: React.FC = () => {
                 </div>
             </ConceptStage>
             <ExplainPanel>
-                {`
-- **Evolutionary** means _population → selection → variation → new generation_.
-- Gold lines are the **survivors**; the bold green line is the **current best**.
-- Crossover blends parents; mutation adds small random tweaks.
-- **Interact**: Click "Evolve" or adjust mutation to see how diversity changes.
-`}
+                {text.explain}
             </ExplainPanel>
         </div>
     );

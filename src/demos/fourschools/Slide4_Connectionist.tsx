@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ExplainPanel } from '../../components/core/ExplainPanel';
 import { ConceptStage } from '../../components/core/ConceptStage';
 import { Play, RotateCcw } from 'lucide-react';
+import { useLanguage } from '../../components/core/LanguageContext';
 
 // Helpers
 const sigmoid = (x: number) => 1 / (1 + Math.exp(-x));
@@ -12,6 +13,44 @@ type LayerWeights = number[][]; // [input_index][output_index]
 type LayerBiases = number[];
 
 export const Slide4_Connectionist: React.FC = () => {
+    const { language } = useLanguage();
+    const t = {
+        en: {
+            loss: 'Loss',
+            epoch: 'Epoch',
+            cloud: 'Cloud',
+            humid: 'Humid',
+            rain: 'Rain?',
+            output: 'Out',
+            train: 'Train One Step',
+            reset: 'Reset',
+            explain: `
+- **Neural Networks** are inspired by the brain's dense connections.
+- We added **2 Hidden Layers** (the "Black Box" magic).
+- **Signal Flow**: When you train, see the signal propagate?
+- Deep networks can learn deeper patterns than simple rules!
+- Click **Train** to minimize the Loss (Error).
+`
+        },
+        zh: {
+            loss: '损失',
+            epoch: '轮次',
+            cloud: '多云',
+            humid: '潮湿',
+            rain: '下雨？',
+            output: '输出',
+            train: '训练一步',
+            reset: '重置',
+            explain: `
+- **神经网络**受大脑密集连接启发。
+- 这里有**2 个隐藏层**（“黑箱”能力）。
+- **信号流**：训练时，观察信号如何传播。
+- 深层网络能学习比简单规则更复杂的模式。
+- 点击**训练**以降低损失（误差）。
+`
+        },
+    };
+    const text = t[language];
     // --- State for 2-3-3-1 Network ---
     // Inputs: 2
     // Hidden 1: 3
@@ -170,8 +209,8 @@ export const Slide4_Connectionist: React.FC = () => {
                 <div className="flex flex-col items-center justify-center w-full h-full relative">
 
                     <div className="absolute top-4 right-4 bg-gray-100 p-2 rounded text-xs font-mono">
-                        Loss: {loss.toFixed(4)} <br />
-                        Epoch: {epoch}
+                        {text.loss}: {loss.toFixed(4)} <br />
+                        {text.epoch}: {epoch}
                     </div>
 
                     <div className="relative w-[500px] h-[300px]">
@@ -231,7 +270,9 @@ export const Slide4_Connectionist: React.FC = () => {
                             {nodeY.input.map((y, i) => (
                                 <g key={`in-${i}`}>
                                     <circle cx={layerX[0]} cy={y} r="25" fill="#e5e7eb" stroke="#374151" strokeWidth="2" />
-                                    <text x={layerX[0]} y={y + 5} textAnchor="middle" fontSize="10" fontWeight="bold">{i === 0 ? 'Cloud' : 'Humid'}</text>
+                                    <text x={layerX[0]} y={y + 5} textAnchor="middle" fontSize="10" fontWeight="bold">
+                                        {i === 0 ? text.cloud : text.humid}
+                                    </text>
                                 </g>
                             ))}
 
@@ -249,8 +290,12 @@ export const Slide4_Connectionist: React.FC = () => {
                             <circle cx={layerX[3]} cy={nodeY.output[0]} r="30"
                                 fill={`rgba(147, 51, 234, ${activations.out})`} stroke="#9333ea" strokeWidth="4"
                             />
-                            <text x={layerX[3]} y={nodeY.output[0] + 5} textAnchor="middle" fontSize="12" fill={activations.out > 0.5 ? 'white' : 'black'} fontWeight="bold">Rain?</text>
-                            <text x={layerX[3]} y={nodeY.output[0] + 45} textAnchor="middle" fontSize="12" className="font-mono">Out: {activations.out.toFixed(2)}</text>
+                            <text x={layerX[3]} y={nodeY.output[0] + 5} textAnchor="middle" fontSize="12" fill={activations.out > 0.5 ? 'white' : 'black'} fontWeight="bold">
+                                {text.rain}
+                            </text>
+                            <text x={layerX[3]} y={nodeY.output[0] + 45} textAnchor="middle" fontSize="12" className="font-mono">
+                                {text.output}: {activations.out.toFixed(2)}
+                            </text>
                         </svg>
 
                         <div className="absolute inset-0 pointer-events-none">
@@ -288,7 +333,7 @@ export const Slide4_Connectionist: React.FC = () => {
                             className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-full shadow-lg hover:bg-purple-700 active:transform active:scale-95 transition-all"
                         >
                             <Play size={20} fill="currentColor" />
-                            Train One Step
+                            {text.train}
                         </button>
 
                         <button
@@ -296,19 +341,13 @@ export const Slide4_Connectionist: React.FC = () => {
                             className="flex items-center gap-2 px-4 py-3 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300"
                         >
                             <RotateCcw size={18} />
-                            Reset
+                            {text.reset}
                         </button>
                     </div>
                 </div>
             </ConceptStage>
             <ExplainPanel>
-                {`
-- **Neural Networks** are inspired by the brain's dense connections.
-- We added **2 Hidden Layers** (the "Black Box" magic).
-- **Signal Flow**: When you train, see the signal propagate?
-- Deep networks can learn deeper patterns than simple rules!
-- Click **Train** to minimize the Loss (Error).
-`}
+                {text.explain}
             </ExplainPanel>
         </div>
     );
