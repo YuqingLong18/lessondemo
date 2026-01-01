@@ -3,8 +3,8 @@ import { ConceptStage } from '../../components/core/ConceptStage';
 import { ExplainPanel } from '../../components/core/ExplainPanel';
 import { useLanguage } from '../../components/core/LanguageContext';
 
-const WIDTH = 420;
-const HEIGHT = 200;
+const WIDTH = 600;
+const HEIGHT = 320;
 const PADDING = 28;
 const COMPLEXITY_MAX = 10;
 

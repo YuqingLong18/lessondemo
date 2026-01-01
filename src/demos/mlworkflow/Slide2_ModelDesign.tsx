@@ -1,142 +1,201 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { ConceptStage } from '../../components/core/ConceptStage';
 import { ExplainPanel } from '../../components/core/ExplainPanel';
 import { useLanguage } from '../../components/core/LanguageContext';
 
-type DataType = 'tabular' | 'image' | 'sequence';
+// Import assets (some might be placeholders initially)
+import tabularImg from '../../assets/input_tabular.png';
+import imageImg from '../../assets/input_image.png';
+import sequenceImg from '../../assets/input_sequence.png'; // To be generated
+import linearStructure from '../../assets/structure_linear.png'; // To be generated
+import cnnStructure from '../../assets/structure_cnn.png'; // To be generated
+import rnnStructure from '../../assets/structure_rnn.png'; // To be generated
 
+type DataType = 'tabular' | 'image' | 'sequence';
 type ModelKey = 'linear' | 'cnn' | 'rnn';
 
-type ModelScore = Record<ModelKey, number>;
+interface InputCard {
+    type: DataType;
+    label: string;
+    image: string;
+    description: string;
+}
 
-const baseScores: Record<DataType, ModelScore> = {
-    tabular: { linear: 0.82, cnn: 0.35, rnn: 0.4 },
-    image: { linear: 0.3, cnn: 0.88, rnn: 0.5 },
-    sequence: { linear: 0.35, cnn: 0.45, rnn: 0.86 },
-};
+interface ModelCard {
+    key: ModelKey;
+    label: string;
+    pill: string;
+    structureImg: string;
+    bestFor: DataType;
+}
 
-const models = [
-    { key: 'linear', label: 'Linear Model', bar: 'bg-slate-500', pill: 'bg-slate-100 text-slate-700' },
-    { key: 'cnn', label: 'CNN', bar: 'bg-blue-500', pill: 'bg-blue-100 text-blue-700' },
-    { key: 'rnn', label: 'RNN', bar: 'bg-purple-500', pill: 'bg-purple-100 text-purple-700' },
-] as const;
+const inputCardsData: InputCard[] = [
+    { type: 'tabular', label: 'Tabular Data', image: tabularImg, description: 'Spreadsheets, CSVs, features' },
+    { type: 'image', label: 'Image Data', image: imageImg, description: 'Photos, visual inputs' },
+    { type: 'sequence', label: 'Sequence Data', image: sequenceImg, description: 'Audio, text, time-series' },
+];
+
+const modelCardsData: ModelCard[] = [
+    { key: 'linear', label: 'Linear Model', pill: 'bg-slate-100 text-slate-700', structureImg: linearStructure, bestFor: 'tabular' },
+    { key: 'cnn', label: 'CNN', pill: 'bg-blue-100 text-blue-700', structureImg: cnnStructure, bestFor: 'image' },
+    { key: 'rnn', label: 'RNN', pill: 'bg-purple-100 text-purple-700', structureImg: rnnStructure, bestFor: 'sequence' },
+];
 
 export const Slide2_ModelDesign: React.FC = () => {
     const { language } = useLanguage();
-    const [dataType, setDataType] = useState<DataType>('tabular');
-    const [dataSize, setDataSize] = useState<'small' | 'large'>('small');
+    const [selectedInput, setSelectedInput] = useState<DataType | null>(null);
+    const [selectedModel, setSelectedModel] = useState<ModelKey | null>(null);
+    const [matchResult, setMatchResult] = useState<'correct' | 'incorrect' | null>(null);
 
-    const scores = useMemo(() => {
-        const boost: ModelScore =
-            dataSize === 'large'
-                ? { linear: 0, cnn: 0.08, rnn: 0.08 }
-                : { linear: 0.08, cnn: 0, rnn: 0 };
-        return (Object.keys(baseScores[dataType]) as ModelKey[]).reduce((acc, key) => {
-            acc[key] = Math.min(1, baseScores[dataType][key] + boost[key]);
-            return acc;
-        }, {} as ModelScore);
-    }, [dataSize, dataType]);
+    const [shuffledInputs, setShuffledInputs] = useState<InputCard[]>([]);
+    const [shuffledModels, setShuffledModels] = useState<ModelCard[]>([]);
 
-    const bestModel = (Object.keys(scores) as ModelKey[]).reduce((best, key) =>
-        scores[key] > scores[best] ? key : best
-    , 'linear');
+    const inputRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+    const modelRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [lineCoords, setLineCoords] = useState<{ x1: number, y1: number, x2: number, y2: number } | null>(null);
+
+    // Shuffle on mount
+    useEffect(() => {
+        setShuffledInputs([...inputCardsData].sort(() => Math.random() - 0.5));
+        setShuffledModels([...modelCardsData].sort(() => Math.random() - 0.5));
+    }, []);
+
+    // Reset match result when selection changes
+    useEffect(() => {
+        if (selectedInput && selectedModel) {
+            const model = modelCardsData.find(m => m.key === selectedModel);
+            if (model?.bestFor === selectedInput) {
+                setMatchResult('correct');
+            } else {
+                setMatchResult('incorrect');
+            }
+        } else {
+            setMatchResult(null);
+        }
+    }, [selectedInput, selectedModel]);
+
+    // Calculate line coordinates
+    useLayoutEffect(() => {
+        if (matchResult === 'correct' && selectedInput && selectedModel && containerRef.current) {
+            const inputEl = inputRefs.current[selectedInput];
+            const modelEl = modelRefs.current[selectedModel];
+
+            if (inputEl && modelEl) {
+                const containerRect = containerRef.current.getBoundingClientRect();
+                const inputRect = inputEl.getBoundingClientRect();
+                const modelRect = modelEl.getBoundingClientRect();
+
+                setLineCoords({
+                    x1: inputRect.left + inputRect.width / 2 - containerRect.left,
+                    y1: inputRect.bottom - containerRect.top,
+                    x2: modelRect.left + modelRect.width / 2 - containerRect.left,
+                    y2: modelRect.top - containerRect.top,
+                });
+            }
+        } else {
+            setLineCoords(null);
+        }
+    }, [matchResult, selectedInput, selectedModel, shuffledInputs, shuffledModels]);
+    // Add dependencies on shuffled arrays so if layout shifts due to shuffle (though only on mount), it recalcs.
+    // Also consider window resize in a real app.
 
     const panel =
         language === 'zh'
-            ? `**Model Design**\n\n- No Free Lunch: no model wins on every task.\n- Match the model to data format, size, and constraints.\n- A good design starts with the task, not the algorithm.`
-            : `**Model Design**\n\n- No Free Lunch: no model wins on every task.\n- Match the model to data format, size, and constraints.\n- A good design starts with the task, not the algorithm.`;
+            ? `**Interactive Match**\n\n- **Select** a data input type from the top row.\n- **Match** it with the most appropriate model architecture below.\n- Observe the model structure to understand why it fits.`
+            : `**Interactive Match**\n\n- **Select** a data input type from the top row.\n- **Match** it with the most appropriate model architecture below.\n- Observe the model structure to understand why it fits.`;
+
+    const getFeedbackMessage = () => {
+        if (!matchResult) return 'Select an input and a model to check the fit.';
+        if (matchResult === 'correct') return 'Perfect Match! This model architecture is optimized for this data structure.';
+        return 'Not quite. Consider the spatial or temporal nature of the data.';
+    };
 
     return (
         <>
             <ConceptStage>
-                <div className="w-full h-full p-8 flex flex-col gap-6">
-                    <div className="flex flex-wrap items-center gap-6">
-                        <div>
-                            <div className="text-xs uppercase text-gray-400">Data format</div>
-                            <div className="flex gap-2 mt-2">
-                                {(['tabular', 'image', 'sequence'] as DataType[]).map((type) => (
-                                    <button
-                                        key={type}
-                                        type="button"
-                                        onClick={() => setDataType(type)}
-                                        aria-pressed={dataType === type}
-                                        className={`px-3 py-2 rounded-full text-xs font-semibold border transition-all ${
-                                            dataType === type
-                                                ? 'border-emerald-400 bg-emerald-50 text-emerald-700'
-                                                : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
-                                        }`}
-                                    >
-                                        {type === 'tabular' ? 'Tabular' : type === 'image' ? 'Image' : 'Sequence'}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div>
-                            <div className="text-xs uppercase text-gray-400">Data size</div>
-                            <div className="flex gap-2 mt-2">
-                                {(['small', 'large'] as const).map((size) => (
-                                    <button
-                                        key={size}
-                                        type="button"
-                                        onClick={() => setDataSize(size)}
-                                        aria-pressed={dataSize === size}
-                                        className={`px-3 py-2 rounded-full text-xs font-semibold border transition-all ${
-                                            dataSize === size
-                                                ? 'border-emerald-400 bg-emerald-50 text-emerald-700'
-                                                : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
-                                        }`}
-                                    >
-                                        {size === 'small' ? 'Small' : 'Large'}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
+                <div ref={containerRef} className="w-full h-full p-6 flex flex-col font-sans relative">
+                    {/* Header / Feedback */}
+                    <div className={`text-center transition-colors duration-300 font-medium h-8 mb-8 ${matchResult === 'correct' ? 'text-emerald-600' : matchResult === 'incorrect' ? 'text-amber-600' : 'text-gray-500'}`}>
+                        {getFeedbackMessage()}
                     </div>
 
-                    <div className="flex-1 flex flex-col justify-center gap-4">
-                        <div className="text-sm text-gray-500">
-                            {language === 'zh'
-                                ? 'Model fit scores update with the data profile.'
-                                : 'Model fit scores update with the data profile.'}
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-4">
-                            {models.map((model) => {
-                                const score = scores[model.key];
-                                const isBest = model.key === bestModel;
-                                return (
-                                    <div
-                                        key={model.key}
-                                        className={`rounded-2xl border p-4 bg-white shadow-sm ${
-                                            isBest ? 'border-emerald-400 ring-2 ring-emerald-100' : 'border-gray-200'
+                    <div className="flex-1 flex flex-col justify-center gap-24 relative z-10"> {/* Increased gap */}
+                        {/* Input Row */}
+                        <div className="flex justify-center gap-12">
+                            {shuffledInputs.map((card) => (
+                                <button
+                                    key={card.type}
+                                    ref={(el) => { inputRefs.current[card.type] = el; }}
+                                    onClick={() => setSelectedInput(card.type)}
+                                    className={`group relative w-40 flex flex-col items-center p-3 rounded-xl border-2 transition-all duration-200 outline-none
+                                        ${selectedInput === card.type
+                                            ? 'border-indigo-500 bg-indigo-50 ring-2 ring-indigo-200 shadow-md transform scale-105'
+                                            : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
                                         }`}
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            <div className="text-sm font-semibold text-gray-800">{model.label}</div>
-                                            <span className={`text-[10px] font-semibold px-2 py-1 rounded-full ${model.pill}`}>
-                                                {model.key.toUpperCase()}
-                                            </span>
-                                        </div>
-                                        <div className="mt-3 h-2 w-full rounded-full bg-gray-100">
-                                            <div
-                                                className={`h-2 rounded-full ${model.bar}`}
-                                                style={{ width: `${Math.round(score * 100)}%` }}
-                                            />
-                                        </div>
-                                        <div className="mt-2 text-xs text-gray-500">
-                                            Fit score: {Math.round(score * 100)}
-                                        </div>
-                                        {isBest && (
-                                            <div className="mt-2 text-xs font-semibold text-emerald-600">
-                                                Best fit for this data
-                                            </div>
-                                        )}
+                                >
+                                    <div className="w-24 h-24 mb-2 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden">
+                                        <img src={card.image} alt={card.label} className="w-full h-full object-contain p-1" />
                                     </div>
-                                );
-                            })}
+                                    <div className="text-sm font-semibold text-gray-700">{card.label}</div>
+                                    <div className="text-[10px] text-gray-400 mt-1">{card.description}</div>
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Model Row */}
+                        <div className="flex justify-center gap-12">
+                            {shuffledModels.map((card) => (
+                                <button
+                                    key={card.key}
+                                    ref={(el) => { modelRefs.current[card.key] = el; }}
+                                    onClick={() => setSelectedModel(card.key)}
+                                    className={`w-40 flex flex-col items-center p-3 rounded-xl border-2 transition-all duration-200 outline-none
+                                         ${selectedModel === card.key
+                                            ? 'border-indigo-500 bg-indigo-50 ring-2 ring-indigo-200 shadow-md transform scale-105'
+                                            : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
+                                        }`}
+                                >
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${card.pill}`}>{card.key.toUpperCase()}</span>
+                                        <span className="text-sm font-semibold text-gray-700">{card.label}</span>
+                                    </div>
+
+                                    {/* Structure Visualization */}
+                                    <div className="w-32 h-20 rounded border border-slate-100 bg-slate-50 overflow-hidden flex items-center justify-center">
+                                        <img src={card.structureImg} alt="Structure" className="w-full h-full object-contain opacity-80" />
+                                    </div>
+                                </button>
+                            ))}
                         </div>
                     </div>
+
+                    {/* SVG Connector Overlay */}
+                    <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
+                        {lineCoords && (
+                            <line
+                                x1={lineCoords.x1}
+                                y1={lineCoords.y1}
+                                x2={lineCoords.x2}
+                                y2={lineCoords.y2}
+                                stroke="#10b981"
+                                strokeWidth="4"
+                                strokeDasharray="10"
+                                className="animate-dash"
+                                style={{ strokeDashoffset: 0 }}
+                            >
+                                <animate attributeName="stroke-dashoffset" from="100" to="0" dur="0.5s" fill="freeze" />
+                            </line>
+                        )}
+                    </svg>
+
+                    {/* Simple CSS animation fallback/hack inline or we assume global css handles it. Using simple opacity transition wrapper */}
+                    <div className={`absolute inset-0 pointer-events-none flex items-center justify-center transition-all duration-500 z-20 ${matchResult === 'correct' ? 'opacity-100 scale-100 delay-300' : 'opacity-0 scale-90'}`}>
+                        <div className="bg-white/95 p-4 rounded-full shadow-xl border-2 border-emerald-100 text-emerald-600 font-bold text-xl backdrop-blur-sm">
+                            ✓ Connected!
+                        </div>
+                    </div>
+
                 </div>
             </ConceptStage>
             <ExplainPanel>{panel}</ExplainPanel>

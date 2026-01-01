@@ -1,95 +1,100 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ConceptStage } from '../../components/core/ConceptStage';
 import { ExplainPanel } from '../../components/core/ExplainPanel';
 import { useLanguage } from '../../components/core/LanguageContext';
 
-const WIDTH = 420;
-const HEIGHT = 200;
-const PADDING = 28;
-
 export const Slide3_LossFunction: React.FC = () => {
     const { language } = useLanguage();
-    const [prediction, setPrediction] = useState(0.35);
-    const target = 1;
-    const loss = Math.pow(prediction - target, 2);
 
-    const curvePoints = useMemo(() => {
-        const points: string[] = [];
-        for (let i = 0; i <= 100; i += 1) {
-            const x = i / 100;
-            const y = Math.pow(x - target, 2);
-            const px = PADDING + x * (WIDTH - PADDING * 2);
-            const py = HEIGHT - PADDING - y * (HEIGHT - PADDING * 2);
-            points.push(`${px},${py}`);
-        }
-        return points.join(' ');
-    }, [target]);
+    // 8 Parameters for the complex loss function
+    const [params, setParams] = useState({
+        w1: 0, w2: 0, w3: 0, w4: 0,
+        w5: 0, w6: 0, w7: 0, w8: 0
+    });
 
-    const pointX = PADDING + prediction * (WIDTH - PADDING * 2);
-    const pointY = HEIGHT - PADDING - loss * (HEIGHT - PADDING * 2);
+    // A highly non-linear, non-convex loss function with 8 parameters
+    const loss = useMemo(() => {
+        const { w1, w2, w3, w4, w5, w6, w7, w8 } = params;
+
+        // Block 1: Rosenbrock-like valley (w1, w2)
+        const term1 = 100 * Math.pow(w2 - w1 * w1, 2) + Math.pow(1 - w1, 2);
+
+        // Block 2: Rastrigin-like oscillation (w3, w4)
+        const term2 = 20 + (w3 * w3 - 10 * Math.cos(2 * Math.PI * w3)) + (w4 * w4 - 10 * Math.cos(2 * Math.PI * w4));
+
+        // Block 3: Styblinski-Tang interactions (w5, w6)
+        const st = (x: number) => Math.pow(x, 4) - 16 * Math.pow(x, 2) + 5 * x;
+        const term3 = 0.5 * (st(w5) + st(w6)) + 40; // Shifted up to be positive
+
+        // Block 4: Simple chaos (w7, w8)
+        const term4 = Math.abs(w7 + w8) + Math.sin(w7 * 3) * Math.cos(w8 * 3) * 5 + 5;
+
+        // Normalize/Scale to be readable but hard to zero out
+        return (term1 + term2 + term3 + term4) / 100 + 0.1532;
+    }, [params]);
+
+    const handleChange = (param: keyof typeof params, value: number) => {
+        setParams(prev => ({ ...prev, [param]: value }));
+    };
 
     const panel =
         language === 'zh'
-            ? `**Model Training: Loss**\n\n- A loss function measures the gap between prediction and target.\n- Training seeks parameters that minimize the loss.\n- Smaller loss means the model fits the data better.`
-            : `**Model Training: Loss**\n\n- A loss function measures the gap between prediction and target.\n- Training seeks parameters that minimize the loss.\n- Smaller loss means the model fits the data better.`;
+            ? `**High-Dimensional Optimization**\n\n- Model training is the mathematical process of finding the optimal parameters.\n- In high dimensions, the loss landscape is complex and non-convex.\n- Gradient descent helps efficiently automate this "hunting" process.`
+            : `**High-Dimensional Optimization**\n\n- Model training is the mathematical process of finding the optimal parameters.\n- In high dimensions, the loss landscape is complex and non-convex.\n- Gradient descent helps efficiently automate this "hunting" process.`;
+
+    // Dynamic color for loss value
+    const getLossColor = (l: number) => {
+        if (l < 0.5) return 'text-emerald-500'; // Hard to reach
+        if (l < 2.0) return 'text-amber-500';
+        return 'text-rose-500';
+    };
 
     return (
         <>
             <ConceptStage>
-                <div className="w-full h-full p-8 flex items-center gap-8">
-                    <div className="flex-1 flex flex-col items-center">
-                        <div className="text-sm text-gray-500 mb-3">
-                            Loss = (Y - T)^2, target T = {target}
+                <div className="w-full h-full p-6 flex flex-col items-center justify-center gap-8 font-sans">
+
+                    {/* Header */}
+                    <div className="text-center">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-2">Blind Parameter Optimization</h2>
+                        <div className="text-gray-500 max-w-lg mx-auto text-sm">
+                            Adjust the 8 parameters to minimize the loss. The relationship is non-linear and non-convex, making manual optimization extremely difficult.
                         </div>
-                        <div className="flex items-center gap-3 text-xs text-gray-500 mb-2">
-                            <span className="inline-flex items-center gap-2">
-                                <span className="w-2 h-2 rounded-full bg-blue-500" />
-                                Loss curve
-                            </span>
-                            <span className="inline-flex items-center gap-2">
-                                <span className="w-2 h-2 rounded-full bg-rose-500" />
-                                Current loss
-                            </span>
-                        </div>
-                        <svg width={WIDTH} height={HEIGHT} className="bg-white">
-                            <line
-                                x1={PADDING}
-                                y1={HEIGHT - PADDING}
-                                x2={WIDTH - PADDING}
-                                y2={HEIGHT - PADDING}
-                                stroke="#d1d5db"
-                            />
-                            <line
-                                x1={PADDING}
-                                y1={PADDING}
-                                x2={PADDING}
-                                y2={HEIGHT - PADDING}
-                                stroke="#d1d5db"
-                            />
-                            <polyline points={curvePoints} fill="none" stroke="#3b82f6" strokeWidth="3" />
-                            <circle cx={pointX} cy={pointY} r="6" fill="#f43f5e" />
-                        </svg>
-                        <div className="text-xs text-gray-400 mt-2">Prediction (Y) on x-axis, loss on y-axis.</div>
                     </div>
 
-                    <div className="w-64 bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
-                        <div className="text-xs uppercase text-blue-500">Prediction</div>
-                        <div className="text-2xl font-semibold text-gray-900 mt-1">{prediction.toFixed(2)}</div>
-                        <input
-                            type="range"
-                            min={0}
-                            max={1}
-                            step={0.01}
-                            value={prediction}
-                            onChange={(event) => setPrediction(Number(event.target.value))}
-                            className="w-full mt-4 accent-blue-600"
-                            aria-label="Prediction value"
-                        />
+                    {/* Main Interface: Sliders + Loss Display */}
+                    <div className="flex gap-8 w-full max-w-5xl items-center">
 
-                        <div className="mt-6 text-xs uppercase text-rose-500">Loss value</div>
-                        <div className="text-2xl font-semibold text-rose-600 mt-1">{loss.toFixed(3)}</div>
-                        <div className="text-xs text-gray-500 mt-2">
-                            Lower loss means closer to the target.
+                        {/* Sliders Area - 2x4 Grid */}
+                        <div className="flex-1 grid grid-cols-2 lg:grid-cols-4 gap-4">
+                            {(Object.keys(params) as Array<keyof typeof params>).map((key) => (
+                                <div key={key} className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm flex flex-col gap-2">
+                                    <div className="flex justify-between items-center">
+                                        <label className="text-xs font-bold text-gray-500 uppercase">{key}</label>
+                                        <span className="text-[10px] text-slate-400 font-mono">{params[key].toFixed(2)}</span>
+                                    </div>
+                                    <input
+                                        type="range"
+                                        min="-3"
+                                        max="3"
+                                        step="0.01"
+                                        value={params[key]}
+                                        onChange={(e) => handleChange(key, parseFloat(e.target.value))}
+                                        className="w-full accent-indigo-600 h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Loss Monitor */}
+                        <div className="w-56 shrink-0 flex flex-col items-center justify-center p-6 bg-slate-900 rounded-2xl shadow-xl border border-slate-700">
+                            <div className="text-xs uppercase text-slate-400 font-bold tracking-widest mb-4">Current Loss</div>
+                            <div className={`text-4xl font-mono font-bold transition-all duration-200 ${getLossColor(loss)}`}>
+                                {loss.toFixed(4)}
+                            </div>
+                            <div className="mt-4 text-[10px] text-slate-600 text-center px-2">
+                                Minimize this value manually to understand the difficulty of training.
+                            </div>
                         </div>
                     </div>
                 </div>
