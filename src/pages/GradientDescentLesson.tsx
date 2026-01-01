@@ -7,7 +7,7 @@ import { useLanguage } from '../components/core/LanguageContext';
 
 export const GradientDescentLesson: React.FC = () => {
     const [currentModule, setCurrentModule] = useState(1);
-    const { language } = useLanguage();
+    const { language, setLanguage } = useLanguage();
 
     const modules = [
         { id: 1, title: language === 'zh' ? '热与冷 (梯度)' : 'Hot or Cold (Gradient)', component: <Module1_HotOrCold /> },
@@ -72,17 +72,48 @@ export const GradientDescentLesson: React.FC = () => {
                     {language === 'zh' ? '上一章' : 'Previous'}
                 </button>
 
-                <button
-                    onClick={handleNext}
-                    disabled={currentModule === modules.length}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${currentModule === modules.length
-                            ? 'opacity-0 cursor-default'
-                            : 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg'
-                        }`}
-                >
-                    {language === 'zh' ? '下一章' : 'Next'}
-                    <ChevronRight size={20} />
-                </button>
+                <div className="flex items-center gap-4">
+                    <div
+                        role="group"
+                        aria-label="Language toggle"
+                        className="flex rounded-full border border-gray-300 bg-white p-1 shadow-sm"
+                    >
+                        <button
+                            type="button"
+                            onClick={() => setLanguage('zh')}
+                            aria-pressed={language === 'zh'}
+                            className={`px-3 py-1 text-sm font-semibold rounded-full transition ${language === 'zh'
+                                    ? 'bg-blue-600 text-white shadow'
+                                    : 'text-gray-500 hover:text-gray-700'
+                                }`}
+                        >
+                            中文
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setLanguage('en')}
+                            aria-pressed={language === 'en'}
+                            className={`px-3 py-1 text-sm font-semibold rounded-full transition ${language === 'en'
+                                    ? 'bg-blue-600 text-white shadow'
+                                    : 'text-gray-500 hover:text-gray-700'
+                                }`}
+                        >
+                            English
+                        </button>
+                    </div>
+
+                    <button
+                        onClick={handleNext}
+                        disabled={currentModule === modules.length}
+                        className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${currentModule === modules.length
+                                ? 'opacity-0 cursor-default'
+                                : 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg'
+                            }`}
+                    >
+                        {language === 'zh' ? '下一章' : 'Next'}
+                        <ChevronRight size={20} />
+                    </button>
+                </div>
             </div>
         </div>
     );

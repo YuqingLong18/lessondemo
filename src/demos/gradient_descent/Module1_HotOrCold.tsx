@@ -1,11 +1,47 @@
 import React, { useState } from 'react';
 import { Bot, Mountain, AlertCircle, CheckCircle2, CloudFog, ArrowDownRight, RefreshCw, ChevronRight } from 'lucide-react';
-import { useLanguage } from '../../components/core/LanguageContext';
+import { useLanguage, type LocalizedText } from '../../components/core/LanguageContext';
+
+type FeedbackKey = 'uphill' | 'cry' | 'toe';
+
+const feedbackMessages: Record<FeedbackKey, LocalizedText> = {
+    uphill: {
+        zh: 'Widget向山上跑去，掉进了一个更深的错误裂缝中。坏主意。再试一次。',
+        en: 'Widget ran uphill and fell into a deeper crevice of wrongness. Bad idea. Try again.',
+    },
+    cry: {
+        zh: '错误之山不怜悯弱者。再试一次。',
+        en: 'The Mountain of Mistakes does not pity the weak. Try again.',
+    },
+    toe: {
+        zh: '聪明！你看不到整座山，但你知道此时此刻“下坡”的感觉。这种倾斜的感觉就是**梯度**。',
+        en: 'Smart! You can’t see the whole mountain, but you know what "downhill" feels like right where you are. This feeling of steepness is called the **GRADIENT**.',
+    },
+};
+
+const machineLabels: Record<'title' | 'knobA' | 'knobB' | 'output', LocalizedText> = {
+    title: {
+        zh: '猫识别器 3000',
+        en: 'CAT-IDENTIFIER 3000',
+    },
+    knobA: {
+        zh: '旋钮 A',
+        en: 'KNOB A',
+    },
+    knobB: {
+        zh: '旋钮 B',
+        en: 'KNOB B',
+    },
+    output: {
+        zh: '输出: 烤面包机',
+        en: 'OUTPUT: TOASTER OVEN',
+    },
+};
 
 export const Module1_HotOrCold: React.FC = () => {
     const { language } = useLanguage();
     const [step, setStep] = useState(0); // 0-2: Intro Panels, 3: Game, 4: Success
-    const [gameFeedback, setGameFeedback] = useState<{ type: 'error' | 'success' | null, message: string }>({ type: null, message: '' });
+    const [gameFeedback, setGameFeedback] = useState<{ type: 'error' | 'success' | null, key: FeedbackKey | null }>({ type: null, key: null });
 
     const nextStep = () => setStep(prev => prev + 1);
 
@@ -13,23 +49,25 @@ export const Module1_HotOrCold: React.FC = () => {
         if (choice === 'A') {
             setGameFeedback({
                 type: 'error',
-                message: language === 'zh' ? 'Widget向山上跑去，掉进了一个更深的错误裂缝中。坏主意。再试一次。' : 'Widget ran uphill and fell into a deeper crevice of wrongness. Bad idea. Try again.'
+                key: 'uphill',
             });
         } else if (choice === 'B') {
             setGameFeedback({
                 type: 'error',
-                message: language === 'zh' ? '错误之山不怜悯弱者。再试一次。' : 'The Mountain of Mistakes does not pity the weak. Try again.'
+                key: 'cry',
             });
         } else {
             setGameFeedback({
                 type: 'success',
-                message: language === 'zh' ? '聪明！你看不到整座山，但你知道此时此刻“下坡”的感觉。这种倾斜的感觉就是**梯度**。' : 'Smart! You can’t see the whole mountain, but you know what "downhill" feels like right where you are. This feeling of steepness is called the **GRADIENT**.'
+                key: 'toe',
             });
             setTimeout(() => {
                 setStep(4);
             }, 2500);
         }
     };
+
+    const feedbackText = gameFeedback.key ? feedbackMessages[gameFeedback.key][language] : '';
 
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-6">
@@ -52,13 +90,13 @@ export const Module1_HotOrCold: React.FC = () => {
                         <div className="flex items-end gap-4">
                             <Bot size={120} className="text-blue-600" />
                             <div className="bg-gray-800 text-green-400 p-4 rounded-xl border-4 border-gray-600 shadow-xl w-48 font-mono text-sm">
-                                <div className="border-b border-gray-600 mb-2 pb-1 text-xs text-gray-400">CAT-IDENTIFIER 3000</div>
+                                <div className="border-b border-gray-600 mb-2 pb-1 text-xs text-gray-400">{machineLabels.title[language]}</div>
                                 <div className="flex justify-between mb-2">
-                                    <span>KNOB A</span>
+                                    <span>{machineLabels.knobA[language]}</span>
                                     <span className="text-white">|||</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span>KNOB B</span>
+                                    <span>{machineLabels.knobB[language]}</span>
                                     <span className="text-white">||||||</span>
                                 </div>
                             </div>
@@ -84,7 +122,7 @@ export const Module1_HotOrCold: React.FC = () => {
                         <div className="flex flex-col items-center">
                             <Bot size={120} className="text-blue-600 animate-pulse" />
                             <div className="mt-4 bg-black text-red-500 px-6 py-3 rounded-lg font-mono text-xl border-2 border-red-400 shadow-lg animate-bounce">
-                                OUTPUT: TOASTER OVEN
+                                {machineLabels.output[language]}
                             </div>
                         </div>
                     </div>
@@ -163,13 +201,13 @@ export const Module1_HotOrCold: React.FC = () => {
                         {gameFeedback.type === 'error' && (
                             <div className="mb-6 p-4 bg-red-100 text-red-800 rounded-xl flex items-start gap-3 animate-in slide-in-from-top-2">
                                 <AlertCircle className="shrink-0 mt-0.5" />
-                                <div>{gameFeedback.message}</div>
+                                <div>{feedbackText}</div>
                             </div>
                         )}
                         {gameFeedback.type === 'success' && (
                             <div className="mb-6 p-4 bg-green-100 text-green-800 rounded-xl flex items-start gap-3 animate-in slide-in-from-top-2">
                                 <CheckCircle2 className="shrink-0 mt-0.5" />
-                                <div>{gameFeedback.message}</div>
+                                <div>{feedbackText}</div>
                             </div>
                         )}
 

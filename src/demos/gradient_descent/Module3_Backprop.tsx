@@ -120,7 +120,7 @@ export const Module3_Backprop: React.FC = () => {
                             <div className="flex flex-col items-center">
                                 <Bot size={100} className="text-blue-600" />
                                 <div className="mt-4 bg-gray-800 text-green-400 px-4 py-2 rounded-lg font-mono text-sm border-2 border-gray-600">
-                                    PROCESSING...
+                                    {language === 'zh' ? '处理中...' : 'PROCESSING...'}
                                 </div>
                             </div>
                         </div>
@@ -142,7 +142,7 @@ export const Module3_Backprop: React.FC = () => {
                         <div className="flex flex-col items-center z-10">
                             <Bot size={100} className="text-blue-600 animate-pulse" />
                             <div className="mt-4 bg-black text-red-500 px-6 py-3 rounded-lg font-mono text-xl border-2 border-red-400 shadow-lg animate-bounce">
-                                OUTPUT: A SQUIRREL
+                                {language === 'zh' ? '输出: 松鼠' : 'OUTPUT: A SQUIRREL'}
                             </div>
                         </div>
                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border-4 border-red-600 text-red-600 font-black text-6xl px-8 py-4 rounded-xl rotate-12 opacity-80 mix-blend-multiply">
@@ -171,10 +171,22 @@ export const Module3_Backprop: React.FC = () => {
                         <div className="text-white/50 font-mono text-sm mb-4 flex justify-between items-center">
                             <span>{language === 'zh' ? '神经网络内部视图' : 'NEURAL NETWORK: INTERNAL VIEW'}</span>
                             <div className="flex gap-4 text-xs">
-                                <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-slate-200"></div> Input</div>
-                                <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-yellow-100"></div> Hidden 1</div>
-                                <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-orange-100"></div> Hidden 2</div>
-                                <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-red-100"></div> Output</div>
+                                <div className="flex items-center gap-1">
+                                    <div className="w-3 h-3 rounded-full bg-slate-200"></div>
+                                    <span>{language === 'zh' ? '输入' : 'Input'}</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <div className="w-3 h-3 rounded-full bg-yellow-100"></div>
+                                    <span>{language === 'zh' ? '隐藏层 1' : 'Hidden 1'}</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <div className="w-3 h-3 rounded-full bg-orange-100"></div>
+                                    <span>{language === 'zh' ? '隐藏层 2' : 'Hidden 2'}</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <div className="w-3 h-3 rounded-full bg-red-100"></div>
+                                    <span>{language === 'zh' ? '输出' : 'Output'}</span>
+                                </div>
                             </div>
                         </div>
 
@@ -384,6 +396,7 @@ export const Module3_Backprop: React.FC = () => {
 const FinalShowcase: React.FC<{ onReset: () => void }> = ({ onReset }) => {
     const { language } = useLanguage();
     const [scene, setScene] = useState(0); // 0: Dog, 1: Cat, 2: You
+    const [bubbleFlash, setBubbleFlash] = useState(false);
 
     useEffect(() => {
         const timer1 = setTimeout(() => setScene(1), 3000);
@@ -394,6 +407,12 @@ const FinalShowcase: React.FC<{ onReset: () => void }> = ({ onReset }) => {
             clearTimeout(timer2);
         };
     }, []);
+
+    useEffect(() => {
+        setBubbleFlash(true);
+        const timer = setTimeout(() => setBubbleFlash(false), 500);
+        return () => clearTimeout(timer);
+    }, [scene]);
 
     const getLeftContent = () => {
         if (scene === 0) return <span className="text-6xl animate-bounce">🐶</span>;
@@ -414,7 +433,7 @@ const FinalShowcase: React.FC<{ onReset: () => void }> = ({ onReset }) => {
 
     return (
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 h-[400px] flex flex-col">
-            <div className="flex-1 flex items-center justify-center gap-12 relative p-8">
+            <div className="flex-1 flex items-center justify-center gap-12 p-8">
                 {/* Left Side (Input) */}
                 <div key={scene} className="w-48 h-48 bg-slate-50 rounded-2xl border-2 border-slate-200 flex flex-col items-center justify-center animate-in slide-in-from-left-8 fade-in duration-500">
                     {getLeftContent()}
@@ -429,12 +448,15 @@ const FinalShowcase: React.FC<{ onReset: () => void }> = ({ onReset }) => {
                 <div className="flex flex-col items-center z-10">
                     <Bot size={80} className="text-blue-600 mb-4" />
                     <div className="bg-slate-100 text-slate-500 px-3 py-1 rounded-full text-xs font-mono">
-                        WIDGET v2.0
+                        {language === 'zh' ? 'WIDGET 2.0版' : 'WIDGET v2.0'}
                     </div>
                 </div>
 
                 {/* Right Side (Output) */}
-                <div key={`out-${scene}`} className="absolute top-8 right-12 z-20 animate-in zoom-in fade-in slide-in-from-bottom-4 duration-300 delay-300">
+                <div
+                    key={`out-${scene}`}
+                    className={`relative z-20 transition-all duration-300 ${bubbleFlash ? 'scale-105 ring-4 ring-blue-200/70 shadow-[0_0_0_6px_rgba(59,130,246,0.12)]' : 'scale-100'}`}
+                >
                     <div className="bg-blue-600 text-white text-xl font-bold px-6 py-4 rounded-t-2xl rounded-bl-2xl rounded-br-sm shadow-xl relative">
                         {getRightContent()}
                         <div className="absolute -bottom-2 right-0 w-4 h-4 bg-blue-600 rotate-45 transform translate-y-2"></div>

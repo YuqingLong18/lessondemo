@@ -1,6 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { RefreshCcw, Play, CheckCircle2, AlertTriangle, Info } from 'lucide-react';
-import { useLanguage } from '../../components/core/LanguageContext';
+import { useLanguage, type LocalizedText } from '../../components/core/LanguageContext';
+
+type MessageKey = 'idle' | 'success' | 'tooSlow' | 'tooFast';
+
+const messageCopy: Record<MessageKey, LocalizedText> = {
+    idle: {
+        zh: '调整滑块以设置学习率，然后点击“开始”！',
+        en: 'Adjust the slider to set the Learning Rate, then click GO!',
+    },
+    success: {
+        zh: '完美！这就是**学习率**。',
+        en: 'Perfect! This is the **Learning Rate**.',
+    },
+    tooSlow: {
+        zh: '太慢了！按这个速度，Widget在学会什么是猫之前就已经过时了。',
+        en: 'Too slow! At this rate, Widget will be obsolete before he learns what a cat is.',
+    },
+    tooFast: {
+        zh: '哎呀！你冲过头了。如果学习率太高，你就会永远来回跳跃。',
+        en: 'Oops! You overshot. If your Learning Rate is too high, you\'ll just bounce back and forth forever.',
+    },
+};
 
 export const Module2_LearningRate: React.FC = () => {
     const { language } = useLanguage();
@@ -9,7 +30,7 @@ export const Module2_LearningRate: React.FC = () => {
     const [widgetPosition, setWidgetPosition] = useState(0); // -100 (left top) to 0 (bottom) to 100 (right top)
     const [history, setHistory] = useState<number[]>([]);
     const [status, setStatus] = useState<'idle' | 'running' | 'success' | 'failed'>('idle');
-    const [message, setMessage] = useState('');
+    const [messageKey, setMessageKey] = useState<MessageKey>('idle');
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     // Initial position high on the left
@@ -23,7 +44,7 @@ export const Module2_LearningRate: React.FC = () => {
         setWidgetPosition(START_POS);
         setHistory([START_POS]);
         setStatus('idle');
-        setMessage(language === 'zh' ? '调整滑块以设置学习率，然后点击“开始”！' : 'Adjust the slider to set the Learning Rate, then click GO!');
+        setMessageKey('idle');
     };
 
     const runSimulation = async () => {
@@ -81,19 +102,19 @@ export const Module2_LearningRate: React.FC = () => {
             // Check end conditions
             if (Math.abs(currentPos) < 5) {
                 setStatus('success');
-                setMessage(language === 'zh' ? '完美！这就是**学习率**。' : 'Perfect! This is the **Learning Rate**.');
+                setMessageKey('success');
                 return;
             }
 
             if (learningRate <= 3 && steps === 5) {
                 setStatus('failed');
-                setMessage(language === 'zh' ? '太慢了！按这个速度，Widget在学会什么是猫之前就已经过时了。' : 'Too slow! At this rate, Widget will be obsolete before he learns what a cat is.');
+                setMessageKey('tooSlow');
                 return;
             }
 
             if (learningRate >= 7 && steps === 4) {
                 setStatus('failed');
-                setMessage(language === 'zh' ? '哎呀！你冲过头了。如果学习率太高，你就会永远来回跳跃。' : 'Oops! You overshot. If your Learning Rate is too high, you\'ll just bounce back and forth forever.');
+                setMessageKey('tooFast');
                 return;
             }
 
@@ -182,6 +203,7 @@ export const Module2_LearningRate: React.FC = () => {
 
     }, [widgetPosition, history, status]);
 
+    const message = messageCopy[messageKey][language];
 
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-6">
