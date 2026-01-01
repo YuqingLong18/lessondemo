@@ -4,12 +4,12 @@ import { ExplainPanel } from '../../components/core/ExplainPanel';
 import { useLanguage } from '../../components/core/LanguageContext';
 
 // Import assets (some might be placeholders initially)
-import tabularImg from '../../assets/input_tabular.png';
+import tabularImg from '../../assets/tabular_data.svg';
 import imageImg from '../../assets/input_image.png';
 import sequenceImg from '../../assets/input_sequence.png'; // To be generated
-import linearStructure from '../../assets/structure_linear.png'; // To be generated
-import cnnStructure from '../../assets/structure_cnn.png'; // To be generated
-import rnnStructure from '../../assets/structure_rnn.png'; // To be generated
+import linearStructure from '../../assets/linear_model.png';
+import cnnStructure from '../../assets/cnn_model.png';
+import rnnStructure from '../../assets/rnn_model.webp';
 
 type DataType = 'tabular' | 'image' | 'sequence';
 type ModelKey = 'linear' | 'cnn' | 'rnn';
@@ -37,8 +37,8 @@ const inputCardsData: InputCard[] = [
 
 const modelCardsData: ModelCard[] = [
     { key: 'linear', label: 'Linear Model', pill: 'bg-slate-100 text-slate-700', structureImg: linearStructure, bestFor: 'tabular' },
-    { key: 'cnn', label: 'CNN', pill: 'bg-blue-100 text-blue-700', structureImg: cnnStructure, bestFor: 'image' },
-    { key: 'rnn', label: 'RNN', pill: 'bg-purple-100 text-purple-700', structureImg: rnnStructure, bestFor: 'sequence' },
+    { key: 'cnn', label: 'Convolutional Neural Network', pill: 'bg-blue-100 text-blue-700', structureImg: cnnStructure, bestFor: 'image' },
+    { key: 'rnn', label: 'Recurrent Neural Network', pill: 'bg-purple-100 text-purple-700', structureImg: rnnStructure, bestFor: 'sequence' },
 ];
 
 export const Slide2_ModelDesign: React.FC = () => {
@@ -128,17 +128,17 @@ export const Slide2_ModelDesign: React.FC = () => {
                                     key={card.type}
                                     ref={(el) => { inputRefs.current[card.type] = el; }}
                                     onClick={() => setSelectedInput(card.type)}
-                                    className={`group relative w-40 flex flex-col items-center p-3 rounded-xl border-2 transition-all duration-200 outline-none
+                                    className={`group relative w-56 flex flex-col items-center p-4 rounded-xl border-2 transition-all duration-200 outline-none
                                         ${selectedInput === card.type
                                             ? 'border-indigo-500 bg-indigo-50 ring-2 ring-indigo-200 shadow-md transform scale-105'
                                             : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
                                         }`}
                                 >
-                                    <div className="w-24 h-24 mb-2 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden">
-                                        <img src={card.image} alt={card.label} className="w-full h-full object-contain p-1" />
+                                    <div className="w-32 h-32 mb-3 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden">
+                                        <img src={card.image} alt={card.label} className="w-full h-full object-contain p-2" />
                                     </div>
-                                    <div className="text-sm font-semibold text-gray-700">{card.label}</div>
-                                    <div className="text-[10px] text-gray-400 mt-1">{card.description}</div>
+                                    <div className="text-base font-semibold text-gray-700">{card.label}</div>
+                                    <div className="text-xs text-center text-gray-400 mt-1 leading-tight">{card.description}</div>
                                 </button>
                             ))}
                         </div>
@@ -150,21 +150,16 @@ export const Slide2_ModelDesign: React.FC = () => {
                                     key={card.key}
                                     ref={(el) => { modelRefs.current[card.key] = el; }}
                                     onClick={() => setSelectedModel(card.key)}
-                                    className={`w-40 flex flex-col items-center p-3 rounded-xl border-2 transition-all duration-200 outline-none
+                                    className={`group relative w-56 flex flex-col items-center p-4 rounded-xl border-2 transition-all duration-200 outline-none
                                          ${selectedModel === card.key
-                                            ? 'border-indigo-500 bg-indigo-50 ring-2 ring-indigo-200 shadow-md transform scale-105'
+                                            ? 'border-purple-500 bg-purple-50 ring-2 ring-purple-200 shadow-md transform scale-105'
                                             : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
                                         }`}
                                 >
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${card.pill}`}>{card.key.toUpperCase()}</span>
-                                        <span className="text-sm font-semibold text-gray-700">{card.label}</span>
+                                    <div className="w-32 h-32 mb-3 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden">
+                                        <img src={card.structureImg} alt={card.label} className="w-full h-full object-contain p-2" />
                                     </div>
-
-                                    {/* Structure Visualization */}
-                                    <div className="w-32 h-20 rounded border border-slate-100 bg-slate-50 overflow-hidden flex items-center justify-center">
-                                        <img src={card.structureImg} alt="Structure" className="w-full h-full object-contain opacity-80" />
-                                    </div>
+                                    <div className="text-sm font-bold text-center text-gray-700 leading-tight">{card.label}</div>
                                 </button>
                             ))}
                         </div>
