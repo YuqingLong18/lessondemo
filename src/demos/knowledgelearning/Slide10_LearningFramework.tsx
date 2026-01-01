@@ -41,12 +41,15 @@ export const Slide10_LearningFramework: React.FC = () => {
     const [slope, setSlope] = useState(0.7);
     const [intercept, setIntercept] = useState(2.5);
     const [selected, setSelected] = useState('objective');
+    const canAdjust = selected === 'algorithm';
 
     const t = {
         en: {
             slope: 'Slope',
             intercept: 'Intercept',
             accuracy: 'Accuracy',
+            adjustHint: 'Adjust the line to reduce errors.',
+            lockedHint: 'Switch to Algorithm to adjust the line.',
             explain: `
 - Learning uses five elements: objective, model, algorithm, data, knowledge.
 - The model improves by minimizing errors on data.
@@ -57,6 +60,8 @@ export const Slide10_LearningFramework: React.FC = () => {
             slope: '斜率',
             intercept: '截距',
             accuracy: '准确率',
+            adjustHint: '调整直线来减少错误。',
+            lockedHint: '切换到“算法”后才能调整直线。',
             explain: `
 - 学习框架包含五个要素：目标、模型、算法、数据、知识。
 - 模型通过减少错误来改进。
@@ -124,7 +129,11 @@ export const Slide10_LearningFramework: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-6">
+                    <div className="text-sm text-gray-600">
+                        {canAdjust ? text.adjustHint : text.lockedHint}
+                    </div>
+
+                    <div className={`flex items-center gap-6 ${canAdjust ? '' : 'opacity-60'}`}>
                         <div className="flex flex-col">
                             <label className="text-xs text-gray-600" htmlFor="slope-slider">
                                 {text.slope}
@@ -138,6 +147,7 @@ export const Slide10_LearningFramework: React.FC = () => {
                                 value={slope}
                                 onChange={(e) => setSlope(Number(e.target.value))}
                                 className="w-36"
+                                disabled={!canAdjust}
                             />
                         </div>
                         <div className="flex flex-col">
@@ -153,6 +163,7 @@ export const Slide10_LearningFramework: React.FC = () => {
                                 value={intercept}
                                 onChange={(e) => setIntercept(Number(e.target.value))}
                                 className="w-36"
+                                disabled={!canAdjust}
                             />
                         </div>
                     </div>
