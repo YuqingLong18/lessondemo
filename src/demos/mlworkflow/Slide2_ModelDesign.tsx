@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { ConceptStage } from '../../components/core/ConceptStage';
 import { ExplainPanel } from '../../components/core/ExplainPanel';
-import { useLanguage } from '../../components/core/LanguageContext';
+import { useLanguage, type LocalizedText } from '../../components/core/LanguageContext';
 
 // Import assets (some might be placeholders initially)
 import tabularImg from '../../assets/tabular_data.svg';
@@ -16,29 +16,62 @@ type ModelKey = 'linear' | 'cnn' | 'rnn';
 
 interface InputCard {
     type: DataType;
-    label: string;
+    label: LocalizedText;
     image: string;
-    description: string;
+    description: LocalizedText;
 }
 
 interface ModelCard {
     key: ModelKey;
-    label: string;
+    label: LocalizedText;
     pill: string;
     structureImg: string;
     bestFor: DataType;
 }
 
 const inputCardsData: InputCard[] = [
-    { type: 'tabular', label: 'Tabular Data', image: tabularImg, description: 'Spreadsheets, CSVs, features' },
-    { type: 'image', label: 'Image Data', image: imageImg, description: 'Photos, visual inputs' },
-    { type: 'sequence', label: 'Sequence Data', image: sequenceImg, description: 'Audio, text, time-series' },
+    {
+        type: 'tabular',
+        label: { en: 'Tabular Data', zh: '表格数据' },
+        image: tabularImg,
+        description: { en: 'Spreadsheets, CSVs, features', zh: '表格、CSV、特征向量' },
+    },
+    {
+        type: 'image',
+        label: { en: 'Image Data', zh: '图像数据' },
+        image: imageImg,
+        description: { en: 'Photos, visual inputs', zh: '照片、视觉输入' },
+    },
+    {
+        type: 'sequence',
+        label: { en: 'Sequence Data', zh: '序列数据' },
+        image: sequenceImg,
+        description: { en: 'Audio, text, time-series', zh: '音频、文本、时间序列' },
+    },
 ];
 
 const modelCardsData: ModelCard[] = [
-    { key: 'linear', label: 'Linear Model', pill: 'bg-slate-100 text-slate-700', structureImg: linearStructure, bestFor: 'tabular' },
-    { key: 'cnn', label: 'Convolutional Neural Network', pill: 'bg-blue-100 text-blue-700', structureImg: cnnStructure, bestFor: 'image' },
-    { key: 'rnn', label: 'Recurrent Neural Network', pill: 'bg-purple-100 text-purple-700', structureImg: rnnStructure, bestFor: 'sequence' },
+    {
+        key: 'linear',
+        label: { en: 'Linear Model', zh: '线性模型' },
+        pill: 'bg-slate-100 text-slate-700',
+        structureImg: linearStructure,
+        bestFor: 'tabular',
+    },
+    {
+        key: 'cnn',
+        label: { en: 'Convolutional Neural Network', zh: '卷积神经网络' },
+        pill: 'bg-blue-100 text-blue-700',
+        structureImg: cnnStructure,
+        bestFor: 'image',
+    },
+    {
+        key: 'rnn',
+        label: { en: 'Recurrent Neural Network', zh: '循环神经网络' },
+        pill: 'bg-purple-100 text-purple-700',
+        structureImg: rnnStructure,
+        bestFor: 'sequence',
+    },
 ];
 
 export const Slide2_ModelDesign: React.FC = () => {
@@ -100,15 +133,29 @@ export const Slide2_ModelDesign: React.FC = () => {
     // Add dependencies on shuffled arrays so if layout shifts due to shuffle (though only on mount), it recalcs.
     // Also consider window resize in a real app.
 
-    const panel =
-        language === 'zh'
-            ? `**Interactive Match**\n\n- **Select** a data input type from the top row.\n- **Match** it with the most appropriate model architecture below.\n- Observe the model structure to understand why it fits.`
-            : `**Interactive Match**\n\n- **Select** a data input type from the top row.\n- **Match** it with the most appropriate model architecture below.\n- Observe the model structure to understand why it fits.`;
+    const copy = {
+        zh: {
+            panel: `**交互匹配**\n\n- 从上方选择一种数据输入类型。\n- 将它与下方最合适的模型结构进行匹配。\n- 观察模型结构，理解为什么它适合这种数据。`,
+            feedbackPrompt: '选择一个输入类型和一个模型来检查匹配度。',
+            feedbackCorrect: '完美匹配！该模型结构针对这种数据形式进行了优化。',
+            feedbackIncorrect: '还不太对。想一想数据的空间或时间结构。',
+            connected: '✓ 匹配成功！',
+        },
+        en: {
+            panel: `**Interactive Match**\n\n- **Select** a data input type from the top row.\n- **Match** it with the most appropriate model architecture below.\n- Observe the model structure to understand why it fits.`,
+            feedbackPrompt: 'Select an input and a model to check the fit.',
+            feedbackCorrect: 'Perfect Match! This model architecture is optimized for this data structure.',
+            feedbackIncorrect: 'Not quite. Consider the spatial or temporal nature of the data.',
+            connected: '✓ Connected!',
+        },
+    };
+    const text = copy[language];
+    const panel = text.panel;
 
     const getFeedbackMessage = () => {
-        if (!matchResult) return 'Select an input and a model to check the fit.';
-        if (matchResult === 'correct') return 'Perfect Match! This model architecture is optimized for this data structure.';
-        return 'Not quite. Consider the spatial or temporal nature of the data.';
+        if (!matchResult) return text.feedbackPrompt;
+        if (matchResult === 'correct') return text.feedbackCorrect;
+        return text.feedbackIncorrect;
     };
 
     return (
@@ -135,10 +182,12 @@ export const Slide2_ModelDesign: React.FC = () => {
                                         }`}
                                 >
                                     <div className="w-32 h-32 mb-3 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden">
-                                        <img src={card.image} alt={card.label} className="w-full h-full object-contain p-2" />
+                                        <img src={card.image} alt={card.label[language]} className="w-full h-full object-contain p-2" />
                                     </div>
-                                    <div className="text-base font-semibold text-gray-700">{card.label}</div>
-                                    <div className="text-xs text-center text-gray-400 mt-1 leading-tight">{card.description}</div>
+                                    <div className="text-base font-semibold text-gray-700">{card.label[language]}</div>
+                                    <div className="text-xs text-center text-gray-400 mt-1 leading-tight">
+                                        {card.description[language]}
+                                    </div>
                                 </button>
                             ))}
                         </div>
@@ -157,9 +206,9 @@ export const Slide2_ModelDesign: React.FC = () => {
                                         }`}
                                 >
                                     <div className="w-32 h-32 mb-3 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden">
-                                        <img src={card.structureImg} alt={card.label} className="w-full h-full object-contain p-2" />
+                                        <img src={card.structureImg} alt={card.label[language]} className="w-full h-full object-contain p-2" />
                                     </div>
-                                    <div className="text-sm font-bold text-center text-gray-700 leading-tight">{card.label}</div>
+                                    <div className="text-sm font-bold text-center text-gray-700 leading-tight">{card.label[language]}</div>
                                 </button>
                             ))}
                         </div>
@@ -187,7 +236,7 @@ export const Slide2_ModelDesign: React.FC = () => {
                     {/* Simple CSS animation fallback/hack inline or we assume global css handles it. Using simple opacity transition wrapper */}
                     <div className={`absolute inset-0 pointer-events-none flex items-center justify-center transition-all duration-500 z-20 ${matchResult === 'correct' ? 'opacity-100 scale-100 delay-300' : 'opacity-0 scale-90'}`}>
                         <div className="bg-white/95 p-4 rounded-full shadow-xl border-2 border-emerald-100 text-emerald-600 font-bold text-xl backdrop-blur-sm">
-                            ✓ Connected!
+                            {text.connected}
                         </div>
                     </div>
 

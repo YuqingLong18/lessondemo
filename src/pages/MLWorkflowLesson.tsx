@@ -9,33 +9,33 @@ import { Slide6_ModelSelection } from '../demos/mlworkflow/Slide6_ModelSelection
 
 const slides = [
     {
-        title: { zh: 'Basic Workflow of Machine Learning', en: 'Basic Workflow of Machine Learning' },
-        subConcept: { zh: 'Four Stages', en: 'Four Stages' },
+        title: { zh: '机器学习基础流程', en: 'Basic Workflow of Machine Learning' },
+        subConcept: { zh: '四个阶段', en: 'Four Stages' },
         component: Slide1_WorkflowOverview,
     },
     {
-        title: { zh: 'Model Design', en: 'Model Design' },
-        subConcept: { zh: 'No Free Lunch', en: 'No Free Lunch' },
+        title: { zh: '模型设计', en: 'Model Design' },
+        subConcept: { zh: '无免费午餐', en: 'No Free Lunch' },
         component: Slide2_ModelDesign,
     },
     {
-        title: { zh: 'Model Training', en: 'Model Training' },
-        subConcept: { zh: 'Loss Function', en: 'Loss Function' },
+        title: { zh: '模型训练', en: 'Model Training' },
+        subConcept: { zh: '损失函数', en: 'Loss Function' },
         component: Slide3_LossFunction,
     },
     {
-        title: { zh: 'Model Training', en: 'Model Training' },
-        subConcept: { zh: 'Gradient Descent', en: 'Gradient Descent' },
+        title: { zh: '模型训练', en: 'Model Training' },
+        subConcept: { zh: '梯度下降', en: 'Gradient Descent' },
         component: Slide4_GradientDescent,
     },
     {
-        title: { zh: 'Model Testing', en: 'Model Testing' },
-        subConcept: { zh: 'Overfitting', en: 'Overfitting' },
+        title: { zh: '模型测试', en: 'Model Testing' },
+        subConcept: { zh: '过拟合', en: 'Overfitting' },
         component: Slide5_ModelTesting,
     },
     {
-        title: { zh: 'Model Selection', en: 'Model Selection' },
-        subConcept: { zh: 'Occam\'s Razor', en: 'Occam\'s Razor' },
+        title: { zh: '模型选择', en: 'Model Selection' },
+        subConcept: { zh: '奥卡姆剃刀', en: 'Occam\'s Razor' },
         component: Slide6_ModelSelection,
     },
 ];

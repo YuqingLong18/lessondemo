@@ -7,6 +7,7 @@ import { NeuronLesson } from './pages/NeuronLesson';
 import { MLWorkflowLesson } from './pages/MLWorkflowLesson';
 import { FourSchoolsDemo } from './demos/fourschools/FourSchoolsDemo';
 import { KnowledgeLearningDemo } from './demos/knowledgelearning/KnowledgeLearningDemo';
+import { GradientDescentLesson } from './pages/GradientDescentLesson';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="neuron" element={<NeuronLesson />} />
             <Route path="cnn" element={<CNNLesson />} />
             <Route path="rnn" element={<RNNLesson />} />
+            <Route path="gradient-descent" element={<GradientDescentLesson />} />
             <Route path="fourschools" element={<FourSchoolsDemo />} />
           </Route>
         </Routes>

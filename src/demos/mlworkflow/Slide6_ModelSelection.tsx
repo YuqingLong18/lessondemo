@@ -53,18 +53,64 @@ export const Slide6_ModelSelection: React.FC = () => {
     const simplePath = simpleCurve.map(p => toSvg(p.x, p.y)).join(' ');
     const complexPath = complexCurve.map(p => toSvg(p.x, p.y)).join(' ');
 
-    const panel =
-        language === 'zh'
-            ? `**Occam's Razor**\n\n- "Entities should not be multiplied beyond necessity."\n- When two models have similar performance, the simpler one is usually better.\n- Complex models often "overfit" to noise, making them fragile on new data.`
-            : `**Occam's Razor**\n\n- "Entities should not be multiplied beyond necessity."\n- When two models have similar performance, the simpler one is usually better.\n- Complex models often "overfit" to noise, making them fragile on new data.`;
+    const copy = {
+        zh: {
+            panel: `**奥卡姆剃刀**\n\n- “如无必要，勿增实体。”\n- 当两个模型表现相近时，更简单的模型通常更好。\n- 复杂模型往往会对噪声过拟合，使其在新数据上更脆弱。`,
+            title: '模型选择对决',
+            subtitle: '我们应该把哪个模型部署到生产环境？',
+            modelA: '模型 A',
+            modelB: '模型 B',
+            paramsLabel: '参数',
+            trainingError: '训练误差',
+            complexity: '复杂度',
+            low: '低',
+            veryLow: '很低',
+            zeroPerfect: '零（完美）',
+            extreme: '极高',
+            excellent: '很好的选择！',
+            wait: '等等... 再仔细看看！',
+            razorApproved: '奥卡姆剃刀通过！🪒',
+            razorBodyLead: '即使模型 A 有一些误差，它也捕捉到了',
+            razorBodyEmphasis: '真正的趋势',
+            razorBodyTail: '。它更稳健，能更好地泛化到新数据。',
+            overfitTrap: '过拟合陷阱！⚠️',
+            overfitBody:
+                '模型 B 把每个点都击中，但它只是记住了噪声。它过于曲折且复杂，很可能在新数据上失败。',
+        },
+        en: {
+            panel: `**Occam's Razor**\n\n- "Entities should not be multiplied beyond necessity."\n- When two models have similar performance, the simpler one is usually better.\n- Complex models often "overfit" to noise, making them fragile on new data.`,
+            title: 'Model Selection Tournament',
+            subtitle: 'Which model should we deploy to production?',
+            modelA: 'Model A',
+            modelB: 'Model B',
+            paramsLabel: 'Params',
+            trainingError: 'Training Error',
+            complexity: 'Complexity',
+            low: 'Low',
+            veryLow: 'Very Low',
+            zeroPerfect: 'Zero (Perfect)',
+            extreme: 'Extreme',
+            excellent: 'Excellent Choice!',
+            wait: 'Wait... Look closer!',
+            razorApproved: "Occam's Razor Approved! 🪒",
+            razorBodyLead: 'Even though Model A has some error, it captures the ',
+            razorBodyEmphasis: 'true trend',
+            razorBodyTail: '. It is robust and will generalize well to new data.',
+            overfitTrap: 'The Overfitting Trap! ⚠️',
+            overfitBody:
+                "Model B hit every single point, but it's just memorizing noise. It is too wiggly and complex. It will likely fail on new data.",
+        },
+    };
+    const text = copy[language];
+    const panel = text.panel;
 
     return (
         <>
             <ConceptStage>
                 <div className="w-full h-full p-8 flex flex-col font-sans">
                     <div className="text-center mb-8">
-                        <h2 className="text-xl font-bold text-gray-800">Model Selection Tournament</h2>
-                        <p className="text-gray-500 text-sm mt-1">Which model should we deploy to production?</p>
+                        <h2 className="text-xl font-bold text-gray-800">{text.title}</h2>
+                        <p className="text-gray-500 text-sm mt-1">{text.subtitle}</p>
                     </div>
 
                     <div className="flex-1 flex justify-center gap-12 items-stretch">
@@ -88,16 +134,24 @@ export const Slide6_ModelSelection: React.FC = () => {
                                 </svg>
                             </div>
                             <div className="p-5 flex-1 flex flex-col items-center text-center">
-                                <h3 className="font-bold text-lg text-gray-800">Model A</h3>
-                                <div className="text-xs font-mono bg-gray-100 px-2 py-1 rounded text-gray-500 mt-2">Params: 3</div>
+                                <h3 className="font-bold text-lg text-gray-800">{text.modelA}</h3>
+                                <div className="text-xs font-mono bg-gray-100 px-2 py-1 rounded text-gray-500 mt-2">
+                                    {text.paramsLabel}: 3
+                                </div>
                                 <div className="mt-4 space-y-1">
-                                    <div className="text-sm text-gray-600">Training Error: <span className="font-semibold text-amber-600">Low</span></div>
-                                    <div className="text-sm text-gray-600">Complexity: <span className="font-semibold text-emerald-600">Very Low</span></div>
+                                    <div className="text-sm text-gray-600">
+                                        {text.trainingError}:{' '}
+                                        <span className="font-semibold text-amber-600">{text.low}</span>
+                                    </div>
+                                    <div className="text-sm text-gray-600">
+                                        {text.complexity}:{' '}
+                                        <span className="font-semibold text-emerald-600">{text.veryLow}</span>
+                                    </div>
                                 </div>
                                 {selected === 'simple' && (
                                     <div className="mt-auto pt-4 text-emerald-700 font-bold flex items-center gap-2 animate-pulse">
                                         <CheckCircleIcon className="w-5 h-5" />
-                                        Excellent Choice!
+                                        {text.excellent}
                                     </div>
                                 )}
                             </div>
@@ -122,16 +176,24 @@ export const Slide6_ModelSelection: React.FC = () => {
                                 </svg>
                             </div>
                             <div className="p-5 flex-1 flex flex-col items-center text-center">
-                                <h3 className="font-bold text-lg text-gray-800">Model B</h3>
-                                <div className="text-xs font-mono bg-gray-100 px-2 py-1 rounded text-gray-500 mt-2">Params: 100+</div>
+                                <h3 className="font-bold text-lg text-gray-800">{text.modelB}</h3>
+                                <div className="text-xs font-mono bg-gray-100 px-2 py-1 rounded text-gray-500 mt-2">
+                                    {text.paramsLabel}: 100+
+                                </div>
                                 <div className="mt-4 space-y-1">
-                                    <div className="text-sm text-gray-600">Training Error: <span className="font-semibold text-emerald-600">Zero (Perfect)</span></div>
-                                    <div className="text-sm text-gray-600">Complexity: <span className="font-semibold text-rose-600">Extreme</span></div>
+                                    <div className="text-sm text-gray-600">
+                                        {text.trainingError}:{' '}
+                                        <span className="font-semibold text-emerald-600">{text.zeroPerfect}</span>
+                                    </div>
+                                    <div className="text-sm text-gray-600">
+                                        {text.complexity}:{' '}
+                                        <span className="font-semibold text-rose-600">{text.extreme}</span>
+                                    </div>
                                 </div>
                                 {selected === 'complex' && (
                                     <div className="mt-auto pt-4 text-rose-700 font-bold flex items-center gap-2">
                                         <XCircleIcon className="w-5 h-5" />
-                                        Wait... Look closer!
+                                        {text.wait}
                                     </div>
                                 )}
                             </div>
@@ -144,13 +206,15 @@ export const Slide6_ModelSelection: React.FC = () => {
                         ${selected === 'simple' ? 'bg-emerald-50 border-emerald-100' : 'bg-rose-50 border-rose-100'}`}>
                         {selected === 'simple' ? (
                             <p className="text-emerald-800 text-sm">
-                                <strong className="block text-base mb-1">Occam's Razor Approved! 🪒</strong>
-                                Even though Model A has some error, it captures the <strong>true trend</strong>. It is robust and will generalize well to new data.
+                                <strong className="block text-base mb-1">{text.razorApproved}</strong>
+                                {text.razorBodyLead}
+                                <strong>{text.razorBodyEmphasis}</strong>
+                                {text.razorBodyTail}
                             </p>
                         ) : (
                             <p className="text-rose-800 text-sm">
-                                <strong className="block text-base mb-1">The Overfitting Trap! ⚠️</strong>
-                                Model B hit every single point, but it's just memorizing noise. It is too wiggly and complex. It will likely fail on new data.
+                                <strong className="block text-base mb-1">{text.overfitTrap}</strong>
+                                {text.overfitBody}
                             </p>
                         )}
                     </div>

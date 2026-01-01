@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { BrainCircuit, Activity, Zap, Layers, BookOpen, Workflow } from 'lucide-react';
+import { BrainCircuit, Activity, Zap, Layers, BookOpen, Workflow, TrendingDown } from 'lucide-react';
 import { useLanguage } from '../core/LanguageContext';
 
 export const Sidebar: React.FC = () => {
@@ -45,7 +45,7 @@ export const Sidebar: React.FC = () => {
                         <Workflow size={20} className="text-sky-600" />
                     </div>
                     <span className="font-medium">
-                        {language === 'zh' ? 'Basic Workflow of Machine Learning' : 'Basic Workflow of Machine Learning'}
+                        {language === 'zh' ? '机器学习基础流程' : 'Basic Workflow of Machine Learning'}
                     </span>
                 </NavLink>
 
@@ -66,6 +66,7 @@ export const Sidebar: React.FC = () => {
                     </span>
                 </NavLink>
 
+
                 <NavLink
                     to="/neuron"
                     className={({ isActive }) =>
@@ -80,6 +81,23 @@ export const Sidebar: React.FC = () => {
                     </div>
                     <span className="font-medium">
                         {language === 'zh' ? '人工神经元' : 'Artificial Neuron'}
+                    </span>
+                </NavLink>
+
+                <NavLink
+                    to="/gradient-descent"
+                    className={({ isActive }) =>
+                        `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${isActive
+                            ? 'bg-rose-50 text-rose-600 shadow-sm'
+                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        }`
+                    }
+                >
+                    <div className="p-2 bg-rose-100 rounded-lg group-[.active]:bg-rose-200">
+                        <TrendingDown size={20} className="text-rose-600" />
+                    </div>
+                    <span className="font-medium">
+                        {language === 'zh' ? '梯度下降' : 'Gradient Descent'}
                     </span>
                 </NavLink>
 

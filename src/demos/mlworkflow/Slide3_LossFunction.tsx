@@ -37,10 +37,26 @@ export const Slide3_LossFunction: React.FC = () => {
         setParams(prev => ({ ...prev, [param]: value }));
     };
 
-    const panel =
-        language === 'zh'
-            ? `**High-Dimensional Optimization**\n\n- Model training is the mathematical process of finding the optimal parameters.\n- In high dimensions, the loss landscape is complex and non-convex.\n- Gradient descent helps efficiently automate this "hunting" process.`
-            : `**High-Dimensional Optimization**\n\n- Model training is the mathematical process of finding the optimal parameters.\n- In high dimensions, the loss landscape is complex and non-convex.\n- Gradient descent helps efficiently automate this "hunting" process.`;
+    const copy = {
+        zh: {
+            panel: `**高维优化**\n\n- 模型训练是寻找最优参数的数学过程。\n- 在高维空间中，损失地形复杂且非凸。\n- 梯度下降能高效地自动完成这种“寻优”过程。`,
+            title: '模型训练：参数优化',
+            subtitle:
+                '调整 8 个参数以最小化损失。关系是非线性且非凸的，手工优化非常困难。',
+            currentLoss: '当前损失',
+            lossHint: '尝试手动最小化该值，体会训练的难度。',
+        },
+        en: {
+            panel: `**High-Dimensional Optimization**\n\n- Model training is the mathematical process of finding the optimal parameters.\n- In high dimensions, the loss landscape is complex and non-convex.\n- Gradient descent helps efficiently automate this "hunting" process.`,
+            title: 'Blind Parameter Optimization',
+            subtitle:
+                'Adjust the 8 parameters to minimize the loss. The relationship is non-linear and non-convex, making manual optimization extremely difficult.',
+            currentLoss: 'Current Loss',
+            lossHint: 'Minimize this value manually to understand the difficulty of training.',
+        },
+    };
+    const text = copy[language];
+    const panel = text.panel;
 
     // Dynamic color for loss value
     const getLossColor = (l: number) => {
@@ -56,9 +72,9 @@ export const Slide3_LossFunction: React.FC = () => {
 
                     {/* Header */}
                     <div className="text-center">
-                        <h2 className="text-2xl font-bold text-gray-800 mb-2">Blind Parameter Optimization</h2>
+                        <h2 className="text-2xl font-bold text-gray-800 mb-2">{text.title}</h2>
                         <div className="text-gray-500 max-w-lg mx-auto text-sm">
-                            Adjust the 8 parameters to minimize the loss. The relationship is non-linear and non-convex, making manual optimization extremely difficult.
+                            {text.subtitle}
                         </div>
                     </div>
 
@@ -88,12 +104,12 @@ export const Slide3_LossFunction: React.FC = () => {
 
                         {/* Loss Monitor */}
                         <div className="w-56 shrink-0 flex flex-col items-center justify-center p-6 bg-slate-900 rounded-2xl shadow-xl border border-slate-700">
-                            <div className="text-xs uppercase text-slate-400 font-bold tracking-widest mb-4">Current Loss</div>
+                            <div className="text-xs uppercase text-slate-400 font-bold tracking-widest mb-4">{text.currentLoss}</div>
                             <div className={`text-4xl font-mono font-bold transition-all duration-200 ${getLossColor(loss)}`}>
                                 {loss.toFixed(4)}
                             </div>
                             <div className="mt-4 text-[10px] text-slate-600 text-center px-2">
-                                Minimize this value manually to understand the difficulty of training.
+                                {text.lossHint}
                             </div>
                         </div>
                     </div>

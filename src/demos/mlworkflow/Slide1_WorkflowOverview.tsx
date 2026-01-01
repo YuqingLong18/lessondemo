@@ -13,10 +13,10 @@ type StepInfo = {
 const steps: StepInfo[] = [
     {
         key: 'design',
-        label: { en: 'Model Design', zh: 'Model Design' },
+        label: { en: 'Model Design', zh: '模型设计' },
         detail: {
             en: 'Pick features and a model family that matches the task and data.',
-            zh: 'Pick features and a model family that matches the task and data.',
+            zh: '选择与任务和数据相匹配的特征与模型家族。',
         },
         tone: {
             active: 'border-emerald-300 bg-emerald-50 text-emerald-700',
@@ -27,10 +27,10 @@ const steps: StepInfo[] = [
     },
     {
         key: 'training',
-        label: { en: 'Model Training', zh: 'Model Training' },
+        label: { en: 'Model Training', zh: '模型训练' },
         detail: {
             en: 'Use data to adjust parameters by minimizing a loss function.',
-            zh: 'Use data to adjust parameters by minimizing a loss function.',
+            zh: '用数据通过最小化损失函数来调整参数。',
         },
         tone: {
             active: 'border-blue-300 bg-blue-50 text-blue-700',
@@ -41,10 +41,10 @@ const steps: StepInfo[] = [
     },
     {
         key: 'testing',
-        label: { en: 'Model Testing', zh: 'Model Testing' },
+        label: { en: 'Model Testing', zh: '模型测试' },
         detail: {
             en: 'Evaluate on new data to detect overfitting or underfitting.',
-            zh: 'Evaluate on new data to detect overfitting or underfitting.',
+            zh: '在新数据上评估，以检测过拟合或欠拟合。',
         },
         tone: {
             active: 'border-amber-300 bg-amber-50 text-amber-700',
@@ -55,10 +55,10 @@ const steps: StepInfo[] = [
     },
     {
         key: 'selection',
-        label: { en: 'Model Selection', zh: 'Model Selection' },
+        label: { en: 'Model Selection', zh: '模型选择' },
         detail: {
             en: 'Choose the simplest model that performs well on the test set.',
-            zh: 'Choose the simplest model that performs well on the test set.',
+            zh: '在测试集上表现良好时选择最简单的模型。',
         },
         tone: {
             active: 'border-purple-300 bg-purple-50 text-purple-700',
@@ -73,23 +73,42 @@ export const Slide1_WorkflowOverview: React.FC = () => {
     const { language } = useLanguage();
     const [activeStep, setActiveStep] = useState(0);
 
-    const panel =
-        language === 'zh'
-            ? `**Workflow Overview**\n\n- A machine learning system moves from task + data to a chosen model.\n- The workflow has four stages: design, training, testing, and selection.\n- Click each stage to see its role in the pipeline.`
-            : `**Workflow Overview**\n\n- A machine learning system moves from task + data to a chosen model.\n- The workflow has four stages: design, training, testing, and selection.\n- Click each stage to see its role in the pipeline.`;
+    const copy = {
+        zh: {
+            panel: `**流程概览**\n\n- 机器学习系统从任务 + 数据走向最终选定的模型。\n- 流程包含四个阶段：设计、训练、测试和选择。\n- 点击每个阶段查看其在流程中的作用。`,
+            hint: '点击某个阶段进行探索',
+            input: '输入',
+            output: '输出',
+            taskData: '任务 + 数据',
+            deployedModel: '部署的模型',
+            selectedStage: '当前阶段',
+        },
+        en: {
+            panel: `**Workflow Overview**\n\n- A machine learning system moves from task + data to a chosen model.\n- The workflow has four stages: design, training, testing, and selection.\n- Click each stage to see its role in the pipeline.`,
+            hint: 'Click a stage to explore',
+            input: 'Input',
+            output: 'Output',
+            taskData: 'Task + Data',
+            deployedModel: 'Deployed Model',
+            selectedStage: 'Selected Stage',
+        },
+    };
+    const text = copy[language];
+
+    const panel = text.panel;
 
     return (
         <>
             <ConceptStage>
                 <div className="w-full h-full p-8 flex flex-col gap-6">
                     <div className="text-xs uppercase tracking-wide text-gray-400">
-                        {language === 'zh' ? 'Click a stage to explore' : 'Click a stage to explore'}
+                        {text.hint}
                     </div>
 
                     <div className="flex items-center gap-4">
                         <div className="w-40 bg-white border border-gray-200 rounded-xl p-4 text-sm">
-                            <div className="text-xs text-gray-400 uppercase">Input</div>
-                            <div className="font-semibold text-gray-800">Task + Data</div>
+                            <div className="text-xs text-gray-400 uppercase">{text.input}</div>
+                            <div className="font-semibold text-gray-800">{text.taskData}</div>
                         </div>
 
                         <div className="flex-1 flex items-center gap-3">
@@ -115,8 +134,8 @@ export const Slide1_WorkflowOverview: React.FC = () => {
                         </div>
 
                         <div className="w-40 bg-white border border-gray-200 rounded-xl p-4 text-sm">
-                            <div className="text-xs text-gray-400 uppercase">Output</div>
-                            <div className="font-semibold text-gray-800">Deployed Model</div>
+                            <div className="text-xs text-gray-400 uppercase">{text.output}</div>
+                            <div className="font-semibold text-gray-800">{text.deployedModel}</div>
                         </div>
                     </div>
 
@@ -124,7 +143,7 @@ export const Slide1_WorkflowOverview: React.FC = () => {
                         <div
                             className={`w-full max-w-3xl rounded-2xl p-6 shadow-sm border ${steps[activeStep].tone.panel}`}
                         >
-                            <div className="text-xs uppercase text-gray-400">Selected Stage</div>
+                            <div className="text-xs uppercase text-gray-400">{text.selectedStage}</div>
                             <div className="text-lg font-semibold text-gray-900 mt-1">
                                 {steps[activeStep].label[language]}
                             </div>

@@ -59,10 +59,38 @@ export const Slide4_GradientDescent: React.FC = () => {
         setStartW(newW);
     };
 
-    const panel =
-        language === 'zh'
-            ? `**The Trap of Local Minima**\n\n- In complex landscapes, gradient descent can get stuck in a "local valley" (local minimum).\n- The starting point matters!\n- Try **Randomize Start** to see how the initial position affects the final result.`
-            : `**The Trap of Local Minima**\n\n- In complex landscapes, gradient descent can get stuck in a "local valley" (local minimum).\n- The starting point matters!\n- Try **Randomize Start** to see how the initial position affects the final result.`;
+    const copy = {
+        zh: {
+            panel: `**局部最小值的陷阱**\n\n- 在复杂地形中，梯度下降可能陷入“局部谷底”（局部最小值）。\n- 起点很重要！\n- 点击 **随机起点** 看初始位置如何影响最终结果。`,
+            equationLabel: '损失函数 Loss(w) = 0.3(w-2)² - 0.8cos(3w) + 1.5',
+            legendLoss: '损失曲线',
+            legendSteps: '迭代步骤',
+            legendFinal: '最终点',
+            caption: '小球会往下滚，但可能卡在小坑里。',
+            initialization: '初始化',
+            randomize: '随机起点',
+            learningRate: '学习率',
+            steps: '步数',
+            currentParam: '当前参数',
+            finalLoss: '最终损失',
+        },
+        en: {
+            panel: `**The Trap of Local Minima**\n\n- In complex landscapes, gradient descent can get stuck in a "local valley" (local minimum).\n- The starting point matters!\n- Try **Randomize Start** to see how the initial position affects the final result.`,
+            equationLabel: 'Loss(w) = 0.3(w-2)² - 0.8cos(3w) + 1.5',
+            legendLoss: 'Loss curve',
+            legendSteps: 'Steps',
+            legendFinal: 'Final',
+            caption: 'The ball rolls down, but can get stuck in small holes.',
+            initialization: 'Initialization',
+            randomize: 'Randomize Start',
+            learningRate: 'Learning rate',
+            steps: 'Steps',
+            currentParam: 'Current Param',
+            finalLoss: 'Final Loss',
+        },
+    };
+    const text = copy[language];
+    const panel = text.panel;
 
     return (
         <>
@@ -70,20 +98,20 @@ export const Slide4_GradientDescent: React.FC = () => {
                 <div className="w-full h-full p-8 flex items-center gap-8 font-sans">
                     <div className="flex-1 flex flex-col items-center">
                         <div className="text-sm text-gray-500 mb-3 font-semibold">
-                            Loss(w) = 0.3(w-2)² - 0.8cos(3w) + 1.5
+                            {text.equationLabel}
                         </div>
                         <div className="flex items-center gap-3 text-xs text-gray-500 mb-2">
                             <span className="inline-flex items-center gap-2">
                                 <span className="w-2 h-2 rounded-full bg-blue-500" />
-                                Loss curve
+                                {text.legendLoss}
                             </span>
                             <span className="inline-flex items-center gap-2">
                                 <span className="w-2 h-2 rounded-full bg-slate-400" />
-                                Steps
+                                {text.legendSteps}
                             </span>
                             <span className="inline-flex items-center gap-2">
                                 <span className="w-2 h-2 rounded-full bg-blue-700" />
-                                Final
+                                {text.legendFinal}
                             </span>
                         </div>
                         <svg width={WIDTH} height={HEIGHT} className="bg-white rounded-lg border border-slate-50 shadow-sm">
@@ -119,27 +147,27 @@ export const Slide4_GradientDescent: React.FC = () => {
                                 );
                             })}
                         </svg>
-                        <div className="text-xs text-slate-400 mt-2 italic">The ball rolls down, but can get stuck in small holes.</div>
+                        <div className="text-xs text-slate-400 mt-2 italic">{text.caption}</div>
                     </div>
 
                     <div className="w-72 bg-white border border-gray-200 rounded-2xl p-5 shadow-sm flex flex-col gap-5">
 
                         {/* Start Control */}
                         <div>
-                            <div className="text-xs uppercase text-slate-500 font-bold mb-2">Initialization</div>
+                            <div className="text-xs uppercase text-slate-500 font-bold mb-2">{text.initialization}</div>
                             <button
                                 onClick={randomizeStart}
                                 className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-sm font-semibold transition-colors"
                             >
                                 <RefreshCw className="w-4 h-4" />
-                                Randomize Start
+                                {text.randomize}
                             </button>
                         </div>
 
                         {/* Learning Rate */}
                         <div>
                             <div className="flex justify-between items-center mb-1">
-                                <div className="text-xs uppercase text-blue-500 font-bold">Learning rate</div>
+                                <div className="text-xs uppercase text-blue-500 font-bold">{text.learningRate}</div>
                                 <div className="text-sm font-semibold text-gray-900">{learningRate.toFixed(2)}</div>
                             </div>
                             <input
@@ -156,7 +184,7 @@ export const Slide4_GradientDescent: React.FC = () => {
                         {/* Steps */}
                         <div>
                             <div className="flex justify-between items-center mb-1">
-                                <div className="text-xs uppercase text-slate-500 font-bold">Steps</div>
+                                <div className="text-xs uppercase text-slate-500 font-bold">{text.steps}</div>
                                 <div className="text-sm font-semibold text-gray-900">{steps}</div>
                             </div>
                             <input
@@ -174,11 +202,11 @@ export const Slide4_GradientDescent: React.FC = () => {
                         <div className="pt-4 border-t border-gray-100">
                             <div className="flex justify-between items-center bg-slate-50 p-3 rounded-lg">
                                 <div>
-                                    <div className="text-[10px] uppercase text-slate-400 font-bold">Current Param</div>
+                                    <div className="text-[10px] uppercase text-slate-400 font-bold">{text.currentParam}</div>
                                     <div className="text-lg font-mono font-semibold text-slate-700">{lastW.toFixed(2)}</div>
                                 </div>
                                 <div className="text-right">
-                                    <div className="text-[10px] uppercase text-slate-400 font-bold">Final Loss</div>
+                                    <div className="text-[10px] uppercase text-slate-400 font-bold">{text.finalLoss}</div>
                                     <div className={`text-lg font-mono font-semibold ${lastLoss < 0.5 ? 'text-emerald-600' : 'text-rose-600'}`}>
                                         {lastLoss.toFixed(3)}
                                     </div>
@@ -193,4 +221,3 @@ export const Slide4_GradientDescent: React.FC = () => {
         </>
     );
 };
-
