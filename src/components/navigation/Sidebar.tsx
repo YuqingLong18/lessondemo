@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { BrainCircuit, Activity, Zap, Layers } from 'lucide-react';
+import { BrainCircuit, Activity, Zap, Layers, BookOpen } from 'lucide-react';
 import { useLanguage } from '../core/LanguageContext';
 
 export const Sidebar: React.FC = () => {
@@ -15,6 +15,23 @@ export const Sidebar: React.FC = () => {
             </div>
 
             <nav className="flex-1 px-4 space-y-2">
+                <NavLink
+                    to="/knowledge-learning"
+                    className={({ isActive }) =>
+                        `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${isActive
+                            ? 'bg-indigo-50 text-indigo-600 shadow-sm'
+                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        }`
+                    }
+                >
+                    <div className="p-2 bg-indigo-100 rounded-lg group-[.active]:bg-indigo-200">
+                        <BookOpen size={20} className="text-indigo-600" />
+                    </div>
+                    <span className="font-medium">
+                        {language === 'zh' ? '知识到学习' : 'Knowledge → Learning'}
+                    </span>
+                </NavLink>
+
                 <NavLink
                     to="/fourschools"
                     className={({ isActive }) =>

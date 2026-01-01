@@ -5,6 +5,7 @@ import { CNNLesson } from './pages/CNNLesson';
 import { RNNLesson } from './pages/RNNLesson';
 import { NeuronLesson } from './pages/NeuronLesson';
 import { FourSchoolsDemo } from './demos/fourschools/FourSchoolsDemo';
+import { KnowledgeLearningDemo } from './demos/knowledgelearning/KnowledgeLearningDemo';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Navigate to="/neuron" replace />} />
+            <Route path="knowledge-learning" element={<KnowledgeLearningDemo />} />
             <Route path="neuron" element={<NeuronLesson />} />
             <Route path="cnn" element={<CNNLesson />} />
             <Route path="rnn" element={<RNNLesson />} />
