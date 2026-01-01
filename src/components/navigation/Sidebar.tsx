@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { BrainCircuit, Activity, Zap, Layers, BookOpen } from 'lucide-react';
+import { BrainCircuit, Activity, Zap, Layers, BookOpen, Workflow } from 'lucide-react';
 import { useLanguage } from '../core/LanguageContext';
 
 export const Sidebar: React.FC = () => {
@@ -29,6 +29,23 @@ export const Sidebar: React.FC = () => {
                     </div>
                     <span className="font-medium">
                         {language === 'zh' ? '知识到学习' : 'Knowledge → Learning'}
+                    </span>
+                </NavLink>
+
+                <NavLink
+                    to="/ml-workflow"
+                    className={({ isActive }) =>
+                        `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${isActive
+                            ? 'bg-sky-50 text-sky-700 shadow-sm'
+                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        }`
+                    }
+                >
+                    <div className="p-2 bg-sky-100 rounded-lg group-[.active]:bg-sky-200">
+                        <Workflow size={20} className="text-sky-600" />
+                    </div>
+                    <span className="font-medium">
+                        {language === 'zh' ? 'Basic Workflow of Machine Learning' : 'Basic Workflow of Machine Learning'}
                     </span>
                 </NavLink>
 
