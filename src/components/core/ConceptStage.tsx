@@ -10,6 +10,8 @@ export const ConceptStage: React.FC<ConceptStageProps> = ({ children }) => {
             className="concept-stage"
             style={{
                 flex: 1,
+                minHeight: 0,
+                minWidth: 0,
                 backgroundColor: '#ffffff',
                 borderRadius: '8px',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.05)',

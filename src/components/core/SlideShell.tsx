@@ -69,6 +69,8 @@ export const SlideShell: React.FC<SlideShellProps> = ({
           position: 'relative',
           padding: '2rem',
           gap: '2rem',
+          minHeight: 0,
+          overflow: 'hidden',
         }}
       >
         {children}

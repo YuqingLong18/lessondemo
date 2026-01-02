@@ -45,6 +45,7 @@ export const ExplainPanel: React.FC<ExplainPanelProps> = ({ children }) => {
             style={{
                 width: '300px',
                 flexShrink: 0,
+                minHeight: 0,
                 backgroundColor: '#ffffff',
                 padding: '1.5rem',
                 borderRadius: '8px',

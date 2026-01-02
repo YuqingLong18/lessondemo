@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { BrainCircuit, Activity, Zap, Layers, BookOpen, Workflow, TrendingDown, Cpu } from 'lucide-react';
+import { BrainCircuit, Activity, Zap, Layers, BookOpen, Workflow, TrendingDown, Cpu, MessageSquare } from 'lucide-react';
 import { useLanguage } from '../core/LanguageContext';
 
 export const Sidebar: React.FC = () => {
@@ -132,6 +132,23 @@ export const Sidebar: React.FC = () => {
                     </div>
                     <span className="font-medium">
                         {language === 'zh' ? '循环神经网络' : 'RNN'}
+                    </span>
+                </NavLink>
+
+                <NavLink
+                    to="/language-models"
+                    className={({ isActive }) =>
+                        `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${isActive
+                            ? 'bg-orange-50 text-orange-700 shadow-sm'
+                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        }`
+                    }
+                >
+                    <div className="p-2 bg-orange-100 rounded-lg group-[.active]:bg-orange-200">
+                        <MessageSquare size={20} className="text-orange-600" />
+                    </div>
+                    <span className="font-medium">
+                        {language === 'zh' ? 'Language Models' : 'Language Models'}
                     </span>
                 </NavLink>
 
