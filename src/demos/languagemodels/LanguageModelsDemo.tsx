@@ -13,53 +13,53 @@ import { Slide10_ContextualEmbeddings } from './Slide10_ContextualEmbeddings';
 
 const slides = [
     {
-        title: { zh: 'Language and Intelligence', en: 'Language and Intelligence' },
-        subConcept: { zh: 'Language moves ideas', en: 'Language moves ideas' },
+        title: { zh: '语言与智能', en: 'Language and Intelligence' },
+        subConcept: { zh: '语言传递思想', en: 'Language moves ideas' },
         component: Slide1_LanguageBridge,
     },
     {
-        title: { zh: 'Language and Intelligence', en: 'Language and Intelligence' },
-        subConcept: { zh: 'Language organizes thought', en: 'Language organizes thought' },
+        title: { zh: '语言与智能', en: 'Language and Intelligence' },
+        subConcept: { zh: '语言组织思维', en: 'Language organizes thought' },
         component: Slide2_LanguageShapesThought,
     },
     {
-        title: { zh: 'Language and Intelligence', en: 'Language and Intelligence' },
-        subConcept: { zh: 'Human or model?', en: 'Human or model?' },
+        title: { zh: '语言与智能', en: 'Language and Intelligence' },
+        subConcept: { zh: '人类还是模型？', en: 'Human or model?' },
         component: Slide3_PoemDetection,
     },
     {
-        title: { zh: 'Language Models', en: 'Language Models' },
-        subConcept: { zh: 'Predict the next word', en: 'Predict the next word' },
+        title: { zh: '语言模型', en: 'Language Models' },
+        subConcept: { zh: '预测下一个词', en: 'Predict the next word' },
         component: Slide4_WhatIsALanguageModel,
     },
     {
-        title: { zh: 'Symbolic Approach', en: 'Symbolic Approach' },
-        subConcept: { zh: 'Rules and grammar', en: 'Rules and grammar' },
+        title: { zh: '符号主义方法', en: 'Symbolic Approach' },
+        subConcept: { zh: '规则与语法', en: 'Rules and grammar' },
         component: Slide5_SymbolicRules,
     },
     {
-        title: { zh: 'Symbolic Approach', en: 'Symbolic Approach' },
-        subConcept: { zh: 'Ambiguity and meaning', en: 'Ambiguity and meaning' },
+        title: { zh: '符号主义方法', en: 'Symbolic Approach' },
+        subConcept: { zh: '歧义与意义', en: 'Ambiguity and meaning' },
         component: Slide6_SymbolicAmbiguity,
     },
     {
-        title: { zh: 'Statistical Approach', en: 'Statistical Approach' },
-        subConcept: { zh: 'N-gram prediction', en: 'N-gram prediction' },
+        title: { zh: '统计方法', en: 'Statistical Approach' },
+        subConcept: { zh: 'N-gram 预测', en: 'N-gram prediction' },
         component: Slide7_StatisticalNgram,
     },
     {
-        title: { zh: 'Statistical Approach', en: 'Statistical Approach' },
-        subConcept: { zh: 'Long-range limits', en: 'Long-range limits' },
+        title: { zh: '统计方法', en: 'Statistical Approach' },
+        subConcept: { zh: '长程依赖的限制', en: 'Long-range limits' },
         component: Slide8_StatisticalLimits,
     },
     {
-        title: { zh: 'Word Embeddings', en: 'Word Embeddings' },
-        subConcept: { zh: 'Vectors and analogies', en: 'Vectors and analogies' },
+        title: { zh: '词向量', en: 'Word Embeddings' },
+        subConcept: { zh: '向量与类比', en: 'Vectors and analogies' },
         component: Slide9_WordEmbeddings,
     },
     {
-        title: { zh: 'Word Embeddings', en: 'Word Embeddings' },
-        subConcept: { zh: 'Context and what comes next', en: 'Context and what comes next' },
+        title: { zh: '词向量', en: 'Word Embeddings' },
+        subConcept: { zh: '语境与下一步', en: 'Context and what comes next' },
         component: Slide10_ContextualEmbeddings,
     },
 ];

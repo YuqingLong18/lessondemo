@@ -148,7 +148,7 @@ export const Sidebar: React.FC = () => {
                         <MessageSquare size={20} className="text-orange-600" />
                     </div>
                     <span className="font-medium">
-                        {language === 'zh' ? 'Language Models' : 'Language Models'}
+                        {language === 'zh' ? '语言模型' : 'Language Models'}
                     </span>
                 </NavLink>
 

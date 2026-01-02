@@ -36,6 +36,10 @@ export const Slide7_StatisticalNgram: React.FC = () => {
         en: {
             title: 'N-gram models predict the next word from a short window.',
             sliderLabel: 'Context size (n)',
+            windowLabel: 'Context window',
+            probLabel: 'Next word probabilities',
+            topGuessLabel: 'Top guess',
+            topGuessNote: 'Based on the last',
             explain: `
 - Statistical models learn which word sequences are common.
 - A bigger window usually improves the prediction.
@@ -43,12 +47,16 @@ export const Slide7_StatisticalNgram: React.FC = () => {
 `,
         },
         zh: {
-            title: 'N-gram models predict the next word from a short window.',
-            sliderLabel: 'Context size (n)',
+            title: 'N-gram 模型用短窗口预测下一个词。',
+            sliderLabel: '上下文长度 (n)',
+            windowLabel: '上下文窗口',
+            probLabel: '候选词概率',
+            topGuessLabel: '最可能的词',
+            topGuessNote: '基于最近',
             explain: `
-- Statistical models learn which word sequences are common.
-- A bigger window usually improves the prediction.
-- They still only see the last n - 1 words.
+- 统计模型学习常见的词序列。
+- 窗口更大通常预测更好。
+- 但它们仍只看到最近的 n - 1 个词。
 `,
         },
     };
@@ -64,18 +72,18 @@ export const Slide7_StatisticalNgram: React.FC = () => {
         <div className="flex h-full gap-4 w-full">
             <ConceptStage>
                 <div className="flex flex-col w-full h-full p-6">
-                    <div className="text-sm text-gray-500 mb-3">{t.title}</div>
+                    <div className="text-base text-gray-600 mb-4">{t.title}</div>
                     <div className="flex-1 grid grid-cols-[1.05fr_1fr] gap-6">
                         <div className="flex flex-col gap-4">
                             <div>
-                                <div className="text-xs uppercase tracking-wide text-gray-500 mb-2">Context window</div>
+                                <div className="text-sm uppercase tracking-wide text-gray-500 mb-2">{t.windowLabel}</div>
                                 <div className="flex flex-wrap gap-2">
                                     {contextTokens.map((token, index) => {
                                         const isActive = index >= highlightStart;
                                         return (
                                             <span
                                                 key={`${token}-${index}`}
-                                                className={`px-2 py-1 rounded-full text-xs border ${
+                                                className={`px-3 py-1 rounded-full text-sm border ${
                                                     isActive
                                                         ? 'bg-slate-900 text-white border-slate-900'
                                                         : 'bg-slate-100 text-slate-500 border-slate-200'
@@ -88,10 +96,10 @@ export const Slide7_StatisticalNgram: React.FC = () => {
                                 </div>
                             </div>
                             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                                <div className="text-xs uppercase tracking-wide text-gray-500 mb-3">Next word probabilities</div>
+                                <div className="text-sm uppercase tracking-wide text-gray-500 mb-3">{t.probLabel}</div>
                                 <div className="space-y-2">
                                     {predictions.map((prediction) => (
-                                        <div key={prediction.word} className="flex items-center gap-3 text-sm text-gray-700">
+                                        <div key={prediction.word} className="flex items-center gap-3 text-base text-gray-700">
                                             <span className="w-20 font-semibold">{prediction.word}</span>
                                             <div className="flex-1 h-2 bg-white border border-slate-200 rounded-full overflow-hidden">
                                                 <div
@@ -99,7 +107,7 @@ export const Slide7_StatisticalNgram: React.FC = () => {
                                                     style={{ width: `${prediction.prob * 100}%` }}
                                                 />
                                             </div>
-                                            <span className="text-xs text-gray-500">{Math.round(prediction.prob * 100)}%</span>
+                                            <span className="text-sm text-gray-500">{Math.round(prediction.prob * 100)}%</span>
                                         </div>
                                     ))}
                                 </div>
@@ -107,14 +115,16 @@ export const Slide7_StatisticalNgram: React.FC = () => {
                         </div>
 
                         <div className="flex flex-col justify-center items-center rounded-2xl border border-indigo-200 bg-indigo-50 p-5 text-center">
-                            <div className="text-xs uppercase tracking-wide text-indigo-600 mb-3">Top guess</div>
-                            <div className="text-3xl font-semibold text-indigo-800">{predictions[0].word}</div>
-                            <div className="text-xs text-indigo-700 mt-2">Based on the last {nValue - 1} words.</div>
+                            <div className="text-sm uppercase tracking-wide text-indigo-600 mb-3">{t.topGuessLabel}</div>
+                            <div className="text-4xl font-semibold text-indigo-800">{predictions[0].word}</div>
+                            <div className="text-sm text-indigo-700 mt-2">
+                                {t.topGuessNote} {nValue - 1} {language === 'zh' ? '个词。' : 'words.'}
+                            </div>
                         </div>
                     </div>
 
                     <div className="mt-4 flex items-center gap-4">
-                        <div className="text-xs text-gray-500">{t.sliderLabel}: {nValue}</div>
+                        <div className="text-sm text-gray-500">{t.sliderLabel}: {nValue}</div>
                         <input
                             type="range"
                             min={2}

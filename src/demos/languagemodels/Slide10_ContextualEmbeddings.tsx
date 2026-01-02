@@ -6,21 +6,19 @@ import { useLanguage } from '../../components/core/LanguageContext';
 const contexts = [
     {
         id: 'money',
-        label: 'Money context',
+        label: { en: 'Money context', zh: '金融语境' },
         center: { x: 140, y: 150 },
         color: '#f97316',
-        examples: ['loan', 'interest', 'account'],
+        examples: { en: ['loan', 'interest', 'account'], zh: ['贷款', '利息', '账户'] },
     },
     {
         id: 'river',
-        label: 'River context',
+        label: { en: 'River context', zh: '河流语境' },
         center: { x: 380, y: 150 },
         color: '#0ea5e9',
-        examples: ['water', 'shore', 'current'],
+        examples: { en: ['water', 'shore', 'current'], zh: ['水', '河岸', '水流'] },
     },
 ];
-
-const timeline = ['Rules', 'Statistics', 'Embeddings', 'RNN', 'Transformer'];
 
 export const Slide10_ContextualEmbeddings: React.FC = () => {
     const { language } = useLanguage();
@@ -41,22 +39,26 @@ export const Slide10_ContextualEmbeddings: React.FC = () => {
             contextualLabel: 'Contextual embedding',
         },
         zh: {
-            title: 'Context decides which meaning a word should take.',
+            title: '语境决定一个词应取哪种含义。',
             explain: `
-- Traditional embeddings store one vector per word.
-- Words like "bank" need different vectors for different contexts.
-- Sequence models and Transformers learn contextual embeddings.
+- 传统词向量为每个词只存一个向量。
+- 像 "bank" 这样的词在不同语境需要不同向量。
+- 序列模型与 Transformer 学到语境化向量。
 `,
-            selectorLabel: 'Choose a context',
-            staticLabel: 'Static embedding',
-            staticNoteLine1: 'Static vector blurs',
-            staticNoteLine2: 'both meanings.',
-            contextualLabel: 'Contextual embedding',
+            selectorLabel: '选择一个语境',
+            staticLabel: '静态向量',
+            staticNoteLine1: '静态向量会混淆',
+            staticNoteLine2: '两种含义。',
+            contextualLabel: '语境向量',
         },
     };
 
     const t = text[language];
     const selected = contexts.find((context) => context.id === selectedId) ?? contexts[0];
+    const timeline = language === 'zh'
+        ? ['规则', '统计', '词向量', 'RNN', 'Transformer']
+        : ['Rules', 'Statistics', 'Embeddings', 'RNN', 'Transformer'];
+    const activeStep = language === 'zh' ? '词向量' : 'Embeddings';
 
     const staticPoint = useMemo(() => ({ x: 260, y: 150 }), []);
     const contextualY = selected.center.y - 18;
@@ -65,7 +67,7 @@ export const Slide10_ContextualEmbeddings: React.FC = () => {
         <div className="flex h-full gap-4 w-full">
             <ConceptStage>
                 <div className="flex flex-col w-full h-full p-6">
-                    <div className="text-sm text-gray-500 mb-3">{t.title}</div>
+                    <div className="text-base text-gray-600 mb-4">{t.title}</div>
                     <div className="flex-1 flex flex-col gap-4">
                         <div className="flex items-center gap-3">
                             {contexts.map((context) => {
@@ -75,14 +77,14 @@ export const Slide10_ContextualEmbeddings: React.FC = () => {
                                         key={context.id}
                                         type="button"
                                         onClick={() => setSelectedId(context.id)}
-                                        className={`px-3 py-2 rounded-full text-xs font-semibold border transition ${
+                                        className={`px-4 py-2 rounded-full text-sm font-semibold border transition ${
                                             isActive
                                                 ? 'bg-slate-900 text-white border-slate-900'
                                                 : 'bg-white text-gray-600 border-gray-200'
                                         }`}
                                         aria-pressed={isActive}
                                     >
-                                        {context.label}
+                                        {context.label[language]}
                                     </button>
                                 );
                             })}
@@ -99,39 +101,39 @@ export const Slide10_ContextualEmbeddings: React.FC = () => {
                                             fill={context.color}
                                             opacity={0.12}
                                         />
+                                    <text
+                                        x={context.center.x}
+                                        y={context.center.y - 82}
+                                        textAnchor="middle"
+                                        fontSize={14}
+                                        fill="#475569"
+                                    >
+                                        {context.label[language]}
+                                    </text>
+                                    {context.examples[language].map((word, index) => (
                                         <text
+                                            key={word}
                                             x={context.center.x}
-                                            y={context.center.y - 80}
+                                            y={context.center.y + 18 + index * 16}
                                             textAnchor="middle"
-                                            fontSize={12}
-                                            fill="#475569"
+                                            fontSize={13}
+                                            fill="#64748b"
                                         >
-                                            {context.label}
+                                            {word}
                                         </text>
-                                        {context.examples.map((word, index) => (
-                                            <text
-                                                key={word}
-                                                x={context.center.x}
-                                                y={context.center.y + 18 + index * 16}
-                                                textAnchor="middle"
-                                                fontSize={11}
-                                                fill="#64748b"
-                                            >
-                                                {word}
-                                            </text>
-                                        ))}
+                                    ))}
                                     </g>
                                 ))}
                                 <g>
                                     <circle cx={staticPoint.x} cy={staticPoint.y} r={10} fill="#94a3b8" />
-                                    <text x={staticPoint.x} y={staticPoint.y + 26} textAnchor="middle" fontSize={11} fill="#475569">
+                                    <text x={staticPoint.x} y={staticPoint.y + 26} textAnchor="middle" fontSize={12} fill="#475569">
                                         {t.staticLabel}
                                     </text>
                                     <text
                                         x={staticPoint.x}
                                         y={staticPoint.y + 42}
                                         textAnchor="middle"
-                                        fontSize={10}
+                                        fontSize={11}
                                         fill="#64748b"
                                     >
                                         {t.staticNoteLine1}
@@ -140,7 +142,7 @@ export const Slide10_ContextualEmbeddings: React.FC = () => {
                                         x={staticPoint.x}
                                         y={staticPoint.y + 56}
                                         textAnchor="middle"
-                                        fontSize={10}
+                                        fontSize={11}
                                         fill="#64748b"
                                     >
                                         {t.staticNoteLine2}
@@ -156,7 +158,7 @@ export const Slide10_ContextualEmbeddings: React.FC = () => {
                                     <text
                                         x={selected.center.x + 18}
                                         y={contextualY + 4}
-                                        fontSize={12}
+                                        fontSize={14}
                                         fill="#0f172a"
                                     >
                                         bank
@@ -165,7 +167,7 @@ export const Slide10_ContextualEmbeddings: React.FC = () => {
                                         x={selected.center.x}
                                         y={selected.center.y + 92}
                                         textAnchor="middle"
-                                        fontSize={11}
+                                        fontSize={12}
                                         fill="#0f172a"
                                     >
                                         {t.contextualLabel}
@@ -174,9 +176,9 @@ export const Slide10_ContextualEmbeddings: React.FC = () => {
                             </svg>
                         </div>
 
-                        <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs text-slate-600">
+                        <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
                             {timeline.map((step) => {
-                                const isActive = step === 'Embeddings';
+                                const isActive = step === activeStep;
                                 const isNext = step === 'RNN' || step === 'Transformer';
                                 return (
                                     <span
