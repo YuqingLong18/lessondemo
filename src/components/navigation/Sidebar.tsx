@@ -148,7 +148,7 @@ export const Sidebar: React.FC = () => {
                         <Cpu size={20} className="text-teal-600" />
                     </div>
                     <span className="font-medium">
-                        {language === 'zh' ? 'The Transformer Architecture' : 'The Transformer Architecture'}
+                        {language === 'zh' ? 'Transformer 架构' : 'The Transformer Architecture'}
                     </span>
                 </NavLink>
             </nav>

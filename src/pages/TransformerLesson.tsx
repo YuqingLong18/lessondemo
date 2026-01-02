@@ -8,31 +8,31 @@ import { Slide5_Outro } from '../demos/transformer/Slide5_Outro';
 
 const slides = [
     {
-        title: { zh: 'The Transformer Architecture', en: 'The Transformer Architecture' },
-        subConcept: { zh: 'Module 1 - The Hook (RNNs)', en: 'Module 1 - The Hook (RNNs)' },
+        title: { zh: 'Transformer 架构', en: 'The Transformer Architecture' },
+        subConcept: { zh: '模块 1 - 引子（RNN）', en: 'Module 1 - The Hook (RNNs)' },
         component: Slide1_TheHook,
     },
     {
-        title: { zh: 'The Transformer Architecture', en: 'The Transformer Architecture' },
-        subConcept: { zh: 'Module 2 - Enter the Syndicate', en: 'Module 2 - Enter the Syndicate' },
+        title: { zh: 'Transformer 架构', en: 'The Transformer Architecture' },
+        subConcept: { zh: '模块 2 - Syndicate 登场', en: 'Module 2 - Enter the Syndicate' },
         component: Slide2_Intro,
     },
     {
-        title: { zh: 'The Transformer Architecture', en: 'The Transformer Architecture' },
+        title: { zh: 'Transformer 架构', en: 'The Transformer Architecture' },
         subConcept: {
-            zh: 'Module 3 - Suiting Up (Embeddings + Position)',
+            zh: '模块 3 - 装备上身（嵌入 + 位置）',
             en: 'Module 3 - Suiting Up (Embeddings + Position)',
         },
         component: Slide3_DeepDive,
     },
     {
-        title: { zh: 'The Transformer Architecture', en: 'The Transformer Architecture' },
-        subConcept: { zh: 'Module 4 - The Resonance (Attention)', en: 'Module 4 - The Resonance (Attention)' },
+        title: { zh: 'Transformer 架构', en: 'The Transformer Architecture' },
+        subConcept: { zh: '模块 4 - 共振（注意力）', en: 'Module 4 - The Resonance (Attention)' },
         component: Slide4_MainEvent,
     },
     {
-        title: { zh: 'The Transformer Architecture', en: 'The Transformer Architecture' },
-        subConcept: { zh: 'Module 5 - The Decoder and the Future', en: 'Module 5 - The Decoder and the Future' },
+        title: { zh: 'Transformer 架构', en: 'The Transformer Architecture' },
+        subConcept: { zh: '模块 5 - 全局图景', en: 'Module 5 - The Big Picture' },
         component: Slide5_Outro,
     },
 ];

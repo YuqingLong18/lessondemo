@@ -4,12 +4,14 @@ import { ExplainPanel } from '../../components/core/ExplainPanel';
 import { ConceptStage } from '../../components/core/ConceptStage';
 import type { RegisterStepControl } from '../../components/core/SlideDeck';
 import { NeonBabelFrame } from './NeonBabelFrame';
+import { useLanguage } from '../../components/core/LanguageContext';
 
 interface SlideStepProps {
     registerStepControl?: RegisterStepControl;
 }
 
 export const Slide4_MainEvent: React.FC<SlideStepProps> = ({ registerStepControl }) => {
+    const { language } = useLanguage();
     const [step, setStep] = useState(0); // 0: Idle, 1: Query, 2: Key Match, 3: Value Download
     const totalSteps = 4;
 
@@ -34,7 +36,7 @@ export const Slide4_MainEvent: React.FC<SlideStepProps> = ({ registerStepControl
         return () => registerStepControl(null);
     }, [registerStepControl]);
 
-    const words = [
+    const wordsEn = [
         { text: 'The', type: 'article', match: 0.1 },
         { text: 'big', type: 'adj', match: 0.2 },
         { text: 'red', type: 'adj', match: 0.2 },
@@ -44,27 +46,42 @@ export const Slide4_MainEvent: React.FC<SlideStepProps> = ({ registerStepControl
         { text: 'tiny', type: 'adj', match: 0.3 },
         { text: 'bone', type: 'noun', match: 0.65, label: 'MEDIUM MATCH' },
     ];
+    const wordsZh = [
+        { text: '那只', type: '限定词', match: 0.1 },
+        { text: '大', type: '形容词', match: 0.2 },
+        { text: '红', type: '形容词', match: 0.2 },
+        { text: '狗', type: '名词', match: 0.95, label: '高匹配' },
+        { text: '吃了', type: '动词', match: 1.0, isFocus: true },
+        { text: '那根', type: '限定词', match: 0.1 },
+        { text: '小', type: '形容词', match: 0.3 },
+        { text: '骨头', type: '名词', match: 0.65, label: '中等匹配' },
+    ];
 
+    const words = language === 'zh' ? wordsZh : wordsEn;
     const focusIndex = words.findIndex((word) => word.isFocus);
 
     return (
         <>
             <ConceptStage>
-                <NeonBabelFrame cornerLabel="Module 4 - The Resonance">
+                <NeonBabelFrame cornerLabel={language === 'zh' ? '模块 4 - 共振' : 'Module 4 - The Resonance'}>
                     <div className="flex-1 flex flex-col items-center justify-between py-6">
                         <div className="flex flex-col items-center gap-2">
                             <div className="text-xs uppercase tracking-[0.3em] text-cyan-200">
-                                Attention Protocol - Matchmaking in motion
+                                {language === 'zh' ? '注意力协议 - 匹配进行中' : 'Attention Protocol - Matchmaking in motion'}
                             </div>
 
                             <div className="text-sm text-slate-300 max-w-xl text-center">
-                                The word "ate" needs a subject and an object. It sends a resonance ping to every other word.
+                                {language === 'zh'
+                                    ? '“吃了”需要主语和宾语，它向每个词发送共振信号。'
+                                    : 'The word "ate" needs a subject and an object. It sends a resonance ping to every other word.'}
                             </div>
 
                             <div className="min-h-[28px] flex items-center justify-center">
                                 {step >= 1 && (
                                     <div className="text-[10px] uppercase tracking-[0.3em] text-cyan-200 border border-cyan-400/40 px-3 py-1 rounded-full">
-                                        Query: Looking for nouns related to eating
+                                        {language === 'zh'
+                                            ? '查询：寻找与“吃”相关的名词'
+                                            : 'Query: Looking for nouns related to eating'}
                                     </div>
                                 )}
                             </div>
@@ -94,47 +111,49 @@ export const Slide4_MainEvent: React.FC<SlideStepProps> = ({ registerStepControl
                                                 : 'text-slate-400';
 
                                     return (
-                                    <div key={word.text} className="flex flex-col items-center relative">
-                                        <div
-                                            className={`w-20 h-24 rounded-lg flex flex-col items-center justify-center border-2 transition-all duration-500 ${
-                                                word.isFocus
-                                                    ? 'bg-cyan-200 text-slate-900 border-cyan-400 scale-110 shadow-[0_0_30px_rgba(34,211,238,0.6)]'
-                                                    : `bg-slate-900/80 text-slate-100 ${step >= 2 ? signalStyles : 'border-slate-600/60'}`
-                                            }`}
-                                        >
-                                            <span className="font-bold text-lg">{word.text}</span>
-                                            <span className="text-[10px] uppercase tracking-[0.3em] text-slate-400">{word.type}</span>
+                                        <div key={word.text} className="flex flex-col items-center relative">
+                                            <div
+                                                className={`w-20 h-24 rounded-lg flex flex-col items-center justify-center border-2 transition-all duration-500 ${
+                                                    word.isFocus
+                                                        ? 'bg-cyan-200 text-slate-900 border-cyan-400 scale-110 shadow-[0_0_30px_rgba(34,211,238,0.6)]'
+                                                        : `bg-slate-900/80 text-slate-100 ${step >= 2 ? signalStyles : 'border-slate-600/60'}`
+                                                }`}
+                                            >
+                                                <span className="font-bold text-lg">{word.text}</span>
+                                                <span className="text-[10px] uppercase tracking-[0.3em] text-slate-400">
+                                                    {word.type}
+                                                </span>
 
-                                            {step >= 1 && word.isFocus && (
-                                                <div className="absolute -inset-4 rounded-full border border-cyan-300/60 animate-ping" />
-                                            )}
-                                            {step >= 2 && !word.isFocus && word.label && (
-                                                <div
-                                                    className={`absolute -top-7 text-[9px] uppercase tracking-[0.3em] ${signalText}`}
-                                                    style={{ opacity: 0.9 }}
-                                                >
-                                                    {word.label}
-                                                </div>
-                                            )}
-                                            {step >= 2 && !word.isFocus && (
-                                                <div className={`absolute -top-2 flex items-center gap-1 ${signalText}`}>
-                                                    <span className={`w-2 h-2 rounded-full ${signalDot}`} />
-                                                    <Key size={14} />
-                                                </div>
-                                            )}
-                                            {step === 3 && !word.isFocus && word.match > 0.5 && (
-                                                <div className="absolute -bottom-4 text-cyan-300 animate-pulse">
-                                                    <Download size={14} />
-                                                </div>
-                                            )}
-                                            {step >= 2 && !word.isFocus && (
-                                                <div
-                                                    className={`absolute -bottom-3 w-10 h-1 rounded-full ${signalDot}`}
-                                                    style={{ opacity: matchLevel === 'low' ? 0.4 : 0.9 }}
-                                                />
-                                            )}
+                                                {step >= 1 && word.isFocus && (
+                                                    <div className="absolute -inset-4 rounded-full border border-cyan-300/60 animate-ping" />
+                                                )}
+                                                {step >= 2 && !word.isFocus && word.label && (
+                                                    <div
+                                                        className={`absolute -top-7 text-[9px] uppercase tracking-[0.3em] ${signalText}`}
+                                                        style={{ opacity: 0.9 }}
+                                                    >
+                                                        {word.label}
+                                                    </div>
+                                                )}
+                                                {step >= 2 && !word.isFocus && (
+                                                    <div className={`absolute -top-2 flex items-center gap-1 ${signalText}`}>
+                                                        <span className={`w-2 h-2 rounded-full ${signalDot}`} />
+                                                        <Key size={14} />
+                                                    </div>
+                                                )}
+                                                {step === 3 && !word.isFocus && word.match > 0.5 && (
+                                                    <div className="absolute -bottom-4 text-cyan-300 animate-pulse">
+                                                        <Download size={14} />
+                                                    </div>
+                                                )}
+                                                {step >= 2 && !word.isFocus && (
+                                                    <div
+                                                        className={`absolute -bottom-3 w-10 h-1 rounded-full ${signalDot}`}
+                                                        style={{ opacity: matchLevel === 'low' ? 0.4 : 0.9 }}
+                                                    />
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
                                     );
                                 })}
                             </div>
@@ -166,7 +185,7 @@ export const Slide4_MainEvent: React.FC<SlideStepProps> = ({ registerStepControl
                                     onClick={handleBroadcastQ}
                                     className="px-6 py-3 bg-cyan-400 text-slate-900 font-bold rounded-lg shadow-[0_0_20px_rgba(34,211,238,0.4)] flex items-center gap-2"
                                 >
-                                    <Radio size={18} /> BROADCAST Q
+                                    <Radio size={18} /> {language === 'zh' ? '广播 Q' : 'BROADCAST Q'}
                                 </button>
                             )}
                             {step === 1 && (
@@ -174,7 +193,7 @@ export const Slide4_MainEvent: React.FC<SlideStepProps> = ({ registerStepControl
                                     onClick={handleCheckKeys}
                                     className="px-6 py-3 bg-amber-400 text-slate-900 font-bold rounded-lg shadow-[0_0_20px_rgba(250,204,21,0.4)] flex items-center gap-2"
                                 >
-                                    <Key size={18} /> CHECK KEYS
+                                    <Key size={18} /> {language === 'zh' ? '检查 K' : 'CHECK KEYS'}
                                 </button>
                             )}
                             {step === 2 && (
@@ -182,12 +201,14 @@ export const Slide4_MainEvent: React.FC<SlideStepProps> = ({ registerStepControl
                                     onClick={handleDownloadValues}
                                     className="px-6 py-3 bg-slate-100 text-slate-900 font-bold rounded-lg shadow-[0_0_20px_rgba(248,250,252,0.4)] flex items-center gap-2"
                                 >
-                                    <Download size={18} /> DOWNLOAD VALUES
+                                    <Download size={18} /> {language === 'zh' ? '下载 V' : 'DOWNLOAD VALUES'}
                                 </button>
                             )}
                             {step === 3 && (
                                 <div className="px-6 py-3 bg-slate-950/80 text-cyan-200 border border-cyan-400/40 rounded-lg text-sm">
-                                    Self-attention complete: "ate" locks onto "dog" and "bone".
+                                    {language === 'zh'
+                                        ? '自注意力完成：“吃了”锁定“狗”和“骨头”。'
+                                        : 'Self-attention complete: "ate" locks onto "dog" and "bone".'}
                                 </div>
                             )}
                         </div>
@@ -196,13 +217,22 @@ export const Slide4_MainEvent: React.FC<SlideStepProps> = ({ registerStepControl
             </ConceptStage>
             <ExplainPanel>
                 <li>
-                    <strong>Query (Q):</strong> "Ate" sends a resonance ping asking who acted and what was acted on.
+                    <strong>{language === 'zh' ? 'Q（查询）：' : 'Query (Q):'}</strong>{' '}
+                    {language === 'zh'
+                        ? '“吃了”发出共振：谁在吃？吃了什么？'
+                        : '"Ate" sends a resonance ping asking who acted and what was acted on.'}
                 </li>
                 <li>
-                    <strong>Key (K):</strong> Each word replies with a match signal. Dog is bright, bone is medium.
+                    <strong>{language === 'zh' ? 'K（键）：' : 'Key (K):'}</strong>{' '}
+                    {language === 'zh'
+                        ? '每个词回复匹配强度：狗最强，骨头中等。'
+                        : 'Each word replies with a match signal. Dog is bright, bone is medium.'}
                 </li>
                 <li>
-                    <strong>Value (V):</strong> "Ate" absorbs the strongest replies to build context. This is self-attention.
+                    <strong>{language === 'zh' ? 'V（值）：' : 'Value (V):'}</strong>{' '}
+                    {language === 'zh'
+                        ? '“吃了”吸收最强的回复来建立语义，这就是自注意力。'
+                        : '"Ate" absorbs the strongest replies to build context. This is self-attention.'}
                 </li>
             </ExplainPanel>
         </>

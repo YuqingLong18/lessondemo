@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from '../../components/core/LanguageContext';
 
 interface NeonBabelFrameProps {
     children: React.ReactNode;
@@ -6,6 +7,8 @@ interface NeonBabelFrameProps {
 }
 
 export const NeonBabelFrame: React.FC<NeonBabelFrameProps> = ({ children, cornerLabel }) => {
+    const { language } = useLanguage();
+    const projectLabel = language === 'zh' ? '项目：NEON BABEL' : 'Project: NEON BABEL';
     return (
         <div
             className="relative w-full h-full overflow-hidden"
@@ -45,7 +48,7 @@ export const NeonBabelFrame: React.FC<NeonBabelFrameProps> = ({ children, corner
                         className="px-3 py-1 rounded-full border border-cyan-400/60 text-cyan-200"
                         style={{ fontFamily: 'var(--neon-display-font)' }}
                     >
-                        Project: NEON BABEL
+                        {projectLabel}
                     </span>
                     <span className="text-slate-400">{cornerLabel || 'Transformer Architecture'}</span>
                 </div>
