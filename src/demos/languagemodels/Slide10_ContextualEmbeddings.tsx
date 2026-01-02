@@ -36,6 +36,8 @@ export const Slide10_ContextualEmbeddings: React.FC = () => {
 `,
             selectorLabel: 'Choose a context',
             staticLabel: 'Static embedding',
+            staticNoteLine1: 'Static vector blurs',
+            staticNoteLine2: 'both meanings.',
             contextualLabel: 'Contextual embedding',
         },
         zh: {
@@ -47,6 +49,8 @@ export const Slide10_ContextualEmbeddings: React.FC = () => {
 `,
             selectorLabel: 'Choose a context',
             staticLabel: 'Static embedding',
+            staticNoteLine1: 'Static vector blurs',
+            staticNoteLine2: 'both meanings.',
             contextualLabel: 'Contextual embedding',
         },
     };
@@ -55,6 +59,7 @@ export const Slide10_ContextualEmbeddings: React.FC = () => {
     const selected = contexts.find((context) => context.id === selectedId) ?? contexts[0];
 
     const staticPoint = useMemo(() => ({ x: 260, y: 150 }), []);
+    const contextualY = selected.center.y - 18;
 
     return (
         <div className="flex h-full gap-4 w-full">
@@ -122,17 +127,43 @@ export const Slide10_ContextualEmbeddings: React.FC = () => {
                                     <text x={staticPoint.x} y={staticPoint.y + 26} textAnchor="middle" fontSize={11} fill="#475569">
                                         {t.staticLabel}
                                     </text>
+                                    <text
+                                        x={staticPoint.x}
+                                        y={staticPoint.y + 42}
+                                        textAnchor="middle"
+                                        fontSize={10}
+                                        fill="#64748b"
+                                    >
+                                        {t.staticNoteLine1}
+                                    </text>
+                                    <text
+                                        x={staticPoint.x}
+                                        y={staticPoint.y + 56}
+                                        textAnchor="middle"
+                                        fontSize={10}
+                                        fill="#64748b"
+                                    >
+                                        {t.staticNoteLine2}
+                                    </text>
                                 </g>
                                 <g>
                                     <circle
                                         cx={selected.center.x}
-                                        cy={selected.center.y}
+                                        cy={contextualY}
                                         r={12}
                                         fill="#0f172a"
                                     />
                                     <text
+                                        x={selected.center.x + 18}
+                                        y={contextualY + 4}
+                                        fontSize={12}
+                                        fill="#0f172a"
+                                    >
+                                        bank
+                                    </text>
+                                    <text
                                         x={selected.center.x}
-                                        y={selected.center.y + 28}
+                                        y={selected.center.y + 92}
                                         textAnchor="middle"
                                         fontSize={11}
                                         fill="#0f172a"

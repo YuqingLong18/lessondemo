@@ -4,18 +4,18 @@ import { ExplainPanel } from '../../components/core/ExplainPanel';
 import { useLanguage } from '../../components/core/LanguageContext';
 
 const points: Record<string, { x: number; y: number; group: string }> = {
-    man: { x: 80, y: 210, group: 'gender' },
-    woman: { x: 170, y: 210, group: 'gender' },
-    king: { x: 80, y: 120, group: 'gender' },
-    queen: { x: 170, y: 120, group: 'gender' },
-    france: { x: 330, y: 220, group: 'geo' },
-    italy: { x: 430, y: 220, group: 'geo' },
-    paris: { x: 330, y: 140, group: 'geo' },
-    rome: { x: 430, y: 140, group: 'geo' },
-    walk: { x: 120, y: 300, group: 'tense' },
-    walked: { x: 120, y: 260, group: 'tense' },
-    swim: { x: 220, y: 300, group: 'tense' },
-    swam: { x: 220, y: 260, group: 'tense' },
+    man: { x: 100, y: 230, group: 'gender' },
+    woman: { x: 190, y: 210, group: 'gender' },
+    king: { x: 80, y: 85, group: 'gender' },
+    queen: { x: 170, y: 65, group: 'gender' },
+    france: { x: 400, y: 240, group: 'geo' },
+    italy: { x: 470, y: 210, group: 'geo' },
+    paris: { x: 330, y: 170, group: 'geo' },
+    rome: { x: 400, y: 140, group: 'geo' },
+    walk: { x: 140, y: 310, group: 'tense' },
+    walked: { x: 180, y: 240, group: 'tense' },
+    swim: { x: 250, y: 300, group: 'tense' },
+    swam: { x: 290, y: 230, group: 'tense' },
 };
 
 const examples = [
