@@ -10,6 +10,7 @@ import { KnowledgeLearningDemo } from './demos/knowledgelearning/KnowledgeLearni
 import { GradientDescentLesson } from './pages/GradientDescentLesson';
 import { TransformerLesson } from './pages/TransformerLesson';
 import { LanguageModelsLesson } from './pages/LanguageModelsLesson';
+import { LearningToGeneratingLesson } from './pages/LearningToGeneratingLesson';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="neuron" element={<NeuronLesson />} />
             <Route path="cnn" element={<CNNLesson />} />
             <Route path="rnn" element={<RNNLesson />} />
+            <Route path="learning-to-generating" element={<LearningToGeneratingLesson />} />
             <Route path="language-models" element={<LanguageModelsLesson />} />
             <Route path="gradient-descent" element={<GradientDescentLesson />} />
             <Route path="transformer" element={<TransformerLesson />} />
