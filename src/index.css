@@ -7,6 +7,15 @@
   line-height: 1.5;
   font-weight: 400;
   box-sizing: border-box;
+  --neon-display-font: 'Orbitron', 'Rajdhani', 'Segoe UI', sans-serif;
+  --neon-body-font: 'Share Tech Mono', 'Fira Mono', 'Menlo', monospace;
+  --neon-cyan: #2ee6ff;
+  --neon-pink: #ff47c1;
+  --neon-amber: #f6c945;
+  --neon-blue: #5b9dff;
+  --neon-green: #3dffb5;
+  --neon-dark: #0b0f1a;
+  --neon-panel: #101826;
 }
 
 *,
@@ -21,4 +30,38 @@ body {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+}
+
+@keyframes neon-float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes neon-scan {
+  0% {
+    transform: translateX(-40%);
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateX(140%);
+    opacity: 0;
+  }
+}
+
+.neon-float {
+  animation: neon-float 8s ease-in-out infinite;
+}
+
+.neon-scan {
+  animation: neon-scan 10s linear infinite;
 }
