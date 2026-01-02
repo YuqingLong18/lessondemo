@@ -249,3 +249,17 @@ Only then may you begin implementation.
 ---
 
 **End of AGENTS.md**
+
+## 12. Additional Design Practices (Observed)
+
+These are practical patterns seen across the existing demos and should be followed unless they conflict with earlier sections:
+
+- Maintain a clear typographic hierarchy: headline, prompt, then small supporting text.
+- Keep a consistent grid and spacing rhythm across slides for cohesion.
+- Make the primary interaction obvious with a strong affordance (bold label, pill button, highlight).
+- Place feedback near the interaction rather than in a modal or separate area.
+- Use card groupings to isolate the main concept without heavy animation.
+- Apply semantic colors tied to meaning (input/process/output, category groupings, correct/incorrect).
+- Keep multiple-choice layouts symmetric to avoid bias.
+- Favor larger type and shorter text blocks for projector legibility.
+- Localize UI scaffolding while keeping core example content stable across languages.
