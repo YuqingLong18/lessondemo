@@ -9,7 +9,6 @@ import { AnimalFace, MeterBar, PillButton, StageCard } from './shared';
 const samples = [
     {
         input: 'cat',
-        label: 'Cat',
         confidence: 0.88,
         outputs: [
             { catness: 0.9, energy: 0.4 },
@@ -20,7 +19,6 @@ const samples = [
     },
     {
         input: 'dog',
-        label: 'Dog',
         confidence: 0.83,
         outputs: [
             { catness: 0.2, energy: 0.7 },
@@ -31,7 +29,6 @@ const samples = [
     },
     {
         input: 'cat',
-        label: 'Cat',
         confidence: 0.64,
         outputs: [
             { catness: 0.55, energy: 0.4 },
@@ -58,22 +55,26 @@ const copy = {
         noInput: 'No input needed',
         predictionLabel: 'confidence',
         generatedLabel: 'Generated samples',
+        catLabel: 'Cat',
+        dogLabel: 'Dog',
     },
     zh: {
-        title: '1. Learning Can Predict or Create',
+        title: '1. 学习可以预测或生成',
         bullets: [
-            'Prediction uses input to guess a label or next step.',
-            'Generation starts from a seed and creates new examples.',
-            'Toggle the task to see how the goal changes.',
+            '预测使用输入来猜测标签或下一步。',
+            '生成从一个种子开始，创造新的例子。',
+            '切换任务，看目标如何变化。',
         ],
-        inputLabel: 'Input',
-        outputLabel: 'Output',
-        predict: 'Predict',
-        generate: 'Generate',
-        nextSample: 'Next sample',
-        noInput: 'No input needed',
-        predictionLabel: 'confidence',
-        generatedLabel: 'Generated samples',
+        inputLabel: '输入',
+        outputLabel: '输出',
+        predict: '预测',
+        generate: '生成',
+        nextSample: '下一个样本',
+        noInput: '无需输入',
+        predictionLabel: '置信度',
+        generatedLabel: '生成样本',
+        catLabel: '猫',
+        dogLabel: '狗',
     },
 };
 
@@ -82,8 +83,10 @@ export const Slide1_FromLearningToGenerating: React.FC = () => {
     const t = copy[language];
     const [mode, setMode] = useState<'predict' | 'generate'>('predict');
     const [sampleIndex, setSampleIndex] = useState(0);
+    const explain = `**${t.title}**\n\n${t.bullets.map((bullet) => `- ${bullet}`).join('\n')}`;
 
     const sample = samples[sampleIndex];
+    const sampleLabel = sample.input === 'cat' ? t.catLabel : t.dogLabel;
     const inputImage = sample.input === 'cat' ? catImage : dogImage;
 
     return (
@@ -105,9 +108,9 @@ export const Slide1_FromLearningToGenerating: React.FC = () => {
                         <StageCard title={t.outputLabel} tone="output">
                             {mode === 'predict' ? (
                                 <div style={{ width: '100%' }}>
-                                    <div style={{ fontWeight: 700, marginBottom: '0.6rem' }}>{sample.label}</div>
+                                    <div style={{ fontWeight: 700, marginBottom: '0.6rem' }}>{sampleLabel}</div>
                                     <MeterBar
-                                        label={`${sample.label} ${t.predictionLabel}`}
+                                        label={`${sampleLabel} ${t.predictionLabel}`}
                                         value={sample.confidence}
                                         color="#60a5fa"
                                     />
@@ -155,14 +158,7 @@ export const Slide1_FromLearningToGenerating: React.FC = () => {
                     </div>
                 </div>
             </ConceptStage>
-            <ExplainPanel>
-                <h3>{t.title}</h3>
-                <ul>
-                    {t.bullets.map((item, index) => (
-                        <li key={index}>{item}</li>
-                    ))}
-                </ul>
-            </ExplainPanel>
+            <ExplainPanel>{explain}</ExplainPanel>
         </>
     );
 };

@@ -23,19 +23,19 @@ const copy = {
         statusCollapse: 'Mode collapse',
     },
     zh: {
-        title: '6. GANs Need Balance',
+        title: '6. GAN 需要平衡',
         bullets: [
-            'If the discriminator is too weak, fakes stay noisy.',
-            'If it is too strong, the generator collapses to one idea.',
-            'Balanced competition improves both quality and diversity.',
+            '判别器太弱时，生成样本会很嘈杂。',
+            '判别器太强时，生成器会坍缩成单一模式。',
+            '平衡对抗能提升质量与多样性。',
         ],
-        strength: 'Discriminator strength',
-        quality: 'Sample quality',
-        diversity: 'Sample diversity',
-        samples: 'Sample grid',
-        statusBalanced: 'Balanced learning',
-        statusNoisy: 'Noisy samples',
-        statusCollapse: 'Mode collapse',
+        strength: '判别器强度',
+        quality: '样本质量',
+        diversity: '样本多样性',
+        samples: '样本网格',
+        statusBalanced: '平衡学习',
+        statusNoisy: '噪声样本',
+        statusCollapse: '模式崩塌',
     },
 };
 
@@ -43,6 +43,7 @@ export const Slide6_TrainingBalance: React.FC = () => {
     const { language } = useLanguage();
     const t = copy[language];
     const [strength, setStrength] = useState(0.5);
+    const explain = `**${t.title}**\n\n${t.bullets.map((bullet) => `- ${bullet}`).join('\n')}`;
 
     const quality = clamp(1 - Math.abs(strength - 0.6) * 1.4, 0.2, 1);
     const diversity = clamp(1 - Math.abs(strength - 0.5) * 2.0, 0.2, 1);
@@ -111,14 +112,7 @@ export const Slide6_TrainingBalance: React.FC = () => {
                     </StageCard>
                 </div>
             </ConceptStage>
-            <ExplainPanel>
-                <h3>{t.title}</h3>
-                <ul>
-                    {t.bullets.map((item, index) => (
-                        <li key={index}>{item}</li>
-                    ))}
-                </ul>
-            </ExplainPanel>
+            <ExplainPanel>{explain}</ExplainPanel>
         </>
     );
 };

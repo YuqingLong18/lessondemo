@@ -23,18 +23,18 @@ const copy = {
         generated: 'Generated',
     },
     zh: {
-        title: '7. Autoencoder vs GAN Objectives',
+        title: '7. 自编码器 vs GAN 的目标',
         bullets: [
-            'Autoencoders focus on faithful reconstruction.',
-            'GANs focus on realism and variety.',
-            'Compare which goal you want the model to optimize.',
+            '自编码器关注“还原得多像”。',
+            'GAN 关注“逼真度与多样性”。',
+            '对比你希望模型优化的目标。',
         ],
-        autoencoder: 'Autoencoder',
+        autoencoder: '自编码器',
         gan: 'GAN',
-        input: 'Input',
-        reconstruction: 'Reconstruction',
-        noise: 'Noise',
-        generated: 'Generated',
+        input: '输入',
+        reconstruction: '重建',
+        noise: '噪声',
+        generated: '生成结果',
     },
 };
 
@@ -42,6 +42,7 @@ export const Slide7_AEvsGAN: React.FC = () => {
     const { language } = useLanguage();
     const t = copy[language];
     const [focus, setFocus] = useState<'autoencoder' | 'gan'>('autoencoder');
+    const explain = `**${t.title}**\n\n${t.bullets.map((bullet) => `- ${bullet}`).join('\n')}`;
 
     const highlightStyle = (isActive: boolean) => ({
         border: isActive ? '2px solid #60a5fa' : '2px solid transparent',
@@ -96,14 +97,7 @@ export const Slide7_AEvsGAN: React.FC = () => {
                     </div>
                 </div>
             </ConceptStage>
-            <ExplainPanel>
-                <h3>{t.title}</h3>
-                <ul>
-                    {t.bullets.map((item, index) => (
-                        <li key={index}>{item}</li>
-                    ))}
-                </ul>
-            </ExplainPanel>
+            <ExplainPanel>{explain}</ExplainPanel>
         </>
     );
 };

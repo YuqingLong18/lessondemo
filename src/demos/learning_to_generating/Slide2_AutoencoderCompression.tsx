@@ -14,7 +14,8 @@ const copy = {
         bullets: [
             'The encoder squeezes the input into a small code.',
             'The decoder rebuilds the image from that code.',
-            'Smaller bottlenecks lose detail.',
+            'Because the code is tiny, it can only keep key traits (ears, fur, color).',
+            'As training improves, it learns the most efficient features to store.',
         ],
         inputLabel: 'Input image',
         codeLabel: 'Latent code',
@@ -24,18 +25,19 @@ const copy = {
         dog: 'Dog',
     },
     zh: {
-        title: '2. Autoencoders Compress and Rebuild',
+        title: '2. 自编码器压缩并重建',
         bullets: [
-            'The encoder squeezes the input into a small code.',
-            'The decoder rebuilds the image from that code.',
-            'Smaller bottlenecks lose detail.',
+            '编码器把输入压缩成一个很小的编码。',
+            '解码器根据该编码重建图像。',
+            '由于编码很小，只能保留关键特征（耳朵、毛发、颜色）。',
+            '训练越好，学到的存储特征越高效。',
         ],
-        inputLabel: 'Input image',
-        codeLabel: 'Latent code',
-        outputLabel: 'Reconstruction',
-        bottleneckLabel: 'Bottleneck size',
-        cat: 'Cat',
-        dog: 'Dog',
+        inputLabel: '输入图像',
+        codeLabel: '潜在编码',
+        outputLabel: '重建结果',
+        bottleneckLabel: '瓶颈大小',
+        cat: '猫',
+        dog: '狗',
     },
 };
 
@@ -44,6 +46,7 @@ export const Slide2_AutoencoderCompression: React.FC = () => {
     const t = copy[language];
     const [bottleneck, setBottleneck] = useState(4);
     const [animal, setAnimal] = useState<'cat' | 'dog'>('cat');
+    const explain = `**${t.title}**\n\n${t.bullets.map((bullet) => `- ${bullet}`).join('\n')}`;
 
     const blurAmount = (8 - bottleneck) * 0.7;
     const imageSource = animal === 'cat' ? catImage : dogImage;
@@ -52,12 +55,31 @@ export const Slide2_AutoencoderCompression: React.FC = () => {
         <>
             <ConceptStage>
                 <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1 }}>
+                    <div
+                        style={{
+                            display: 'grid',
+                            gridTemplateColumns: '1fr auto 1fr auto 1fr',
+                            gap: '1.2rem',
+                            alignItems: 'stretch',
+                            flex: 1,
+                        }}
+                    >
                         <StageCard title={t.inputLabel} tone="input">
-                            <img src={imageSource} alt={animal} style={{ maxWidth: '100%', maxHeight: '160px' }} />
+                            <img src={imageSource} alt={animal} style={{ maxWidth: '100%', maxHeight: '200px' }} />
                         </StageCard>
 
-                        <div style={{ fontSize: '1.5rem', color: '#94a3b8', fontWeight: 700 }}>-&gt;</div>
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '1.8rem',
+                                color: '#94a3b8',
+                                fontWeight: 700,
+                            }}
+                        >
+                            -&gt;
+                        </div>
 
                         <StageCard title={t.codeLabel} tone="process">
                             <div style={{ display: 'flex', gap: '0.45rem', alignItems: 'flex-end' }}>
@@ -79,7 +101,18 @@ export const Slide2_AutoencoderCompression: React.FC = () => {
                             </div>
                         </StageCard>
 
-                        <div style={{ fontSize: '1.5rem', color: '#94a3b8', fontWeight: 700 }}>-&gt;</div>
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '1.8rem',
+                                color: '#94a3b8',
+                                fontWeight: 700,
+                            }}
+                        >
+                            -&gt;
+                        </div>
 
                         <StageCard title={t.outputLabel} tone="output">
                             <img
@@ -87,7 +120,7 @@ export const Slide2_AutoencoderCompression: React.FC = () => {
                                 alt={`${animal} reconstruction`}
                                 style={{
                                     maxWidth: '100%',
-                                    maxHeight: '160px',
+                                    maxHeight: '200px',
                                     filter: `blur(${blurAmount}px)`,
                                 }}
                             />
@@ -113,14 +146,7 @@ export const Slide2_AutoencoderCompression: React.FC = () => {
                     </div>
                 </div>
             </ConceptStage>
-            <ExplainPanel>
-                <h3>{t.title}</h3>
-                <ul>
-                    {t.bullets.map((item, index) => (
-                        <li key={index}>{item}</li>
-                    ))}
-                </ul>
-            </ExplainPanel>
+            <ExplainPanel>{explain}</ExplainPanel>
         </>
     );
 };

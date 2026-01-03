@@ -19,21 +19,25 @@ const copy = {
         calm: 'Calm',
         energetic: 'Energetic',
         traits: 'Traits',
+        catTrait: 'cat',
+        energyTrait: 'energy',
     },
     zh: {
-        title: '3. Latent Space Is a Map',
+        title: '3. 潜在空间是一张地图',
         bullets: [
-            'Nearby codes decode to similar animals.',
-            'Moving the point changes traits smoothly.',
-            'The map is what the model learned to organize.',
+            '相近的编码会解码出相似的动物。',
+            '移动点会平滑地改变特征。',
+            '这张地图是模型学到的组织方式。',
         ],
-        mapLabel: 'Drag the point',
-        previewLabel: 'Decoded animal',
-        cat: 'More cat',
-        dog: 'More dog',
-        calm: 'Calm',
-        energetic: 'Energetic',
-        traits: 'Traits',
+        mapLabel: '拖动点',
+        previewLabel: '解码后的动物',
+        cat: '更像猫',
+        dog: '更像狗',
+        calm: '安静',
+        energetic: '活力',
+        traits: '特征',
+        catTrait: '猫度',
+        energyTrait: '活力',
     },
 };
 
@@ -42,6 +46,7 @@ export const Slide3_LatentMap: React.FC = () => {
     const t = copy[language];
     const [point, setPoint] = useState({ x: 0.7, y: 0.4 });
     const mapRef = useRef<HTMLDivElement | null>(null);
+    const explain = `**${t.title}**\n\n${t.bullets.map((bullet) => `- ${bullet}`).join('\n')}`;
 
     const updatePoint = (event: React.PointerEvent<HTMLDivElement>) => {
         const bounds = mapRef.current?.getBoundingClientRect();
@@ -151,20 +156,14 @@ export const Slide3_LatentMap: React.FC = () => {
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem' }}>
                             <AnimalFace catness={point.x} energy={energy} size={140} />
                             <div style={{ fontSize: '0.8rem', color: '#6b7280', textAlign: 'center' }}>
-                                {t.traits}: {point.x.toFixed(2)} cat, {energy.toFixed(2)} energy
+                                {t.traits}: {point.x.toFixed(2)} {t.catTrait ?? 'cat'}, {energy.toFixed(2)}{' '}
+                                {t.energyTrait ?? 'energy'}
                             </div>
                         </div>
                     </StageCard>
                 </div>
             </ConceptStage>
-            <ExplainPanel>
-                <h3>{t.title}</h3>
-                <ul>
-                    {t.bullets.map((item, index) => (
-                        <li key={index}>{item}</li>
-                    ))}
-                </ul>
-            </ExplainPanel>
+            <ExplainPanel>{explain}</ExplainPanel>
         </>
     );
 };

@@ -26,21 +26,21 @@ const copy = {
         round: 'Round',
     },
     zh: {
-        title: '5. GANs Learn by Competing',
+        title: '5. GAN 通过对抗学习',
         bullets: [
-            'The generator creates fakes from noise.',
-            'The discriminator tries to spot real vs fake.',
-            'Competition pushes the generator to improve.',
+            '生成器从噪声中生成“假样本”。',
+            '判别器尝试区分真实与生成。',
+            '对抗推动生成器不断改进。',
         ],
-        generator: 'Generator',
-        discriminator: 'Discriminator',
-        noise: 'Noise seed',
-        fakeSample: 'Fake sample',
-        realSample: 'Real sample',
-        realism: 'Generator realism',
-        accuracy: 'Discriminator accuracy',
-        train: 'Train one round',
-        round: 'Round',
+        generator: '生成器',
+        discriminator: '判别器',
+        noise: '噪声种子',
+        fakeSample: '生成样本',
+        realSample: '真实样本',
+        realism: '生成器逼真度',
+        accuracy: '判别器准确率',
+        train: '训练一轮',
+        round: '轮次',
     },
 };
 
@@ -48,6 +48,7 @@ export const Slide5_GANCompetition: React.FC = () => {
     const { language } = useLanguage();
     const t = copy[language];
     const [round, setRound] = useState(0);
+    const explain = `**${t.title}**\n\n${t.bullets.map((bullet) => `- ${bullet}`).join('\n')}`;
     const maxRounds = 6;
     const progress = round / maxRounds;
     const realism = 0.3 + progress * 0.6;
@@ -122,14 +123,7 @@ export const Slide5_GANCompetition: React.FC = () => {
                     </div>
                 </div>
             </ConceptStage>
-            <ExplainPanel>
-                <h3>{t.title}</h3>
-                <ul>
-                    {t.bullets.map((item, index) => (
-                        <li key={index}>{item}</li>
-                    ))}
-                </ul>
-            </ExplainPanel>
+            <ExplainPanel>{explain}</ExplainPanel>
         </>
     );
 };

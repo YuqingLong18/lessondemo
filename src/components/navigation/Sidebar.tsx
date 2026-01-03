@@ -148,7 +148,7 @@ export const Sidebar: React.FC = () => {
                         <Sparkles size={20} className="text-emerald-600" />
                     </div>
                     <span className="font-medium">
-                        {language === 'zh' ? 'From Learning to Generating' : 'From Learning to Generating'}
+                        {language === 'zh' ? '从学习到生成' : 'From Learning to Generating'}
                     </span>
                 </NavLink>
 
