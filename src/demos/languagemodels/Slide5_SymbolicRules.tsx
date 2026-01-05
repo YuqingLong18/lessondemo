@@ -60,7 +60,7 @@ export const Slide5_SymbolicRules: React.FC = () => {
 
     const t = text[language];
 
-    const { grammarOk, meaningOk } = useMemo(() => {
+    const { meaningOk } = useMemo(() => {
         const subjectTraits = nounTraits[subject];
         const objectTraits = nounTraits[object];
 
@@ -72,7 +72,7 @@ export const Slide5_SymbolicRules: React.FC = () => {
         } else if (verb === 'admired') {
             meaning = subjectTraits.animate;
         }
-        return { grammarOk: true, meaningOk: meaning };
+        return { meaningOk: meaning };
     }, [subject, verb, object]);
 
     return (

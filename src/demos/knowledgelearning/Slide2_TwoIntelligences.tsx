@@ -7,8 +7,6 @@ const chartWidth = 520;
 const chartHeight = 260;
 const padding = 36;
 
-const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
-
 const axisAges = [0, 10, 20, 30, 40, 50, 60, 70];
 
 const fluidCurve = [

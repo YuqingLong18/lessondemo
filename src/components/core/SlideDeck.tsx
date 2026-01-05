@@ -12,6 +12,17 @@ interface SlideDeckProps {
     slides: SlideData[];
 }
 
+export interface RegisterStepControl {
+    (control: {
+        currentStep: number;
+        totalSteps: number;
+        canGoNext: boolean;
+        canGoPrev: boolean;
+        goNext: () => void;
+        goPrev: () => void;
+    } | null): void;
+}
+
 export const SlideDeck: React.FC<SlideDeckProps> = ({ slides }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const { language } = useLanguage();

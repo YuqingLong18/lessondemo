@@ -2,14 +2,14 @@ import React, { useMemo, useState } from 'react';
 import { ConceptStage } from '../../components/core/ConceptStage';
 import { ExplainPanel } from '../../components/core/ExplainPanel';
 import { useLanguage } from '../../components/core/LanguageContext';
-import { CheckCircleIcon, XCircleIcon, StarIcon } from 'lucide-react';
+import { CheckCircleIcon, XCircleIcon } from 'lucide-react';
 
 const WIDTH = 280;
 const HEIGHT = 180;
 const PADDING = 20;
 
 // Generate noisy quadratic data
-const generateData = () => {
+const generateData = (): { x: number, y: number }[] => {
     const points: { x: number, y: number }[] = [];
     for (let x = -3; x <= 3; x += 0.8) {
         const noise = (Math.random() - 0.5) * 1.5;
@@ -20,7 +20,7 @@ const generateData = () => {
 };
 
 // Simple model: Smooth quadratic
-const getSimpleCurve = (points: { x: number, y: number }[]) => {
+const getSimpleCurve = (): { x: number, y: number }[] => {
     return Array.from({ length: 50 }, (_, i) => {
         const x = -3 + (i / 49) * 6;
         const y = 0.5 * x * x; // The "true" underlying function
@@ -47,7 +47,7 @@ export const Slide6_ModelSelection: React.FC = () => {
 
     // Stable data per session
     const data = useMemo(() => generateData(), []);
-    const simpleCurve = useMemo(() => getSimpleCurve(data), [data]);
+    const simpleCurve = useMemo(() => getSimpleCurve(), []);
     const complexCurve = useMemo(() => getComplexCurve(data), [data]);
 
     const simplePath = simpleCurve.map(p => toSvg(p.x, p.y)).join(' ');

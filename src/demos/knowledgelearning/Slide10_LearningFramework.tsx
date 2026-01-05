@@ -78,7 +78,7 @@ export const Slide10_LearningFramework: React.FC = () => {
         const correct = [
             ...apples.map((p) => (p.y >= slope * p.x + intercept ? 1 : 0)),
             ...oranges.map((p) => (p.y < slope * p.x + intercept ? 1 : 0)),
-        ].reduce((sum, val) => sum + val, 0);
+        ].reduce((sum: number, val: number) => sum + val, 0);
         return Math.round((correct / total) * 100);
     }, [slope, intercept]);
 

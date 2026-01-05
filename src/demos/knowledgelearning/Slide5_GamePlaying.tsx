@@ -74,14 +74,14 @@ const collectLeaves = (node: TreeNode, bucket: Set<string>) => {
     node.children.forEach((child) => collectLeaves(child, bucket));
 };
 
-const minimax = (node: TreeNode, isMax: boolean, scores: Record<string, number>) => {
+const minimax = (node: TreeNode, isMax: boolean, scores: Record<string, number>): number => {
     if (!node.children || node.children.length === 0) {
         scores[node.id] = node.value ?? 0;
         return node.value ?? 0;
     }
 
-    const childValues = node.children.map((child) => minimax(child, !isMax, scores));
-    const best = isMax ? Math.max(...childValues) : Math.min(...childValues);
+    const childValues: number[] = node.children.map((child) => minimax(child, !isMax, scores));
+    const best: number = isMax ? Math.max(...childValues) : Math.min(...childValues);
     scores[node.id] = best;
     return best;
 };
