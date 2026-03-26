@@ -2,10 +2,15 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { SlideShell } from './SlideShell';
 import { useLanguage, type LocalizedText } from './LanguageContext';
 
+interface SlideComponentProps {
+    registerStepControl?: RegisterStepControl;
+    resetSignal?: number;
+}
+
 interface SlideData {
     title: LocalizedText;
     subConcept?: LocalizedText;
-    component: React.ComponentType<any>;
+    component: React.ComponentType<{}>;
 }
 
 interface SlideDeckProps {
@@ -25,6 +30,11 @@ export interface RegisterStepControl {
 
 export const SlideDeck: React.FC<SlideDeckProps> = ({ slides }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [resetSignal, setResetSignal] = useState(0);
+    const [stepControlState, setStepControlState] = useState<{
+        slideIndex: number;
+        control: Parameters<RegisterStepControl>[0];
+    } | null>(null);
     const { language } = useLanguage();
 
     const nextSlide = useCallback(() => {
@@ -35,25 +45,61 @@ export const SlideDeck: React.FC<SlideDeckProps> = ({ slides }) => {
         setCurrentIndex((prev) => Math.max(prev - 1, 0));
     }, []);
 
+    const registerStepControl = useCallback<RegisterStepControl>((control) => {
+        setStepControlState(
+            control === null
+                ? null
+                : {
+                    slideIndex: currentIndex,
+                    control,
+                }
+        );
+    }, [currentIndex]);
+
+    const stepControl = stepControlState?.slideIndex === currentIndex ? stepControlState.control : null;
+
+    const canGoPrev = Boolean(stepControl?.canGoPrev) || currentIndex > 0;
+    const canGoNext = Boolean(stepControl?.canGoNext) || currentIndex < slides.length - 1;
+
+    const goPrev = useCallback(() => {
+        if (stepControl?.canGoPrev) {
+            stepControl.goPrev();
+            return;
+        }
+        prevSlide();
+    }, [prevSlide, stepControl]);
+
+    const goNext = useCallback(() => {
+        if (stepControl?.canGoNext) {
+            stepControl.goNext();
+            return;
+        }
+        nextSlide();
+    }, [nextSlide, stepControl]);
+
     const reset = useCallback(() => {
-        // In a real app, this might trigger a reset key or callback on the slide
-        // For now, it just logs or could reset local state if lifted
-        console.log('Global Reset Triggered');
-        window.location.reload(); // Hard reset for concept stability as per AGENTS.md "restore same initial behavior"
+        setStepControlState(null);
+        setCurrentIndex(0);
+        setResetSignal((prev) => prev + 1);
     }, []);
 
     // Keyboard Navigation
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'ArrowRight') nextSlide();
-            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'ArrowRight') goNext();
+            if (e.key === 'ArrowLeft') goPrev();
         };
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [nextSlide, prevSlide]);
+    }, [goNext, goPrev]);
 
-    const CurrentSlideComponent = slides[currentIndex].component;
+    const CurrentSlideComponent = slides[currentIndex].component as React.ComponentType<SlideComponentProps>;
+    const stepLabel = stepControl
+        ? language === 'zh'
+            ? `步骤 ${stepControl.currentStep + 1} / ${stepControl.totalSteps}`
+            : `Step ${stepControl.currentStep + 1} / ${stepControl.totalSteps}`
+        : undefined;
 
     return (
         <SlideShell
@@ -61,11 +107,18 @@ export const SlideDeck: React.FC<SlideDeckProps> = ({ slides }) => {
             subConcept={slides[currentIndex].subConcept?.[language]}
             currentSlide={currentIndex}
             totalSlides={slides.length}
-            onNext={nextSlide}
-            onPrev={prevSlide}
+            canGoNext={canGoNext}
+            canGoPrev={canGoPrev}
+            stepLabel={stepLabel}
+            onNext={goNext}
+            onPrev={goPrev}
             onReset={reset}
         >
-            <CurrentSlideComponent />
+            <CurrentSlideComponent
+                key={`${currentIndex}-${resetSignal}`}
+                registerStepControl={registerStepControl}
+                resetSignal={resetSignal}
+            />
         </SlideShell>
     );
 };

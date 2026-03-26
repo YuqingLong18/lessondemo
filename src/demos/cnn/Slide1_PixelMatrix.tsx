@@ -64,27 +64,32 @@ export const Slide1_PixelMatrix: React.FC = () => {
             <ConceptStage>
                 <div style={{ display: 'grid', gridTemplateColumns: `repeat(${GRID_SIZE}, 40px)`, gap: '2px' }}>
                     {grid.map((row, rIndex) =>
-                        row.map((val, cIndex) => (
-                            <div
-                                key={`${rIndex}-${cIndex}`}
-                                onClick={() => togglePixel(rIndex, cIndex)}
-                                style={{
-                                    width: '40px',
-                                    height: '40px',
-                                    backgroundColor: val === 1 ? '#2d3436' : '#dfe6e9',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    cursor: 'pointer',
-                                    fontSize: '0.8rem',
-                                    color: val === 1 ? '#dfe6e9' : '#636e72',
-                                    transition: 'background-color 0.2s',
-                                    userSelect: 'none',
-                                }}
-                            >
-                                {val === 1 ? 255 : 0}
-                            </div>
-                        ))
+                        row.map((val, cIndex) => {
+                            const intensity = val === 1 ? 255 : 0;
+
+                            return (
+                                <div
+                                    key={`${rIndex}-${cIndex}`}
+                                    onClick={() => togglePixel(rIndex, cIndex)}
+                                    style={{
+                                        width: '40px',
+                                        height: '40px',
+                                        backgroundColor: `rgb(${intensity}, ${intensity}, ${intensity})`,
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        cursor: 'pointer',
+                                        fontSize: '0.8rem',
+                                        color: intensity < 128 ? '#ffffff' : '#000000',
+                                        border: '1px solid #cbd5e1',
+                                        transition: 'background-color 0.2s',
+                                        userSelect: 'none',
+                                    }}
+                                >
+                                    {intensity}
+                                </div>
+                            );
+                        })
                     )}
                 </div>
             </ConceptStage>

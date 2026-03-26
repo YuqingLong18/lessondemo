@@ -6,6 +6,9 @@ interface SlideShellProps {
   subConcept?: string;
   currentSlide: number;
   totalSlides: number;
+  canGoNext: boolean;
+  canGoPrev: boolean;
+  stepLabel?: string;
   onNext: () => void;
   onPrev: () => void;
   onReset: () => void;
@@ -17,6 +20,9 @@ export const SlideShell: React.FC<SlideShellProps> = ({
   subConcept,
   currentSlide,
   totalSlides,
+  canGoNext,
+  canGoPrev,
+  stepLabel,
   onNext,
   onPrev,
   onReset,
@@ -89,11 +95,14 @@ export const SlideShell: React.FC<SlideShellProps> = ({
         }}
       >
         <div className="nav-controls" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <button onClick={onPrev} disabled={currentSlide === 0} style={buttonStyle}>
+          <button onClick={onPrev} disabled={!canGoPrev} style={buttonStyle}>
             ◀
           </button>
-          <span style={{ fontVariantNumeric: 'tabular-nums' }}>{slideLabel}</span>
-          <button onClick={onNext} disabled={currentSlide === totalSlides - 1} style={buttonStyle}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', alignItems: 'center' }}>
+            <span style={{ fontVariantNumeric: 'tabular-nums' }}>{slideLabel}</span>
+            {stepLabel && <span style={{ fontSize: '0.75rem', color: '#636e72' }}>{stepLabel}</span>}
+          </div>
+          <button onClick={onNext} disabled={!canGoNext} style={buttonStyle}>
             ▶
           </button>
         </div>

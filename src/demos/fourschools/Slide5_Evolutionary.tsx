@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { ExplainPanel } from '../../components/core/ExplainPanel';
 import { ConceptStage } from '../../components/core/ConceptStage';
 import { RefreshCw, Play, Users, Trophy, Dna, Sparkles } from 'lucide-react';
@@ -26,8 +26,31 @@ const ELITE_COUNT = 5;
 const PARENT_POOL = 10;
 const DISPLAY_COUNT = 20;
 
+const evaluatePopulation = (pop: Gene[]) => {
+    pop.forEach(ind => {
+        let error = 0;
+        TARGET_POINTS.forEach(p => {
+            const yPred = ind.a * p.x + ind.b;
+            if (isNaN(yPred)) error += 1000;
+            else error += Math.pow(yPred - p.y, 2);
+        });
+        ind.fitness = 1 / (error + 0.0001);
+    });
+    pop.sort((x, y) => y.fitness - x.fitness);
+    return pop;
+};
+
+const createInitialPopulation = () =>
+    evaluatePopulation(
+        Array.from({ length: POPULATION_SIZE }).map(() => ({
+            a: (Math.random() * 4) - 2,
+            b: (Math.random() * 2) - 1,
+            fitness: 0,
+        }))
+    );
+
 const Slide5Content: React.FC = () => {
-    const [population, setPopulation] = useState<Gene[]>([]);
+    const [population, setPopulation] = useState<Gene[]>(() => createInitialPopulation());
     const [generation, setGeneration] = useState(0);
     const [mutationRate, setMutationRate] = useState(0.3);
     const { language } = useLanguage();
@@ -88,36 +111,10 @@ const Slide5Content: React.FC = () => {
     };
     const text = t[language];
 
-    const evaluate = useCallback((pop: Gene[]) => {
-        pop.forEach(ind => {
-            let error = 0;
-            TARGET_POINTS.forEach(p => {
-                const yPred = ind.a * p.x + ind.b;
-                // Avoid NaN
-                if (isNaN(yPred)) error += 1000;
-                else error += Math.pow(yPred - p.y, 2);
-            });
-            ind.fitness = 1 / (error + 0.0001); // Higher fitness = lower error
-        });
-        // Sort by fitness desc
-        pop.sort((x, y) => y.fitness - x.fitness);
-    }, []);
-
     const reset = useCallback(() => {
-        const initialPop: Gene[] = Array.from({ length: POPULATION_SIZE }).map(() => ({
-            a: (Math.random() * 4) - 2, // Random slope -2 to 2
-            b: (Math.random() * 2) - 1, // Random intercept -1 to 1
-            fitness: 0
-        }));
-        evaluate(initialPop);
-        setPopulation(initialPop);
+        setPopulation(createInitialPopulation());
         setGeneration(0);
-    }, [evaluate]);
-
-    // Initialize
-    useEffect(() => {
-        reset();
-    }, [reset]);
+    }, []);
 
     const evolve = useCallback(() => {
         // Elitism: Keep top survivors
@@ -145,10 +142,10 @@ const Slide5Content: React.FC = () => {
             newPop.push(child);
         }
 
-        evaluate(newPop);
+        evaluatePopulation(newPop);
         setPopulation(newPop);
         setGeneration(g => g + 1);
-    }, [population, evaluate, mutationRate]);
+    }, [population, mutationRate]);
 
     const bestGene = population[0] || { a: 0, b: 0, fitness: 0 };
     const elite = population.slice(0, ELITE_COUNT);

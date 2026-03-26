@@ -74,15 +74,19 @@ export const Slide5_FeatureHierarchy: React.FC = () => {
     const t = copy[language];
 
     useEffect(() => {
-        // Trigger animation when input changes
-        setActiveStage(0);
+        const timers = [600, 1200, 1800, 2400].map((delay, index) =>
+            window.setTimeout(() => setActiveStage(index + 1), delay)
+        );
 
-        const timings = [0, 600, 1200, 1800, 2400];
-        timings.forEach((t, i) => {
-            setTimeout(() => setActiveStage(i), t);
-        });
-
+        return () => {
+            timers.forEach((timer) => window.clearTimeout(timer));
+        };
     }, [input]);
+
+    const handleInputChange = (nextInput: InputType) => {
+        setActiveStage(0);
+        setInput(nextInput);
+    };
 
     const currentImg = input === 'cat' ? cuteCatImg : cuteDogImg;
     const earLabel = input === 'cat' ? t.catEars : t.dogEars;
@@ -185,7 +189,7 @@ export const Slide5_FeatureHierarchy: React.FC = () => {
                     {/* Controls */}
                     <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', zIndex: 10 }}>
                         <button
-                            onClick={() => setInput('cat')}
+                            onClick={() => handleInputChange('cat')}
                             style={{
                                 padding: '0.6rem 1.2rem',
                                 border: input === 'cat' ? '2px solid #e17055' : '1px solid #dfe6e9',
@@ -200,7 +204,7 @@ export const Slide5_FeatureHierarchy: React.FC = () => {
                             {t.catInput}
                         </button>
                         <button
-                            onClick={() => setInput('dog')}
+                            onClick={() => handleInputChange('dog')}
                             style={{
                                 padding: '0.6rem 1.2rem',
                                 border: input === 'dog' ? '2px solid #0984e3' : '1px solid #dfe6e9',

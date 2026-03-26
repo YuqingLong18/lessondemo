@@ -409,9 +409,12 @@ const FinalShowcase: React.FC<{ onReset: () => void }> = ({ onReset }) => {
     }, []);
 
     useEffect(() => {
-        setBubbleFlash(true);
-        const timer = setTimeout(() => setBubbleFlash(false), 500);
-        return () => clearTimeout(timer);
+        const flashOnTimer = window.setTimeout(() => setBubbleFlash(true), 0);
+        const flashOffTimer = window.setTimeout(() => setBubbleFlash(false), 500);
+        return () => {
+            window.clearTimeout(flashOnTimer);
+            window.clearTimeout(flashOffTimer);
+        };
     }, [scene]);
 
     const getLeftContent = () => {

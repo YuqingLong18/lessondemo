@@ -137,8 +137,8 @@ export const Slide4_Connectionist: React.FC = () => {
 
         // --- Update State ---
         // We do this functional style to ensure consistency
-        setW3(prev => prev.map((row, r) => row.map((val, _c) => val - LR * dW3[r])));
-        setB3(prev => prev.map((val, _i) => val - LR * dB3));
+        setW3(prev => prev.map((row, r) => row.map((val) => val - LR * dW3[r])));
+        setB3(prev => prev.map((val) => val - LR * dB3));
 
         setW2(prev => prev.map((row, r) => row.map((val, c) => val - LR * dW2[r][c])));
         setB2(prev => prev.map((val, i) => val - LR * dB2[i]));
@@ -157,7 +157,7 @@ export const Slide4_Connectionist: React.FC = () => {
         setW2(initWeights(3, 3));
         setB2(initBiases(3));
         setW3(initWeights(3, 1));
-        setB3(initBiases(3)); // bug fix: initBiases(1) actually
+        setB3(initBiases(1));
         setEpoch(0);
         setLoss(0.5); // Initial guess 0 => loss 0.5
         setActivations({ h1: [0, 0, 0], h2: [0, 0, 0], out: 0.5 });
@@ -385,7 +385,7 @@ const SignalDot: React.FC<{
     const startY = y1 + dy * startOffset;
     const travelX = dx * (1 - startOffset);
     const travelY = dy * (1 - startOffset);
-    const style = {
+    const style: React.CSSProperties & { '--dx': string; '--dy': string } = {
         left: startX - 5,
         top: startY - 5,
         width: 10,
@@ -393,9 +393,9 @@ const SignalDot: React.FC<{
         opacity: active ? 1 : 0,
         animation: active ? `signal-flow 0.7s linear ${delay}s 1` : 'none',
         boxShadow: '0 0 12px rgba(250, 204, 21, 0.9)',
-        ['--dx' as any]: `${travelX}px`,
-        ['--dy' as any]: `${travelY}px`,
-    } as React.CSSProperties;
+        '--dx': `${travelX}px`,
+        '--dy': `${travelY}px`,
+    };
 
     return (
         <span

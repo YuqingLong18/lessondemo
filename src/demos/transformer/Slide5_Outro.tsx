@@ -24,6 +24,7 @@ export const Slide5_Outro: React.FC<SlideStepProps> = ({ registerStepControl }) 
 
     const chineseTokens = ['那家', '在', '街对面', '的', '银行', '关门', '了'];
     const englishTokens = ['The', 'bank', 'across', 'the', 'street', 'is', 'closed.'];
+    const decodingInProgress = isDecoding && decodeIndex < englishTokens.length;
 
     const attentionMatrix: number[][] = [
         [0.2, 0.1, 0.2, 0.1, 0.7, 0.4, 0.2],
@@ -36,16 +37,12 @@ export const Slide5_Outro: React.FC<SlideStepProps> = ({ registerStepControl }) 
     ];
 
     useEffect(() => {
-        if (!isDecoding) return;
-        if (decodeIndex >= englishTokens.length) {
-            setIsDecoding(false);
-            return;
-        }
+        if (!decodingInProgress) return;
         const timer = window.setTimeout(() => {
             setDecodeIndex((prev) => prev + 1);
         }, 420);
         return () => window.clearTimeout(timer);
-    }, [isDecoding, decodeIndex, englishTokens.length]);
+    }, [decodingInProgress, decodeIndex, englishTokens.length]);
 
     const handleDecode = () => {
         setDecodeIndex(0);
@@ -224,6 +221,7 @@ export const Slide5_Outro: React.FC<SlideStepProps> = ({ registerStepControl }) 
                                 <div className="mt-auto">
                                     <button
                                         onClick={handleDecode}
+                                        disabled={decodingInProgress}
                                         className="px-4 py-2 bg-cyan-400 text-slate-900 font-bold rounded-lg text-xs"
                                     >
                                         {language === 'zh' ? '解码' : 'Decode'}

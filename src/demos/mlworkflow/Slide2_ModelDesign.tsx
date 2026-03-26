@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import React, { useState, useRef, useLayoutEffect } from 'react';
 import { ConceptStage } from '../../components/core/ConceptStage';
 import { ExplainPanel } from '../../components/core/ExplainPanel';
 import { useLanguage, type LocalizedText } from '../../components/core/LanguageContext';
@@ -74,39 +74,27 @@ const modelCardsData: ModelCard[] = [
     },
 ];
 
+const shuffleArray = <T,>(items: T[]) => [...items].sort(() => Math.random() - 0.5);
+
 export const Slide2_ModelDesign: React.FC = () => {
     const { language } = useLanguage();
     const [selectedInput, setSelectedInput] = useState<DataType | null>(null);
     const [selectedModel, setSelectedModel] = useState<ModelKey | null>(null);
-    const [matchResult, setMatchResult] = useState<'correct' | 'incorrect' | null>(null);
 
-    const [shuffledInputs, setShuffledInputs] = useState<InputCard[]>([]);
-    const [shuffledModels, setShuffledModels] = useState<ModelCard[]>([]);
+    const [shuffledInputs] = useState<InputCard[]>(() => shuffleArray(inputCardsData));
+    const [shuffledModels] = useState<ModelCard[]>(() => shuffleArray(modelCardsData));
 
     const inputRefs = useRef<Record<string, HTMLButtonElement | null>>({});
     const modelRefs = useRef<Record<string, HTMLButtonElement | null>>({});
     const containerRef = useRef<HTMLDivElement>(null);
     const [lineCoords, setLineCoords] = useState<{ x1: number, y1: number, x2: number, y2: number } | null>(null);
 
-    // Shuffle on mount
-    useEffect(() => {
-        setShuffledInputs([...inputCardsData].sort(() => Math.random() - 0.5));
-        setShuffledModels([...modelCardsData].sort(() => Math.random() - 0.5));
-    }, []);
-
-    // Reset match result when selection changes
-    useEffect(() => {
-        if (selectedInput && selectedModel) {
-            const model = modelCardsData.find(m => m.key === selectedModel);
-            if (model?.bestFor === selectedInput) {
-                setMatchResult('correct');
-            } else {
-                setMatchResult('incorrect');
-            }
-        } else {
-            setMatchResult(null);
-        }
-    }, [selectedInput, selectedModel]);
+    const matchResult =
+        selectedInput && selectedModel
+            ? modelCardsData.find((model) => model.key === selectedModel)?.bestFor === selectedInput
+                ? 'correct'
+                : 'incorrect'
+            : null;
 
     // Calculate line coordinates
     useLayoutEffect(() => {

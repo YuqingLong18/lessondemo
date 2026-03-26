@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { RefreshCcw, Play, CheckCircle2, AlertTriangle, Info } from 'lucide-react';
 import { useLanguage, type LocalizedText } from '../../components/core/LanguageContext';
 
@@ -27,25 +27,34 @@ export const Module2_LearningRate: React.FC = () => {
     const { language } = useLanguage();
     // Learning Rate: 1 = baby steps, 5 = optimal, 10 = overshoot
     const [learningRate, setLearningRate] = useState(5);
-    const [widgetPosition, setWidgetPosition] = useState(0); // -100 (left top) to 0 (bottom) to 100 (right top)
-    const [history, setHistory] = useState<number[]>([]);
+    const [widgetPosition, setWidgetPosition] = useState(-90); // -100 (left top) to 0 (bottom) to 100 (right top)
+    const [history, setHistory] = useState<number[]>([-90]);
     const [status, setStatus] = useState<'idle' | 'running' | 'success' | 'failed'>('idle');
     const [messageKey, setMessageKey] = useState<MessageKey>('idle');
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const timeoutRef = useRef<number | null>(null);
 
     // Initial position high on the left
     const START_POS = -90;
 
-    useEffect(() => {
-        resetSimulation();
+    const clearPendingStep = useCallback(() => {
+        if (timeoutRef.current !== null) {
+            window.clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+        }
     }, []);
 
-    const resetSimulation = () => {
+    const resetSimulation = useCallback(() => {
+        clearPendingStep();
         setWidgetPosition(START_POS);
         setHistory([START_POS]);
         setStatus('idle');
         setMessageKey('idle');
-    };
+    }, [START_POS, clearPendingStep]);
+
+    useEffect(() => {
+        return () => clearPendingStep();
+    }, [clearPendingStep]);
 
     const runSimulation = async () => {
         if (status === 'running') return;
@@ -118,7 +127,7 @@ export const Module2_LearningRate: React.FC = () => {
                 return;
             }
 
-            setTimeout(visualizeStep, delay);
+            timeoutRef.current = window.setTimeout(visualizeStep, delay);
         };
 
         visualizeStep();

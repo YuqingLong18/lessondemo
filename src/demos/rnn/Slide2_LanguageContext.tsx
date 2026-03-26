@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ConceptStage } from '../../components/core/ConceptStage';
 import { ExplainPanel } from '../../components/core/ExplainPanel';
 import { useLanguage } from '../../components/core/LanguageContext';
@@ -70,21 +70,21 @@ export const Slide2_LanguageContext: React.FC = () => {
     const { language } = useLanguage();
     const t = copy[language];
     const [contextKey, setContextKey] = useState<ContextKey>('juice');
-    const [choice, setChoice] = useState<string | null>(null);
+    const [choiceState, setChoiceState] = useState<{ language: typeof language; value: string | null }>({
+        language,
+        value: null,
+    });
 
     const contextSet = CONTEXTS[language];
     const context = contextSet[contextKey];
     const choices = CHOICES[language];
+    const choice = choiceState.language === language ? choiceState.value : null;
     const isCorrect = choice === context.answer;
 
     const handleContextChange = (key: ContextKey) => {
         setContextKey(key);
-        setChoice(null);
+        setChoiceState({ language, value: null });
     };
-
-    useEffect(() => {
-        setChoice(null);
-    }, [language]);
 
     return (
         <>
@@ -146,7 +146,7 @@ export const Slide2_LanguageContext: React.FC = () => {
                                 <button
                                     key={option}
                                     type="button"
-                                    onClick={() => setChoice(option)}
+                                    onClick={() => setChoiceState({ language, value: option })}
                                     style={{
                                         padding: '0.7rem 1.2rem',
                                         borderRadius: '10px',

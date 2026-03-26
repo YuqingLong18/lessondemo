@@ -21,11 +21,11 @@ export const ExplainPanel: React.FC<ExplainPanelProps> = ({ children }) => {
         <ReactMarkdown
             rehypePlugins={[rehypeKatex]}
             components={{
-                p: ({ node, ...props }) => <p className="mb-2" {...props} />,
-                ul: ({ node, ...props }) => <ul className="list-disc pl-5 mb-2" {...props} />,
-                li: ({ node, ...props }) => <li className="mb-1" {...props} />,
-                strong: ({ node, ...props }) => <span className="font-bold text-gray-800" {...props} />,
-                em: ({ node, ...props }) => <span className="italic text-gray-700" {...props} />,
+                p: (props) => <p className="mb-2" {...props} />,
+                ul: (props) => <ul className="list-disc pl-5 mb-2" {...props} />,
+                li: (props) => <li className="mb-1" {...props} />,
+                strong: (props) => <span className="font-bold text-gray-800" {...props} />,
+                em: (props) => <span className="italic text-gray-700" {...props} />,
             }}
         >
             {children}

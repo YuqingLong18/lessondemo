@@ -58,7 +58,7 @@ export const Slide8_ExpertAndGraph: React.FC = () => {
     };
 
     const text = t[language];
-    const factLabels = {
+    const factLabels = useMemo(() => ({
         fever: { en: 'Fever', zh: '发烧' },
         cough: { en: 'Cough', zh: '咳嗽' },
         chestPain: { en: 'Chest pain', zh: '胸痛' },
@@ -70,9 +70,9 @@ export const Slide8_ExpertAndGraph: React.FC = () => {
         pneumonia: { en: 'Pneumonia', zh: '肺炎' },
         xray: { en: 'Recommend chest X-ray', zh: '建议胸部 X 光' },
         cold: { en: 'Common cold', zh: '感冒' },
-    } as const;
+    } as const), []);
 
-    const patientFacts = ['fever', 'cough', 'chestPain', 'fatigue'];
+    const patientFacts = useMemo(() => ['fever', 'cough', 'chestPain', 'fatigue'], []);
 
     const rules = useMemo(() => ([
         { id: 'R1', ifFacts: ['fever', 'cough'], thenFact: 'respiratoryInfection' },
